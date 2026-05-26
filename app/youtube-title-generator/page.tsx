@@ -1,3 +1,4 @@
+import FAQBlock from "../components/faq-block";
 export const metadata = {
   title: "YouTube Title Generator | Create Better Video Titles | HookSignals",
   description:
@@ -126,6 +127,25 @@ export default function YouTubeTitleGeneratorPage() {
             Open Hook Analyzer
           </a>
         </section>
+        <FAQBlock
+          items={[
+            {
+              question: "What makes a YouTube title clickable?",
+              answer:
+                "Strong YouTube titles create curiosity while staying clear about the topic. Good titles usually combine specificity, emotion or a strong outcome.",
+            },
+            {
+              question: "Should YouTube titles be short?",
+              answer:
+                "Titles should be concise but still communicate value. Most strong titles are easy to understand quickly without feeling vague.",
+            },
+            {
+              question: "Why do titles affect CTR?",
+              answer:
+                "The title is one of the first things viewers see in the feed. A stronger title increases the chance of clicks and improves first impressions.",
+            },
+          ]}
+        />
       </section>
     </main>
   );
