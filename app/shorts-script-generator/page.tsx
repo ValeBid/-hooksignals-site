@@ -1,5 +1,6 @@
 "use client";
 
+import SiteFooter from "../components/site-footer";
 import { useState } from "react";
 import CopyButton from "../components/copy-button";
 import RelatedTools from "../components/related-tools";
@@ -185,6 +186,8 @@ export default function ShortsScriptGeneratorPage() {
 
         <RelatedTools />
       </section>
+
+      <SiteFooter />
     </main>
   );
 }
