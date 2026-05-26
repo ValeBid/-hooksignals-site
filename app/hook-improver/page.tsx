@@ -1,5 +1,6 @@
 "use client";
 
+import CopyButton from "../components/copy-button";
 import { useState } from "react";
 import RelatedTools from "../components/related-tools";
 
@@ -124,18 +125,18 @@ export default function HookImproverPage() {
                     Improved versions
                   </p>
 
-                  <div className="mt-4 space-y-4">
-                    {result.versions.map((version) => (
-                      <div
-                        key={version}
-                        className="rounded-2xl border border-white/10 bg-black/35 p-5 leading-7 text-white/75"
-                      >
-                        “{version}”
-                      </div>
-                    ))}
-                  </div>
+                   {result.versions.map((version) => (
+                     <div
+                       key={version}
+                       className="rounded-2xl border border-white/10 bg-black/35 p-5 leading-7 text-white/75"
+                     >
+                       <p>“{version}”</p>
 
-                  <a
+                       <CopyButton text={version} />
+                     </div>
+                   ))}
+
+                 <a
                     href="/hook-analyzer"
                     className="mt-6 inline-block rounded-2xl bg-white px-6 py-3 font-semibold text-black"
                   >
