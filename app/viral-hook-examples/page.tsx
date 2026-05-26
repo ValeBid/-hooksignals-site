@@ -1,3 +1,4 @@
+import FAQBlock from "../components/faq-block";
 export const metadata = {
   title: "Viral Hook Examples | Better YouTube & TikTok Hooks | HookSignals",
   description:
@@ -146,6 +147,25 @@ export default function ViralHookExamplesPage() {
             Open Hook Analyzer
           </a>
         </section>
+        <FAQBlock
+          items={[
+            {
+              question: "Why do some hooks go viral?",
+              answer:
+                "Viral hooks usually create immediate curiosity, tension or emotional contrast. They make viewers feel that the next seconds are important.",
+            },
+            {
+              question: "Should I copy viral hooks?",
+              answer:
+                "You should study structures and patterns instead of copying exact wording. Strong hooks often follow repeatable psychological principles.",
+            },
+            {
+              question: "What is the best hook style for Shorts?",
+              answer:
+                "Shorts hooks perform best when they are fast, specific and emotionally clear within the first seconds of the video.",
+            },
+          ]}
+        />
       </section>
     </main>
   );
