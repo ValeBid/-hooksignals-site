@@ -98,7 +98,21 @@ export default function Home() {
                 className="w-full rounded-2xl border border-white/10 bg-white/5 px-7 py-4 font-semibold text-white sm:w-auto"
               >
                 Explore Tools
-              </a>
+<div className="mt-10 flex flex-col gap-4 sm:flex-row">
+  <input
+    type="email"
+    placeholder="Enter your email"
+    className="h-14 w-full rounded-2xl border border-white/10 bg-black px-5 text-white outline-none"
+  />
+
+  <button className="h-14 rounded-2xl bg-white px-8 font-semibold text-black transition hover:opacity-90">
+    Join Free Beta
+  </button>
+</div>
+
+<p className="mt-4 text-sm text-white/40">
+  Join creators testing AI hook, title and retention tools before public launch.
+</p>
             </div>
 
             <div className="mt-10 grid grid-cols-3 gap-3 text-left">
