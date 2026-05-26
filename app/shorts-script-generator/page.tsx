@@ -3,23 +3,30 @@
 import { useState } from "react";
 
 function generateScript(topic: string) {
-  return [
-    `Most creators misunderstand ${topic.toLowerCase()}.`,
-    `The real problem is not what people think.`,
-    `Here is the simple shift that changes results fast.`,
-    `Try this before posting your next Short.`,
-  ];
+  const cleanTopic = topic.trim();
+
+  return {
+    hook: `If ${cleanTopic.toLowerCase()} feels hard, this is the part most people miss.`,
+    body: [
+      `Most creators start with the wrong angle.`,
+      `The real problem is not the idea — it is the way the first seconds are structured.`,
+      `Start with tension, then give the viewer a clear reason to stay.`,
+      `Make every sentence pull them into the next one.`,
+    ],
+    cta: `Before you post your next Short, fix the hook first.`,
+  };
 }
 
 export default function ShortsScriptGeneratorPage() {
   const [topic, setTopic] = useState("");
-  const [script, setScript] = useState<string[]>([]);
+  const [script, setScript] = useState<null | ReturnType<typeof generateScript>>(null);
   const [loading, setLoading] = useState(false);
 
   function handleGenerate() {
     if (!topic.trim()) return;
 
     setLoading(true);
+    setScript(null);
 
     setTimeout(() => {
       setScript(generateScript(topic));
@@ -43,7 +50,7 @@ export default function ShortsScriptGeneratorPage() {
           </a>
         </nav>
 
-        <section className="rounded-[36px] border border-white/10 bg-gradient-to-b from-white/[0.07] to-white/[0.025] p-7 md:p-12">
+        <section className="rounded-[36px] border border-white/10 bg-gradient-to-b from-white/[0.08] to-white/[0.025] p-7 md:p-12">
           <p className="mb-4 text-sm font-semibold text-emerald-300">
             AI Shorts Workflow
           </p>
@@ -53,8 +60,8 @@ export default function ShortsScriptGeneratorPage() {
           </h1>
 
           <p className="mt-6 max-w-3xl text-lg leading-8 text-white/60">
-            Generate short-form script structures designed for retention,
-            pacing and fast viewer attention.
+            Generate a short-form script structure built around hook strength,
+            pacing and retention. Use it as a first draft before recording.
           </p>
 
           <div className="mt-10 grid gap-6 lg:grid-cols-[1fr_1fr]">
@@ -79,19 +86,15 @@ export default function ShortsScriptGeneratorPage() {
             </div>
 
             <div className="rounded-3xl border border-white/10 bg-white/[0.035] p-6">
-              {!loading && script.length === 0 && (
+              {!loading && !script && (
                 <div>
-                  <p className="text-sm text-white/45">
-                    Script preview
-                  </p>
-
+                  <p className="text-sm text-white/45">Script preview</p>
                   <h2 className="mt-4 text-3xl font-semibold">
                     Your Shorts structure will appear here.
                   </h2>
-
                   <p className="mt-4 leading-7 text-white/50">
-                    Strong Shorts scripts move quickly and create momentum from
-                    sentence to sentence.
+                    Strong Shorts scripts open fast, create momentum and remove
+                    filler before the viewer loses attention.
                   </p>
                 </div>
               )}
@@ -99,9 +102,8 @@ export default function ShortsScriptGeneratorPage() {
               {loading && (
                 <div>
                   <p className="text-sm text-emerald-300">
-                    Building your Shorts script...
+                    Building retention-focused script...
                   </p>
-
                   <div className="mt-6 space-y-3">
                     <div className="h-3 w-full animate-pulse rounded-full bg-white/10" />
                     <div className="h-3 w-5/6 animate-pulse rounded-full bg-white/10" />
@@ -110,28 +112,45 @@ export default function ShortsScriptGeneratorPage() {
                 </div>
               )}
 
-              {script.length > 0 && (
+              {script && (
                 <div>
                   <p className="mb-4 text-sm font-semibold text-emerald-300">
-                    Generated script
+                    Generated script structure
                   </p>
 
                   <div className="space-y-4">
-                    {script.map((line, index) => (
+                    <div className="rounded-2xl border border-emerald-300/20 bg-emerald-300/[0.06] p-5">
+                      <p className="mb-2 text-xs uppercase tracking-[0.2em] text-emerald-300">
+                        Hook
+                      </p>
+                      <p className="leading-7 text-white/80">“{script.hook}”</p>
+                    </div>
+
+                    {script.body.map((line, index) => (
                       <div
-                        key={index}
+                        key={line}
                         className="rounded-2xl border border-white/10 bg-black/35 p-5 leading-7 text-white/75"
                       >
+                        <p className="mb-2 text-xs uppercase tracking-[0.2em] text-white/35">
+                          Beat {index + 1}
+                        </p>
                         {line}
                       </div>
                     ))}
+
+                    <div className="rounded-2xl border border-white/10 bg-black/35 p-5">
+                      <p className="mb-2 text-xs uppercase tracking-[0.2em] text-white/35">
+                        CTA
+                      </p>
+                      <p className="leading-7 text-white/75">“{script.cta}”</p>
+                    </div>
                   </div>
 
                   <a
                     href="/hook-improver"
                     className="mt-6 inline-block rounded-2xl bg-white px-6 py-3 font-semibold text-black"
                   >
-                    Improve Hooks
+                    Improve the Hook
                   </a>
                 </div>
               )}
@@ -141,9 +160,9 @@ export default function ShortsScriptGeneratorPage() {
 
         <section className="mt-14 grid gap-4 md:grid-cols-3">
           {[
-            ["Fast Pacing", "Short-form scripts should move quickly."],
-            ["Retention", "Every line should create momentum."],
-            ["Structure", "Strong scripts guide the viewer naturally."],
+            ["Hook", "Open with tension or a clear reason to keep watching."],
+            ["Pacing", "Remove filler and move the idea forward quickly."],
+            ["Retention", "Every line should make the next line feel necessary."],
           ].map(([title, desc]) => (
             <div
               key={title}
