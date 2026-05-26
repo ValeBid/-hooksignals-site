@@ -188,6 +188,20 @@ export default function Home() {
           </div>
         </div>
       </section>
+      <footer className="mx-auto max-w-7xl px-6 pb-10 text-sm text-white/40">
+        <div className="border-t border-white/10 pt-8">
+          <div className="flex flex-wrap gap-4">
+            <a href="/hook-analyzer">Hook Analyzer</a>
+            <a href="/youtube-hook-generator">YouTube Hook Generator</a>
+            <a href="/youtube-title-generator">YouTube Title Generator</a>
+            <a href="/sitemap.xml">Sitemap</a>
+          </div>
+
+          <p className="mt-6">
+            HookSignals helps creators test hooks, titles and content signals before publishing.
+          </p>
+        </div>
+      </footer>
     </main>
   );
 }
