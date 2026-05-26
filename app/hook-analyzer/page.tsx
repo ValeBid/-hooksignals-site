@@ -1,5 +1,6 @@
 "use client";
 
+import SiteFooter from "../components/site-footer";
 import { useState } from "react";
 import RelatedTools from "../components/related-tools";
 import CopyButton from "../components/copy-button";
@@ -235,6 +236,8 @@ export default function HookAnalyzerPage() {
 
         <RelatedTools />
       </section>
+
+      <SiteFooter />
     </main>
   );
 }
