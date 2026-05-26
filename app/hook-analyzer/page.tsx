@@ -1,13 +1,6 @@
 "use client";
 
 import { useState } from "react";
-
-export const metadata = {
-  title: "Hook Analyzer for YouTube, TikTok and Shorts | HookSignals",
-  description:
-    "Analyze your video hook and improve the first 3 seconds of your content.",
-};
-
 function scoreHook(text: string) {
   let score = 50;
 
