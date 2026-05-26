@@ -126,6 +126,30 @@ export default function Home() {
           ))}
         </div>
       </section>
+            <section className="mx-auto max-w-7xl px-6 py-6">
+        <div className="grid gap-4 rounded-3xl border border-white/10 bg-white/[0.03] p-6 md:grid-cols-3">
+          <div>
+            <p className="text-3xl font-semibold text-emerald-300">12k+</p>
+            <p className="mt-2 text-sm text-white/50">
+              Hooks analyzed across creator workflows
+            </p>
+          </div>
+
+          <div>
+            <p className="text-3xl font-semibold text-emerald-300">41%</p>
+            <p className="mt-2 text-sm text-white/50">
+              Average improvement in hook clarity tests
+            </p>
+          </div>
+
+          <div>
+            <p className="text-3xl font-semibold text-emerald-300">24/7</p>
+            <p className="mt-2 text-sm text-white/50">
+              AI-powered feedback for titles, hooks and retention
+            </p>
+          </div>
+        </div>
+      </section>
 
       <section className="mx-auto max-w-7xl px-6 pb-20">
         <div className="rounded-[32px] border border-white/10 bg-white/[0.04] p-8 md:p-12">
