@@ -3,31 +3,37 @@ const tools = [
     name: "Hook Analyzer",
     desc: "Score the first 3 seconds of your video idea before you publish.",
     tag: "Creator Signal",
+    href: "/hook-analyzer",
   },
   {
-    name: "Title Scorer",
-    desc: "Improve click potential with clarity, curiosity and intent scoring.",
+    name: "YouTube Hook Generator",
+    desc: "Create stronger opening lines for YouTube videos and Shorts.",
+    tag: "Hook Engine",
+    href: "/youtube-hook-generator",
+  },
+  {
+    name: "YouTube Title Generator",
+    desc: "Generate clickable YouTube titles built for curiosity and CTR.",
     tag: "CTR Engine",
+    href: "/youtube-title-generator",
   },
   {
     name: "Thumbnail Text Checker",
     desc: "Check if your thumbnail copy is readable, sharp and scroll-stopping.",
     tag: "Visual Signal",
+    href: "/hook-analyzer",
   },
   {
     name: "AI Visibility Score",
     desc: "Preview how your content could appear across search and AI answers.",
     tag: "Future SEO",
+    href: "/hook-analyzer",
   },
   {
     name: "Shorts Script Cleaner",
     desc: "Turn rough ideas into tight, retention-focused short-form scripts.",
     tag: "Workflow",
-  },
-  {
-    name: "Caption Optimizer",
-    desc: "Format captions for TikTok, Reels and Shorts with cleaner structure.",
-    tag: "Distribution",
+    href: "/hook-analyzer",
   },
 ];
 
