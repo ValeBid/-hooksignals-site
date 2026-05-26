@@ -15,6 +15,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
     },
     {
+      url: "https://hooksignals.com/hook-improver",
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
+    {
       url: "https://hooksignals.com/youtube-hook-generator",
       lastModified: new Date(),
       changeFrequency: "weekly",
