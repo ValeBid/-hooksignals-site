@@ -3,28 +3,33 @@
 import { useState } from "react";
 
 function improveHook(input: string) {
-  const topic = input.trim() || "your video idea";
+  const idea = input.trim();
 
-  return [
-    `If ${topic.toLowerCase()} is not working, this is probably why.`,
-    `Stop making this mistake with ${topic.toLowerCase()}.`,
-    `I fixed one thing in ${topic.toLowerCase()} and the result changed fast.`,
-  ];
+  return {
+    diagnosis:
+      "The original idea needs a clearer promise, faster tension and a stronger reason to keep watching.",
+    versions: [
+      `If ${idea.toLowerCase()} is not working, this is probably the reason.`,
+      `Stop making this mistake with ${idea.toLowerCase()} before your next post.`,
+      `Most creators misunderstand ${idea.toLowerCase()} because they miss this one signal.`,
+      `I changed one thing about ${idea.toLowerCase()} and the results improved fast.`,
+    ],
+  };
 }
 
 export default function HookImproverPage() {
-  const [hook, setHook] = useState("");
-  const [results, setResults] = useState<string[]>([]);
+  const [input, setInput] = useState("");
+  const [result, setResult] = useState<null | ReturnType<typeof improveHook>>(null);
   const [loading, setLoading] = useState(false);
 
   function handleImprove() {
-    if (!hook.trim()) return;
+    if (!input.trim()) return;
 
     setLoading(true);
-    setResults([]);
+    setResult(null);
 
     setTimeout(() => {
-      setResults(improveHook(hook));
+      setResult(improveHook(input));
       setLoading(false);
     }, 700);
   }
@@ -39,13 +44,13 @@ export default function HookImproverPage() {
 
           <a
             href="/hook-analyzer"
-            className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-white/70"
+            className="rounded-full bg-emerald-400 px-4 py-2 text-sm font-semibold text-black"
           >
-            Hook Analyzer
+            Analyze Hook
           </a>
         </nav>
 
-        <section className="rounded-[36px] border border-white/10 bg-gradient-to-b from-white/[0.07] to-white/[0.025] p-7 md:p-12">
+        <section className="rounded-[36px] border border-white/10 bg-gradient-to-b from-white/[0.08] to-white/[0.025] p-7 md:p-12">
           <p className="mb-4 text-sm font-semibold text-emerald-300">
             AI Hook Workflow
           </p>
@@ -55,20 +60,20 @@ export default function HookImproverPage() {
           </h1>
 
           <p className="mt-6 max-w-3xl text-lg leading-8 text-white/60">
-            Turn a weak opening line into stronger hook variations built for
-            clarity, curiosity and retention.
+            Rewrite weak video ideas into sharper hook variations designed for
+            clarity, curiosity and viewer retention.
           </p>
 
-          <div className="mt-8 grid gap-6 lg:grid-cols-[1fr_1fr]">
+          <div className="mt-10 grid gap-6 lg:grid-cols-[1fr_1fr]">
             <div className="rounded-3xl border border-white/10 bg-black/40 p-5 md:p-7">
               <label className="mb-3 block text-sm font-medium text-white/60">
-                Paste your current hook or video idea
+                Paste your rough hook or video idea
               </label>
 
               <textarea
-                value={hook}
-                onChange={(e) => setHook(e.target.value)}
-                placeholder="Example: My video is about why small creators do not grow..."
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="Example: A video about why small creators struggle to grow on YouTube..."
                 className="min-h-[180px] w-full rounded-2xl border border-white/10 bg-[#050505] p-5 text-base text-white outline-none placeholder:text-white/25"
               />
 
@@ -81,15 +86,15 @@ export default function HookImproverPage() {
             </div>
 
             <div className="rounded-3xl border border-white/10 bg-white/[0.035] p-6">
-              {!loading && results.length === 0 && (
+              {!loading && !result && (
                 <div>
                   <p className="text-sm text-white/45">Output preview</p>
                   <h2 className="mt-4 text-3xl font-semibold">
-                    Better hook versions will appear here.
+                    Stronger hooks will appear here.
                   </h2>
                   <p className="mt-4 leading-7 text-white/50">
-                    The goal is not to make the hook longer. The goal is to make
-                    the reason to keep watching obvious.
+                    HookSignals rewrites rough ideas into more specific,
+                    curiosity-driven openings.
                   </p>
                 </div>
               )}
@@ -107,19 +112,24 @@ export default function HookImproverPage() {
                 </div>
               )}
 
-              {results.length > 0 && (
+              {result && (
                 <div>
-                  <p className="mb-4 text-sm font-semibold text-emerald-300">
-                    Improved hooks
+                  <p className="text-sm text-white/45">Diagnosis</p>
+                  <p className="mt-4 rounded-2xl border border-white/10 bg-black/30 p-4 leading-7 text-white/65">
+                    {result.diagnosis}
                   </p>
 
-                  <div className="space-y-4">
-                    {results.map((result) => (
+                  <p className="mt-6 text-sm font-semibold text-emerald-300">
+                    Improved versions
+                  </p>
+
+                  <div className="mt-4 space-y-4">
+                    {result.versions.map((version) => (
                       <div
-                        key={result}
+                        key={version}
                         className="rounded-2xl border border-white/10 bg-black/35 p-5 leading-7 text-white/75"
                       >
-                        “{result}”
+                        “{version}”
                       </div>
                     ))}
                   </div>
@@ -138,9 +148,9 @@ export default function HookImproverPage() {
 
         <section className="mt-14 grid gap-4 md:grid-cols-3">
           {[
-            ["Sharper", "Removes vague language and weak openings."],
-            ["More Specific", "Adds clearer stakes and a stronger promise."],
-            ["Retention Focused", "Creates a reason to watch the next line."],
+            ["Sharper", "Removes vague openings and weak promises."],
+            ["More Specific", "Creates clearer stakes for the viewer."],
+            ["Retention Focused", "Makes the next sentence feel worth watching."],
           ].map(([title, desc]) => (
             <div
               key={title}
