@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import RelatedTools from "../components/related-tools";
 
 function generateScript(topic: string) {
   const cleanTopic = topic.trim();
@@ -173,6 +174,7 @@ export default function ShortsScriptGeneratorPage() {
             </div>
           ))}
         </section>
+        <RelatedTools />
       </section>
     </main>
   );
