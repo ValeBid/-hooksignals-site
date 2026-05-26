@@ -9,6 +9,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
     {
+      url: "https://hooksignals.com/tools",
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
+    {
       url: "https://hooksignals.com/hook-analyzer",
       lastModified: new Date(),
       changeFrequency: "weekly",
@@ -33,16 +39,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.85,
     },
     {
-      url: "https://hooksignals.com/viral-hook-examples",
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 0.8,
-    },
-    {
       url: "https://hooksignals.com/tiktok-hook-generator",
       lastModified: new Date(),
       changeFrequency: "weekly",
       priority: 0.85,
+    },
+    {
+      url: "https://hooksignals.com/viral-hook-examples",
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.8,
     },
     {
       url: "https://hooksignals.com/shorts-hook-ideas",
@@ -70,6 +76,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     {
       url: "https://hooksignals.com/viewer-retention-tips",
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.8,
+    },
+    {
+      url: "https://hooksignals.com/youtube-thumbnail-tips",
       lastModified: new Date(),
       changeFrequency: "weekly",
       priority: 0.8,
