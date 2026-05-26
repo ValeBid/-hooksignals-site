@@ -19,5 +19,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: "https://hooksignals.com/viewer-retention-tips", lastModified: new Date(), changeFrequency: "weekly", priority: 0.8 },
     { url: "https://hooksignals.com/retention-hook-examples", lastModified: new Date(), changeFrequency: "weekly", priority: 0.8 },
     { url: "https://hooksignals.com/youtube-thumbnail-tips", lastModified: new Date(), changeFrequency: "weekly", priority: 0.8 },
+    { url: "https://hooksignals.com/shorts-script-generator", lastModified: new Date(), changeFrequency: "weekly", priority: 0.85 },
   ];
 }
