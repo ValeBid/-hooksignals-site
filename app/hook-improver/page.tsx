@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import RelatedTools from "../components/related-tools";
 
 function improveHook(input: string) {
   const idea = input.trim();
@@ -161,6 +162,8 @@ export default function HookImproverPage() {
             </div>
           ))}
         </section>
+
+        <RelatedTools />
       </section>
     </main>
   );
