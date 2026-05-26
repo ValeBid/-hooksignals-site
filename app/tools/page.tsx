@@ -45,11 +45,16 @@ const tools = [
     desc: "Learn retention strategies for Shorts, TikTok and YouTube.",
     href: "/viewer-retention-tips",
   },
-  {
-    name: "YouTube Thumbnail Tips",
-    desc: "Improve CTR with stronger thumbnail strategy and clarity.",
-    href: "/youtube-thumbnail-tips",
-  },
+{
+  name: "YouTube Thumbnail Tips",
+  desc: "Improve CTR with stronger thumbnail strategy and clarity.",
+  href: "/youtube-thumbnail-tips",
+},
+{
+  name: "Thumbnail Text Checker",
+  desc: "Check if your thumbnail text is short, readable and CTR-friendly.",
+  href: "/thumbnail-text-checker",
+},
 ];
 
 export default function ToolsPage() {
