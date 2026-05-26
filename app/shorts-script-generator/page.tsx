@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import CopyButton from "../components/copy-button";
 import RelatedTools from "../components/related-tools";
 
 function generateScript(topic: string) {
@@ -125,6 +126,7 @@ export default function ShortsScriptGeneratorPage() {
                         Hook
                       </p>
                       <p className="leading-7 text-white/80">“{script.hook}”</p>
+                      <CopyButton text={script.hook} />
                     </div>
 
                     {script.body.map((line, index) => (
@@ -135,7 +137,10 @@ export default function ShortsScriptGeneratorPage() {
                         <p className="mb-2 text-xs uppercase tracking-[0.2em] text-white/35">
                           Beat {index + 1}
                         </p>
-                        {line}
+
+                        <p>{line}</p>
+
+                        <CopyButton text={line} />
                       </div>
                     ))}
 
@@ -143,7 +148,10 @@ export default function ShortsScriptGeneratorPage() {
                       <p className="mb-2 text-xs uppercase tracking-[0.2em] text-white/35">
                         CTA
                       </p>
+
                       <p className="leading-7 text-white/75">“{script.cta}”</p>
+
+                      <CopyButton text={script.cta} />
                     </div>
                   </div>
 
@@ -174,6 +182,7 @@ export default function ShortsScriptGeneratorPage() {
             </div>
           ))}
         </section>
+
         <RelatedTools />
       </section>
     </main>
