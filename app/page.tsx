@@ -73,13 +73,18 @@ export default function Home() {
               workflow.
             </p>
 
-            <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
-              <a href="/hook-analyzer" className="w-full rounded-2xl bg-emerald-400 px-7 py-4 font-semibold text-black sm:w-auto">
+            <a
+  href="/hook-analyzer"
+  className="w-full rounded-2xl bg-emerald-400 px-7 py-4 font-semibold text-black sm:w-auto"
+>
   Analyze Your First Hook
 </a>
-              <button className="w-full rounded-2xl border border-white/10 bg-white/5 px-7 py-4 font-semibold text-white sm:w-auto">
-                Explore Tools
-              </button>
+           <a
+  href="#tools"
+  className="w-full rounded-2xl border border-white/10 bg-white/5 px-7 py-4 font-semibold text-white sm:w-auto"
+>
+  Explore Tools
+</a>
             </div>
 
             <div className="mt-10 grid grid-cols-3 gap-3 text-left">
