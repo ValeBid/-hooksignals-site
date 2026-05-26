@@ -1,29 +1,37 @@
 "use client";
 
 import { useState } from "react";
+import CopyButton from "../components/copy-button";
+import RelatedTools from "../components/related-tools";
 
 function checkThumbnailText(text: string) {
   let score = 55;
+  const wordCount = text.trim().split(/\s+/).filter(Boolean).length;
 
   if (text.length > 0 && text.length <= 28) score += 20;
   if (text.length > 28 && text.length <= 45) score += 10;
   if (text.includes("!")) score += 5;
-  if (text.split(" ").length <= 5) score += 10;
+  if (wordCount <= 5) score += 10;
 
-  if (score > 100) score = 100;
+  score = Math.min(100, score);
 
   return {
     score,
+    grade:
+      score >= 85 ? "Excellent" : score >= 72 ? "Strong" : score >= 60 ? "Decent" : "Weak",
     verdict:
-      score >= 80
-        ? "Strong thumbnail text. Short, clear and easy to read."
-        : score >= 65
-        ? "Decent thumbnail text. Try making it shorter and sharper."
-        : "Weak thumbnail text. Too vague, long or hard to read quickly.",
-    suggestion:
-      score >= 80
-        ? "Keep the message simple and make sure it supports your video title."
-        : "Use fewer words. Make the viewer understand the idea in one glance.",
+      score >= 85
+        ? "Strong thumbnail text. It is short, clear and easy to read."
+        : score >= 72
+        ? "Good thumbnail text. It can still become sharper."
+        : score >= 60
+        ? "Usable, but it may be too generic or long."
+        : "Weak thumbnail text. Make it shorter, clearer and easier to scan.",
+    suggestions: [
+      "Use fewer words.",
+      "Make the message readable at mobile feed size.",
+      "Let the thumbnail support the title instead of repeating it.",
+    ],
   };
 }
 
@@ -52,7 +60,7 @@ export default function ThumbnailTextCheckerPage() {
           </a>
         </nav>
 
-        <section className="rounded-[36px] border border-white/10 bg-gradient-to-b from-white/[0.07] to-white/[0.025] p-7 md:p-12">
+        <section className="rounded-[36px] border border-white/10 bg-gradient-to-b from-white/[0.08] to-white/[0.025] p-7 md:p-12">
           <p className="mb-4 text-sm font-semibold text-emerald-300">
             YouTube CTR Tool
           </p>
@@ -62,8 +70,8 @@ export default function ThumbnailTextCheckerPage() {
           </h1>
 
           <p className="mt-6 max-w-3xl text-lg leading-8 text-white/60">
-            Check if your thumbnail text is short, readable and clear enough to
-            work inside the YouTube feed.
+            Check whether your thumbnail text is short, readable and clear
+            enough to work inside the YouTube feed.
           </p>
 
           <div className="mt-10 grid gap-6 lg:grid-cols-[1fr_1fr]">
@@ -95,29 +103,57 @@ export default function ThumbnailTextCheckerPage() {
                     Your thumbnail score will appear here.
                   </h2>
                   <p className="mt-4 leading-7 text-white/50">
-                    Strong thumbnail text is short, readable and aligned with the
-                    video title.
+                    Strong thumbnail text is short, readable and aligned with
+                    the video title.
                   </p>
+
+                  <div className="mt-8 grid gap-3">
+                    <a
+                      href="/youtube-title-generator"
+                      className="rounded-2xl border border-white/10 bg-black/30 p-4 transition hover:border-emerald-300/30"
+                    >
+                      Generate stronger titles →
+                    </a>
+
+                    <a
+                      href="/youtube-thumbnail-tips"
+                      className="rounded-2xl border border-white/10 bg-black/30 p-4 transition hover:border-emerald-300/30"
+                    >
+                      Learn thumbnail strategy →
+                    </a>
+                  </div>
                 </div>
               )}
 
               {result && (
                 <div>
                   <p className="text-sm text-white/45">Thumbnail Text Score</p>
+
                   <div className="mt-3 flex items-end gap-3">
                     <h2 className="text-7xl font-bold text-emerald-300">
                       {result.score}
                     </h2>
-                    <span className="mb-3 text-white/40">/100</span>
+                    <span className="mb-3 text-white/40">
+                      /100 · {result.grade}
+                    </span>
                   </div>
 
                   <p className="mt-5 rounded-2xl border border-white/10 bg-black/30 p-4 leading-7 text-white/65">
                     {result.verdict}
                   </p>
 
-                  <p className="mt-4 leading-7 text-white/50">
-                    {result.suggestion}
-                  </p>
+                  <div className="mt-5 space-y-3">
+                    {result.suggestions.map((suggestion) => (
+                      <div
+                        key={suggestion}
+                        className="rounded-2xl border border-white/10 bg-black/30 p-4 text-white/60"
+                      >
+                        {suggestion}
+                      </div>
+                    ))}
+                  </div>
+
+                  <CopyButton text={text} />
                 </div>
               )}
             </div>
@@ -139,6 +175,8 @@ export default function ThumbnailTextCheckerPage() {
             </div>
           ))}
         </section>
+
+        <RelatedTools />
       </section>
     </main>
   );
