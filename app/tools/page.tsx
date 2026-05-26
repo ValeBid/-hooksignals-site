@@ -1,3 +1,4 @@
+import SiteFooter from "../components/site-footer";
 export const metadata = {
   title: "Creator Tools | HookSignals",
   description:
@@ -137,6 +138,8 @@ export default function ToolsPage() {
           </p>
         </section>
       </section>
+
+      <SiteFooter />
     </main>
   );
 }
