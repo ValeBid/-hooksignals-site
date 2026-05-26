@@ -31,13 +31,14 @@ const tools = [
     href: "/tiktok-hook-generator",
   },
   {
-    name: "Viral Hook Examples",
-    desc: "Study hook examples and patterns for short-form content.",
-    href: "/viral-hook-examples",
-  {
     name: "Shorts Script Generator",
     desc: "Generate fast-paced Shorts scripts designed for retention.",
     href: "/shorts-script-generator",
+  },
+  {
+    name: "Viral Hook Examples",
+    desc: "Study hook examples and patterns for short-form content.",
+    href: "/viral-hook-examples",
   },
   {
     name: "Viewer Retention Tips",
@@ -49,8 +50,7 @@ const tools = [
     desc: "Improve CTR with stronger thumbnail strategy and clarity.",
     href: "/youtube-thumbnail-tips",
   },
-    },
-  ];
+];
 
 export default function ToolsPage() {
   return (
