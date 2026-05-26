@@ -1,3 +1,4 @@
+import FAQBlock from "../components/faq-block";
 export const metadata = {
   title: "Viewer Retention Tips | Improve Audience Retention | HookSignals",
   description:
@@ -142,6 +143,25 @@ export default function ViewerRetentionTipsPage() {
             Open Hook Analyzer
           </a>
         </section>
+        <FAQBlock
+          items={[
+            {
+              question: "What improves viewer retention?",
+              answer:
+                "Viewer retention improves when videos move quickly, remove filler and continuously create reasons to keep watching.",
+            },
+            {
+              question: "Why do viewers leave early?",
+              answer:
+                "Most viewers leave because the opening is slow, confusing or does not clearly explain why the video matters.",
+            },
+            {
+              question: "Do hooks affect retention?",
+              answer:
+                "Yes. The hook strongly affects whether viewers continue watching after the first few seconds. Better hooks often improve overall retention.",
+            },
+          ]}
+        />
       </section>
     </main>
   );
