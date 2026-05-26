@@ -34,8 +34,23 @@ const tools = [
     name: "Viral Hook Examples",
     desc: "Study hook examples and patterns for short-form content.",
     href: "/viral-hook-examples",
+  {
+    name: "Shorts Script Generator",
+    desc: "Generate fast-paced Shorts scripts designed for retention.",
+    href: "/shorts-script-generator",
   },
-];
+  {
+    name: "Viewer Retention Tips",
+    desc: "Learn retention strategies for Shorts, TikTok and YouTube.",
+    href: "/viewer-retention-tips",
+  },
+  {
+    name: "YouTube Thumbnail Tips",
+    desc: "Improve CTR with stronger thumbnail strategy and clarity.",
+    href: "/youtube-thumbnail-tips",
+  },
+    },
+  ];
 
 export default function ToolsPage() {
   return (
