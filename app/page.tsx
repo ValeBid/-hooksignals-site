@@ -36,28 +36,34 @@ export default function Home() {
     <main className="min-h-screen bg-[#070708] text-white">
       <section className="relative overflow-hidden border-b border-white/10">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,#1f2937_0%,transparent_35%),radial-gradient(circle_at_70%_20%,#0f766e33_0%,transparent_28%)]" />
+
         <div className="relative mx-auto max-w-7xl px-6 py-6">
           <nav className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="h-9 w-9 rounded-xl bg-emerald-400/10 ring-1 ring-emerald-400/30 flex items-center justify-center">
-                <span className="text-emerald-300 font-bold">H</span>
+            <a href="/" className="flex items-center gap-3">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-400/10 ring-1 ring-emerald-400/30">
+                <span className="font-bold text-emerald-300">H</span>
               </div>
-              <span className="font-semibold tracking-tight text-lg">HookSignals</span>
+              <span className="text-lg font-semibold tracking-tight">
+                HookSignals
+              </span>
+            </a>
+
+            <div className="hidden items-center gap-8 text-sm text-white/60 md:flex">
+              <a href="#tools">Tools</a>
+              <a href="#workflow">Workflows</a>
+              <a href="#resources">Resources</a>
+              <a href="#pricing">Pricing</a>
             </div>
 
-            <div className="hidden md:flex items-center gap-8 text-sm text-white/60">
-              <span>Tools</span>
-              <span>Workflows</span>
-              <span>Resources</span>
-              <span>Pricing</span>
-            </div>
-
-            <button className="rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-black">
+            <a
+              href="/hook-analyzer"
+              className="rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-black"
+            >
               Start Free
-            </button>
+            </a>
           </nav>
 
-          <div className="mx-auto max-w-4xl pt-24 pb-20 text-center">
+          <div className="mx-auto max-w-4xl pb-20 pt-24 text-center">
             <div className="mx-auto mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/70">
               <span className="h-2 w-2 rounded-full bg-emerald-400" />
               Built for creators who want better signals before publishing
@@ -69,22 +75,24 @@ export default function Home() {
 
             <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-white/60">
               HookSignals gives creators fast AI-powered feedback on hooks,
-              titles, thumbnails, scripts and visibility signals — in one clean
+              titles, thumbnails, scripts and visibility signals in one clean
               workflow.
             </p>
 
-            <a
-  href="/hook-analyzer"
-  className="w-full rounded-2xl bg-emerald-400 px-7 py-4 font-semibold text-black sm:w-auto"
->
-  Analyze Your First Hook
-</a>
-           <a
-  href="#tools"
-  className="w-full rounded-2xl border border-white/10 bg-white/5 px-7 py-4 font-semibold text-white sm:w-auto"
->
-  Explore Tools
-</a>
+            <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
+              <a
+                href="/hook-analyzer"
+                className="w-full rounded-2xl bg-emerald-400 px-7 py-4 font-semibold text-black sm:w-auto"
+              >
+                Analyze Your First Hook
+              </a>
+
+              <a
+                href="#tools"
+                className="w-full rounded-2xl border border-white/10 bg-white/5 px-7 py-4 font-semibold text-white sm:w-auto"
+              >
+                Explore Tools
+              </a>
             </div>
 
             <div className="mt-10 grid grid-cols-3 gap-3 text-left">
@@ -105,7 +113,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-6 py-16">
+      <section id="tools" className="mx-auto max-w-7xl px-6 py-16">
         <div className="mb-10 flex items-end justify-between gap-6">
           <div>
             <p className="mb-3 text-sm font-medium text-emerald-300">
@@ -115,6 +123,7 @@ export default function Home() {
               One signal hub for better content decisions.
             </h2>
           </div>
+
           <p className="hidden max-w-md text-sm leading-6 text-white/45 md:block">
             Start with lightweight tools. Expand into searchable workflows,
             scoring pages and AI visibility assets over time.
@@ -123,8 +132,9 @@ export default function Home() {
 
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {tools.map((tool) => (
-            <article
+            <a
               key={tool.name}
+              href="/hook-analyzer"
               className="group rounded-3xl border border-white/10 bg-gradient-to-b from-white/[0.07] to-white/[0.025] p-6 transition hover:border-emerald-300/40 hover:from-emerald-300/[0.08]"
             >
               <div className="mb-8 flex items-center justify-between">
@@ -147,12 +157,12 @@ export default function Home() {
                   Instant scoring · AI recommendations · SEO-ready workflow
                 </p>
               </div>
-            </article>
+            </a>
           ))}
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-6 pb-20">
+      <section id="workflow" className="mx-auto max-w-7xl px-6 pb-20">
         <div className="rounded-[32px] border border-white/10 bg-white/[0.04] p-8 md:p-12">
           <div className="grid gap-10 md:grid-cols-2 md:items-center">
             <div>
@@ -163,6 +173,7 @@ export default function Home() {
                 Every tool becomes a traffic entry point.
               </h2>
             </div>
+
             <p className="text-lg leading-8 text-white/55">
               HookSignals is designed as a utility ecosystem: tools, use-case
               pages, related workflows and internal links that grow into a
