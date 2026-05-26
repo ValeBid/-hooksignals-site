@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import RelatedTools from "../components/related-tools";
 
 function analyzeHook(text: string) {
   let score = 45;
@@ -177,6 +178,7 @@ export default function HookAnalyzerPage() {
             </a>
           </section>
         )}
+        <RelatedTools />
       </section>
     </main>
   );
