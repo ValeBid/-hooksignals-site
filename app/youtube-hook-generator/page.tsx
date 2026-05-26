@@ -1,31 +1,40 @@
 export const metadata = {
   title: "YouTube Hook Generator | Create Better Video Hooks | HookSignals",
   description:
-    "Generate stronger YouTube hooks for Shorts, long-form videos, podcasts and creator content.",
+    "Generate stronger YouTube hooks for Shorts, long-form videos and creator content with HookSignals.",
 };
 
 const hookExamples = [
-  "Stop making this mistake if your videos die after 300 views.",
-  "I tested this for 7 days and the result surprised me.",
-  "Most creators ignore this, but it changes everything.",
-  "If you only fix one thing in your next video, fix this.",
-  "Your first 3 seconds are probably costing you views.",
+  "If your Shorts die after 300 views, your first 3 seconds are probably making this mistake.",
+  "I studied 100 viral videos. The best ones all started like this.",
+  "Stop posting until you fix this one part of your video.",
+  "Most small creators lose viewers before the video even starts.",
+  "This simple hook formula makes people stay longer.",
 ];
 
 export default function YouTubeHookGeneratorPage() {
   return (
-    <main className="min-h-screen bg-[#070708] px-6 py-12 text-white">
-      <section className="mx-auto max-w-5xl">
-        <a href="/" className="text-sm text-white/50">
-          ← Back to HookSignals
-        </a>
+    <main className="min-h-screen bg-[#070708] text-white">
+      <section className="mx-auto max-w-6xl px-6 py-8">
+        <nav className="mb-10 flex items-center justify-between">
+          <a href="/" className="text-sm text-white/50">
+            ← HookSignals
+          </a>
 
-        <div className="mt-10 rounded-[32px] border border-white/10 bg-white/[0.04] p-8 md:p-12">
-          <p className="mb-4 text-sm font-medium text-emerald-300">
+          <a
+            href="/hook-analyzer"
+            className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-white/70"
+          >
+            Analyze Hook
+          </a>
+        </nav>
+
+        <section className="rounded-[36px] border border-white/10 bg-gradient-to-b from-white/[0.07] to-white/[0.025] p-7 md:p-12">
+          <p className="mb-4 text-sm font-semibold text-emerald-300">
             YouTube Creator Tool
           </p>
 
-          <h1 className="text-4xl font-semibold tracking-tight md:text-6xl">
+          <h1 className="max-w-4xl text-5xl font-semibold tracking-tight md:text-7xl">
             YouTube Hook Generator
           </h1>
 
@@ -35,59 +44,64 @@ export default function YouTubeHookGeneratorPage() {
             first few seconds.
           </p>
 
-          <div className="mt-8 rounded-3xl border border-white/10 bg-black/30 p-6">
-            <label className="mb-3 block text-sm text-white/60">
+          <div className="mt-8 rounded-3xl border border-white/10 bg-black/40 p-5 md:p-7">
+            <label className="mb-3 block text-sm font-medium text-white/60">
               Describe your video idea
             </label>
 
             <textarea
               placeholder="Example: A video about why small YouTube channels stop growing..."
-              className="min-h-[160px] w-full rounded-2xl border border-white/10 bg-black/40 p-5 text-white outline-none placeholder:text-white/25"
+              className="min-h-[150px] w-full rounded-2xl border border-white/10 bg-[#050505] p-5 text-base text-white outline-none placeholder:text-white/25"
             />
 
-            <a
-              href="/hook-analyzer"
-              className="mt-5 inline-block rounded-2xl bg-emerald-400 px-7 py-4 font-semibold text-black"
-            >
-              Analyze Your Hook
-            </a>
-          </div>
-        </div>
+            <div className="mt-5 flex flex-col gap-3 sm:flex-row">
+              <a
+                href="/hook-analyzer"
+                className="rounded-2xl bg-emerald-400 px-7 py-4 text-center font-semibold text-black"
+              >
+                Analyze Your Hook
+              </a>
 
-        <section className="mt-14 grid gap-5 md:grid-cols-2">
-          <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-6">
-            <h2 className="text-2xl font-semibold">
-              What makes a good YouTube hook?
-            </h2>
-            <p className="mt-4 leading-8 text-white/55">
-              A strong YouTube hook is clear, specific and emotionally charged.
-              It should tell the viewer why the next few seconds matter. Weak
-              hooks usually start too slowly or sound too generic.
-            </p>
-          </div>
-
-          <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-6">
-            <h2 className="text-2xl font-semibold">
-              Best hook structure
-            </h2>
-            <p className="mt-4 leading-8 text-white/55">
-              The strongest hooks usually combine a problem, a promise and a
-              curiosity gap. The viewer should immediately understand what they
-              will gain by staying.
-            </p>
+              <a
+                href="#examples"
+                className="rounded-2xl border border-white/10 bg-white/5 px-7 py-4 text-center font-semibold text-white"
+              >
+                See Examples
+              </a>
+            </div>
           </div>
         </section>
 
-        <section className="mt-14">
-          <h2 className="text-3xl font-semibold">
-            YouTube hook examples
+        <section className="mt-10 grid gap-4 md:grid-cols-3">
+          {[
+            ["Clarity", "Make the promise instantly understandable."],
+            ["Curiosity", "Open a gap the viewer wants closed."],
+            ["Retention", "Connect the hook to the next 5–10 seconds."],
+          ].map(([title, desc]) => (
+            <div
+              key={title}
+              className="rounded-3xl border border-white/10 bg-white/[0.035] p-6"
+            >
+              <h2 className="text-xl font-semibold">{title}</h2>
+              <p className="mt-3 leading-7 text-white/50">{desc}</p>
+            </div>
+          ))}
+        </section>
+
+        <section id="examples" className="mt-14">
+          <p className="mb-3 text-sm font-semibold text-emerald-300">
+            Hook examples
+          </p>
+
+          <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">
+            Copy the structure, not the exact words.
           </h2>
 
           <div className="mt-6 grid gap-4">
             {hookExamples.map((hook) => (
               <div
                 key={hook}
-                className="rounded-2xl border border-white/10 bg-white/[0.03] p-5 text-white/70"
+                className="rounded-2xl border border-white/10 bg-white/[0.035] p-5 text-white/70"
               >
                 “{hook}”
               </div>
@@ -95,15 +109,15 @@ export default function YouTubeHookGeneratorPage() {
           </div>
         </section>
 
-        <section className="mt-14 rounded-[32px] border border-white/10 bg-white/[0.04] p-8">
+        <section className="mt-14 rounded-[32px] border border-emerald-300/20 bg-emerald-300/[0.06] p-7 md:p-10">
           <h2 className="text-3xl font-semibold">
-            Improve your hook before publishing
+            Test your hook before publishing.
           </h2>
 
-          <p className="mt-5 leading-8 text-white/55">
-            After writing your hook, run it through the Hook Analyzer to check
-            clarity, curiosity and retention strength. This helps creators avoid
-            weak openings before the video goes live.
+          <p className="mt-4 max-w-3xl leading-8 text-white/60">
+            Do not guess if your opening line is strong. Run it through
+            HookSignals and check clarity, curiosity and retention strength
+            before the video goes live.
           </p>
 
           <a
