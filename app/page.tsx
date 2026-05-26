@@ -74,9 +74,9 @@ export default function Home() {
             </p>
 
             <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
-              <button className="w-full rounded-2xl bg-emerald-400 px-7 py-4 font-semibold text-black sm:w-auto">
-                Analyze Your First Hook
-              </button>
+              <a href="/hook-analyzer" className="w-full rounded-2xl bg-emerald-400 px-7 py-4 font-semibold text-black sm:w-auto">
+  Analyze Your First Hook
+</a>
               <button className="w-full rounded-2xl border border-white/10 bg-white/5 px-7 py-4 font-semibold text-white sm:w-auto">
                 Explore Tools
               </button>
