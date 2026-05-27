@@ -61,6 +61,15 @@ export const seoRoutes: SeoRoute[] = [
     intent: "tool",
   },
   {
+    path: "/tiktok-hook-generator",
+    title: "TikTok Hook Generator | Scroll-Stopping Hook Ideas | HookSignals",
+    description:
+      "Create TikTok hook ideas designed to stop the scroll and improve short-form retention.",
+    priority: 0.84,
+    changeFrequency: "weekly",
+    intent: "tool",
+  },
+  {
     path: "/youtube-title-generator",
     title: "YouTube Title Generator | Create Better Video Titles | HookSignals",
     description:
@@ -88,13 +97,49 @@ export const seoRoutes: SeoRoute[] = [
     intent: "tool",
   },
   {
-    path: "/tiktok-hook-generator",
-    title: "TikTok Hook Generator | Scroll-Stopping Hook Ideas | HookSignals",
+    path: "/hook-psychology",
+    title: "Hook Psychology | Why Viewers Keep Watching | HookSignals",
     description:
-      "Create TikTok hook ideas designed to stop the scroll and improve short-form retention.",
-    priority: 0.84,
+      "Learn how curiosity, clarity and tension shape stronger short-form video openings.",
+    priority: 0.82,
     changeFrequency: "weekly",
-    intent: "tool",
+    intent: "education",
+  },
+  {
+    path: "/clickable-title-formulas",
+    title: "Clickable Title Formulas | HookSignals",
+    description:
+      "Use practical title formulas to improve clarity, curiosity and click intent.",
+    priority: 0.8,
+    changeFrequency: "weekly",
+    intent: "education",
+  },
+  {
+    path: "/viral-title-examples",
+    title: "Viral Title Examples | HookSignals",
+    description:
+      "Study stronger title structures for YouTube, Shorts and creator content.",
+    priority: 0.8,
+    changeFrequency: "weekly",
+    intent: "examples",
+  },
+  {
+    path: "/shorts-title-ideas",
+    title: "Shorts Title Ideas | HookSignals",
+    description:
+      "Explore title ideas for YouTube Shorts and short-form creator workflows.",
+    priority: 0.78,
+    changeFrequency: "weekly",
+    intent: "examples",
+  },
+  {
+    path: "/shorts-hook-ideas",
+    title: "Shorts Hook Ideas | HookSignals",
+    description:
+      "Explore short-form hook ideas designed for fast attention and stronger retention.",
+    priority: 0.8,
+    changeFrequency: "weekly",
+    intent: "examples",
   },
   {
     path: "/viral-hook-examples",
@@ -124,10 +169,28 @@ export const seoRoutes: SeoRoute[] = [
     intent: "education",
   },
   {
+    path: "/retention-hook-examples",
+    title: "Retention Hook Examples | HookSignals",
+    description:
+      "Study hooks designed to reduce early drop-off and improve viewer retention.",
+    priority: 0.78,
+    changeFrequency: "weekly",
+    intent: "examples",
+  },
+  {
     path: "/viewer-retention-tips",
     title: "Viewer Retention Tips for YouTube and Shorts | HookSignals",
     description:
       "Learn practical viewer retention principles for YouTube, Shorts and TikTok content.",
+    priority: 0.76,
+    changeFrequency: "weekly",
+    intent: "education",
+  },
+  {
+    path: "/youtube-thumbnail-tips",
+    title: "YouTube Thumbnail Tips | HookSignals",
+    description:
+      "Learn thumbnail clarity principles for stronger first impressions and packaging.",
     priority: 0.76,
     changeFrequency: "weekly",
     intent: "education",
