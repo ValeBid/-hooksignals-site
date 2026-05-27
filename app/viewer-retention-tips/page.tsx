@@ -1,4 +1,6 @@
 import FAQBlock from "../components/faq-block";
+import SiteFooter from "../components/site-footer";
+
 export const metadata = {
   title: "Viewer Retention Tips | Improve Audience Retention | HookSignals",
   description:
@@ -143,6 +145,7 @@ export default function ViewerRetentionTipsPage() {
             Open Hook Analyzer
           </a>
         </section>
+
         <FAQBlock
           items={[
             {
@@ -163,6 +166,8 @@ export default function ViewerRetentionTipsPage() {
           ]}
         />
       </section>
+
+      <SiteFooter />
     </main>
   );
 }
