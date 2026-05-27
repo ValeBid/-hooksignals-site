@@ -37,11 +37,11 @@ const productTools = [
 ];
 
 const scoreBreakdown = [
-  ["Attention", "92/100", "w-[92%]"],
-  ["Relevance", "85/100", "w-[85%]"],
-  ["Emotional Impact", "90/100", "w-[90%]"],
-  ["Clarity", "78/100", "w-[78%]"],
-  ["Viral Potential", "88/100", "w-[88%]"],
+  { label: "Attention", value: "92/100", width: "92%" },
+  { label: "Relevance", value: "85/100", width: "85%" },
+  { label: "Emotional Impact", value: "90/100", width: "90%" },
+  { label: "Clarity", value: "78/100", width: "78%" },
+  { label: "Viral Potential", value: "88/100", width: "88%" },
 ];
 
 const sideNav = [
@@ -241,14 +241,14 @@ export default function Home() {
                       <div className="rounded-[22px] border border-white/10 bg-white/[0.035] p-5">
                         <p className="text-sm font-semibold text-white/70">Score Breakdown</p>
                         <div className="mt-6 space-y-5">
-                          {scoreBreakdown.map(([label, value, width]) => (
-                            <div key={label}>
+                          {scoreBreakdown.map((item) => (
+                            <div key={item.label}>
                               <div className="mb-2 flex justify-between text-sm">
-                                <span className="text-white/60">{label}</span>
-                                <span className="text-white/75">{value}</span>
+                                <span className="text-white/60">{item.label}</span>
+                                <span className="text-white/75">{item.value}</span>
                               </div>
                               <div className="h-2 rounded-full bg-white/10">
-                                <div className={`h-2 rounded-full bg-gradient-to-r from-violet-500 to-emerald-300 ${width}`} />
+                                <div className="h-2 rounded-full bg-gradient-to-r from-violet-500 to-emerald-300" style={{ width: item.width }} />
                               </div>
                             </div>
                           ))}
