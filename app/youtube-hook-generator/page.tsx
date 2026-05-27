@@ -1,32 +1,32 @@
 import FAQSchema from "../components/faq-schema";
-        <FAQSchema
-          items={[
-            {
-              question: "What is a YouTube hook?",
-              answer:
-                "A YouTube hook is the opening line or first few seconds that gives viewers a reason to keep watching. A strong hook is clear, specific and curiosity-driven.",
-            },
-            {
-              question: "Why do hooks matter for Shorts?",
-              answer:
-                "Shorts viewers decide very quickly whether to keep watching. A weak opening can reduce retention before the video has a chance to deliver value.",
-            },
-            {
-              question: "How can I make my hook better?",
-              answer:
-                "Make the promise clearer, add a specific problem or outcome, and remove slow introductions. The viewer should immediately understand why the next seconds matter.",
-            },
-          ]}
-        />
 import FAQBlock from "../components/faq-block";
+
 export const metadata = {
   title: "YouTube Hook Generator | Create Better Video Hooks | HookSignals",
   description:
     "Generate stronger YouTube hooks for Shorts, long-form videos and creator content with HookSignals.",
 };
 
+const faqItems = [
+  {
+    question: "What is a YouTube hook?",
+    answer:
+      "A YouTube hook is the opening line or first few seconds that gives viewers a reason to keep watching. A strong hook is clear, specific and curiosity-driven.",
+  },
+  {
+    question: "Why do hooks matter for Shorts?",
+    answer:
+      "Shorts viewers decide very quickly whether to keep watching. A weak opening can reduce retention before the video has a chance to deliver value.",
+  },
+  {
+    question: "How can I make my hook better?",
+    answer:
+      "Make the promise clearer, add a specific problem or outcome, and remove slow introductions. The viewer should immediately understand why the next seconds matter.",
+  },
+];
+
 const hookExamples = [
-  "If your Shorts die after 300 views, your first 3 seconds are probably making this mistake.",
+  "If your Shorts stop growing after 300 views, your first 3 seconds are probably making this mistake.",
   "I studied 100 viral videos. The best ones all started like this.",
   "Stop posting until you fix this one part of your video.",
   "Most small creators lose viewers before the video even starts.",
@@ -36,6 +36,8 @@ const hookExamples = [
 export default function YouTubeHookGeneratorPage() {
   return (
     <main className="min-h-screen bg-[#070708] text-white">
+      <FAQSchema items={faqItems} />
+
       <section className="mx-auto max-w-6xl px-6 py-8">
         <nav className="mb-10 flex items-center justify-between">
           <a href="/" className="text-sm text-white/50">
@@ -148,25 +150,8 @@ export default function YouTubeHookGeneratorPage() {
             Open Hook Analyzer
           </a>
         </section>
-        <FAQBlock
-          items={[
-            {
-              question: "What is a YouTube hook?",
-              answer:
-                "A YouTube hook is the opening line or first few seconds that gives viewers a reason to keep watching. A strong hook is clear, specific and curiosity-driven.",
-            },
-            {
-              question: "Why do hooks matter for Shorts?",
-              answer:
-                "Shorts viewers decide very quickly whether to keep watching. A weak opening can reduce retention before the video has a chance to deliver value.",
-            },
-            {
-              question: "How can I make my hook better?",
-              answer:
-                "Make the promise clearer, add a specific problem or outcome, and remove slow introductions. The viewer should immediately understand why the next seconds matter.",
-            },
-          ]}
-        />
+
+        <FAQBlock items={faqItems} />
       </section>
     </main>
   );
