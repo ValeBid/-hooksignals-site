@@ -2,6 +2,7 @@ import "./globals.css";
 import { Analytics } from "@vercel/analytics/react";
 
 export const metadata = {
+  metadataBase: new URL("https://hooksignals.com"),
   title: "HookSignals | AI Creator Workflow Tools",
   description:
     "AI-powered tools for creators to improve hooks, titles, thumbnails, Shorts scripts and retention before publishing.",
