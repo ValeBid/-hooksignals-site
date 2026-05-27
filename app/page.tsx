@@ -12,81 +12,29 @@ export const metadata = {
 };
 
 const productTools = [
-  {
-    name: "Hook Analyzer",
-    desc: "Find what works",
-    href: "/hook-analyzer",
-    icon: "↗",
-  },
-  {
-    name: "Hook Improver",
-    desc: "Make it sharper",
-    href: "/hook-improver",
-    icon: "✦",
-  },
-  {
-    name: "Script Generator",
-    desc: "Build full Shorts scripts",
-    href: "/shorts-script-generator",
-    icon: "▣",
-  },
-  {
-    name: "Thumbnail Checker",
-    desc: "Boost CTR clarity",
-    href: "/thumbnail-text-checker",
-    icon: "◈",
-  },
-];
-
-const scoreBreakdown = [
-  { label: "Attention", value: "92/100", width: "92%" },
-  { label: "Relevance", value: "85/100", width: "85%" },
-  { label: "Emotional Impact", value: "90/100", width: "90%" },
-  { label: "Clarity", value: "78/100", width: "78%" },
-  { label: "Viral Potential", value: "88/100", width: "88%" },
-];
-
-const sideNav = [
-  "Dashboard",
-  "Hook Analyzer",
-  "Hook Improver",
-  "Script Generator",
-  "Thumbnail Checker",
-  "History",
-  "Favorites",
-  "Settings",
+  ["Hook Analyzer", "Find what works", "/hook-analyzer", "↗"],
+  ["Hook Improver", "Make it sharper", "/hook-improver", "✦"],
+  ["Script Generator", "Build Shorts scripts", "/shorts-script-generator", "▣"],
+  ["Thumbnail Checker", "Improve clarity", "/thumbnail-text-checker", "◈"],
 ];
 
 const stats = [
-  ["10K+", "Creators"],
-  ["100K+", "Hooks analyzed"],
-  ["95%", "Workflow coverage"],
-  ["24/7", "AI-powered"],
+  ["Hook", "Analyze the first seconds."],
+  ["Title", "Clarify click intent."],
+  ["Script", "Structure retention."],
+  ["Package", "Improve first impression."],
 ];
 
-const workflowSteps = [
-  {
-    title: "Analyze the opening",
-    desc: "Score the hook for attention, clarity and retention before the video goes live.",
-  },
-  {
-    title: "Rewrite weak angles",
-    desc: "Turn rough ideas into sharper hooks with stronger curiosity and specificity.",
-  },
-  {
-    title: "Build the script",
-    desc: "Create a short-form structure with hook, beats and a clear payoff.",
-  },
-  {
-    title: "Check the click",
-    desc: "Validate thumbnail text and title clarity before publishing.",
-  },
+const authority = [
+  ["Creator psychology", "A stronger opening reduces early drop-off and gives the viewer a clear reason to stay."],
+  ["Workflow discipline", "HookSignals connects hook, title, script and packaging instead of treating each tool as isolated."],
+  ["Pre-publish clarity", "Use the system before posting so weak ideas are improved before they reach the feed."],
 ];
 
 export default function Home() {
   return (
     <main className="min-h-screen overflow-hidden bg-[#030507] text-white">
-      <section className="relative min-h-screen overflow-hidden border-b border-white/10">
+      <section className="relative overflow-hidden border-b border-white/10">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_12%_12%,rgba(34,197,94,0.12),transparent_28%),radial-gradient(circle_at_82%_8%,rgba(124,58,237,0.14),transparent_30%),radial-gradient(circle_at_70%_75%,rgba(14,165,233,0.08),transparent_26%),linear-gradient(180deg,#030507_0%,#05070b_55%,#030507_100%)]" />
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.022)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.022)_1px,transparent_1px)] bg-[size:72px_72px] opacity-25" />
         <div className="absolute left-1/2 top-0 h-[480px] w-[480px] -translate-x-1/2 rounded-full bg-emerald-400/8 blur-[120px]" />
@@ -104,7 +52,7 @@ export default function Home() {
               <a className="transition hover:text-white" href="/tools">Tools</a>
               <a className="transition hover:text-white" href="/hook-analyzer">Analyzer</a>
               <a className="transition hover:text-white" href="/youtube-hook-generator">Generator</a>
-              <a className="transition hover:text-white" href="/youtube-ctr-tips">Resources</a>
+              <a className="transition hover:text-white" href="/viewer-retention-tips">Resources</a>
             </div>
 
             <div className="flex items-center gap-3">
@@ -118,16 +66,16 @@ export default function Home() {
                 href="/hook-analyzer"
                 className="rounded-2xl bg-emerald-400 px-5 py-2.5 text-sm font-bold text-black shadow-lg shadow-emerald-500/20 transition hover:bg-emerald-300"
               >
-                Get Started Free →
+                Start Free
               </a>
             </div>
           </nav>
 
-          <div className="grid gap-10 pb-16 pt-16 lg:grid-cols-[0.88fr_1.12fr] lg:items-center lg:pt-20">
+          <section className="grid gap-10 pb-14 pt-14 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:pb-18 lg:pt-18">
             <div>
               <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-violet-400/30 bg-violet-500/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] text-violet-100 shadow-lg shadow-violet-500/10">
                 <span className="text-emerald-300">✦</span>
-                AI-powered creator tools
+                AI-powered creator workflow
               </div>
 
               <h1 className="max-w-4xl text-5xl font-black leading-[0.94] tracking-[-0.06em] text-white md:text-7xl xl:text-[88px]">
@@ -135,7 +83,97 @@ export default function Home() {
               </h1>
 
               <p className="mt-7 max-w-2xl text-lg leading-8 text-white/62 md:text-xl">
-                A premium pre-publish workflow for creators. Analyze hooks,
-                improve scripts, check thumbnail text and ship stronger videos
-                before your audience ever sees them.
+                A premium creator intelligence workflow for hooks, titles, scripts and retention before your content goes live.
               </p>
+
+              <div className="mt-9 flex flex-col gap-4 sm:flex-row">
+                <a
+                  href="/tools"
+                  className="group inline-flex items-center justify-center gap-3 rounded-2xl bg-emerald-400 px-8 py-4 text-base font-bold text-black shadow-2xl shadow-emerald-500/18 transition hover:bg-emerald-300"
+                >
+                  Explore All Tools
+                  <span className="transition group-hover:translate-x-1">→</span>
+                </a>
+                <a
+                  href="/hook-analyzer"
+                  className="inline-flex items-center justify-center gap-3 rounded-2xl border border-white/15 bg-white/[0.035] px-8 py-4 text-base font-bold text-white transition hover:bg-white/10"
+                >
+                  Analyze a Hook
+                </a>
+              </div>
+
+              <div className="mt-9 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+                {productTools.map(([name, desc, href, icon]) => (
+                  <a
+                    key={href}
+                    href={href}
+                    className="group rounded-[20px] border border-white/10 bg-white/[0.035] p-4 transition hover:border-emerald-300/30 hover:bg-white/[0.07]"
+                  >
+                    <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl border border-emerald-300/20 bg-emerald-400/10 text-emerald-300 shadow-lg shadow-emerald-500/10">
+                      {icon}
+                    </div>
+                    <p className="font-semibold text-white">{name}</p>
+                    <p className="mt-1 text-sm text-white/45">{desc}</p>
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            <BrandOrb
+              title="Built for serious creator workflows."
+              description="HookSignals connects hook analysis, title clarity, script pacing and packaging signals inside one premium pre-publish system."
+            />
+          </section>
+
+          <div className="grid gap-3 rounded-[24px] border border-white/10 bg-white/[0.035] p-4 shadow-2xl shadow-black/20 sm:grid-cols-2 lg:grid-cols-4">
+            {stats.map(([value, label]) => (
+              <div key={value} className="rounded-[18px] bg-black/25 p-4">
+                <p className="text-lg font-black tracking-tight text-white">{value}</p>
+                <p className="mt-1 text-sm leading-6 text-white/45">{label}</p>
+              </div>
+            ))}
+          </div>
+
+          <WorkflowBanner />
+
+          <section className="mt-12 grid gap-4 md:grid-cols-3">
+            {authority.map(([title, desc]) => (
+              <div
+                key={title}
+                className="rounded-[28px] border border-white/10 bg-white/[0.03] p-6 shadow-xl shadow-black/20"
+              >
+                <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl border border-emerald-300/20 bg-emerald-300/[0.06] text-sm font-black text-emerald-300">
+                  HS
+                </div>
+                <h2 className="text-2xl font-black tracking-tight">{title}</h2>
+                <p className="mt-4 leading-7 text-white/52">{desc}</p>
+              </div>
+            ))}
+          </section>
+
+          <section className="py-16 md:py-20">
+            <div className="rounded-[32px] border border-emerald-300/20 bg-emerald-300/[0.06] p-7 md:p-10">
+              <p className="text-sm font-bold uppercase tracking-[0.16em] text-emerald-300">
+                Start with the hook
+              </p>
+              <h2 className="mt-4 max-w-4xl text-3xl font-black tracking-[-0.04em] md:text-5xl">
+                Improve the first seconds before the algorithm gets a vote.
+              </h2>
+              <p className="mt-5 max-w-3xl leading-8 text-white/58">
+                Use HookSignals to check clarity, curiosity and retention risk before publishing. Then move through title, script and packaging tools in one connected workflow.
+              </p>
+              <a
+                href="/hook-analyzer"
+                className="mt-8 inline-flex rounded-2xl bg-emerald-400 px-7 py-4 font-bold text-black shadow-lg shadow-emerald-500/20 transition hover:bg-emerald-300"
+              >
+                Open Hook Analyzer
+              </a>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <SiteFooter />
+    </main>
+  );
+}
