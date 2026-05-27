@@ -1,6 +1,8 @@
 import SiteFooter from "./components/site-footer";
 import BrandOrb from "./components/brand-orb";
 import WorkflowBanner from "./components/workflow-banner";
+import PricingPreview from "./components/pricing-preview";
+import WorkspacePreview from "./components/workspace-preview";
 
 export const metadata = {
   title: "HookSignals | Premium AI Creator Tools for YouTube and Shorts",
@@ -51,16 +53,16 @@ export default function Home() {
             <div className="hidden items-center gap-8 text-sm text-white/58 lg:flex">
               <a className="transition hover:text-white" href="/tools">Tools</a>
               <a className="transition hover:text-white" href="/hook-analyzer">Analyzer</a>
-              <a className="transition hover:text-white" href="/youtube-hook-generator">Generator</a>
-              <a className="transition hover:text-white" href="/viewer-retention-tips">Resources</a>
+              <a className="transition hover:text-white" href="/pricing">Pricing</a>
+              <a className="transition hover:text-white" href="/workspace">Workspace</a>
             </div>
 
             <div className="flex items-center gap-3">
               <a
-                href="/tools"
+                href="/pricing"
                 className="hidden rounded-2xl border border-white/10 bg-white/[0.035] px-5 py-2.5 text-sm font-semibold text-white/80 transition hover:bg-white/10 md:inline-flex"
               >
-                Dashboard
+                Pricing
               </a>
               <a
                 href="/hook-analyzer"
@@ -150,6 +152,9 @@ export default function Home() {
               </div>
             ))}
           </section>
+
+          <WorkspacePreview />
+          <PricingPreview />
 
           <section className="py-16 md:py-20">
             <div className="rounded-[32px] border border-emerald-300/20 bg-emerald-300/[0.06] p-7 md:p-10">

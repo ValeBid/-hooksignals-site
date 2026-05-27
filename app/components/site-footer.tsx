@@ -14,6 +14,12 @@ const resourceLinks = [
   ["Sitemap", "/sitemap.xml"],
 ];
 
+const platformLinks = [
+  ["Pricing", "/pricing"],
+  ["Workspace", "/workspace"],
+  ["Tools Dashboard", "/tools"],
+];
+
 export default function SiteFooter() {
   return (
     <footer className="relative overflow-hidden border-t border-white/10 bg-[#020406] px-5 pb-10 pt-20 md:px-8">
@@ -44,10 +50,10 @@ export default function SiteFooter() {
                 Explore Tools
               </a>
               <a
-                href="/hook-analyzer"
+                href="/pricing"
                 className="rounded-2xl border border-white/10 bg-white/[0.035] px-5 py-3 text-sm font-bold text-white/80 transition hover:bg-white/10"
               >
-                Open Analyzer
+                Pricing Preview
               </a>
             </div>
           </div>
@@ -91,22 +97,23 @@ export default function SiteFooter() {
               Platform
             </p>
 
-            <div className="rounded-[28px] border border-violet-400/20 bg-violet-500/10 p-6">
+            <div className="space-y-4 text-white/58">
+              {platformLinks.map(([label, href]) => (
+                <a
+                  key={label}
+                  href={href}
+                  className="block transition hover:text-white"
+                >
+                  {label}
+                </a>
+              ))}
+            </div>
+
+            <div className="mt-8 rounded-[28px] border border-violet-400/20 bg-violet-500/10 p-6">
               <p className="text-xl font-bold tracking-tight">Built for creators</p>
               <p className="mt-3 text-sm leading-7 text-white/55">
                 HookSignals is designed for YouTube creators, Shorts editors and growth-focused content teams.
               </p>
-
-              <div className="mt-6 grid grid-cols-2 gap-3 text-center">
-                <div className="rounded-2xl bg-black/20 p-4">
-                  <p className="text-2xl font-black text-white">10K+</p>
-                  <p className="mt-1 text-xs text-white/40">Creators</p>
-                </div>
-                <div className="rounded-2xl bg-black/20 p-4">
-                  <p className="text-2xl font-black text-emerald-300">24/7</p>
-                  <p className="mt-1 text-xs text-white/40">AI workflow</p>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -118,11 +125,11 @@ export default function SiteFooter() {
             <a href="/sitemap.xml" className="transition hover:text-white">
               Sitemap
             </a>
-            <a href="/tools" className="transition hover:text-white">
-              Tools
+            <a href="/pricing" className="transition hover:text-white">
+              Pricing
             </a>
-            <a href="/hook-analyzer" className="transition hover:text-white">
-              Analyzer
+            <a href="/workspace" className="transition hover:text-white">
+              Workspace
             </a>
           </div>
         </div>
