@@ -1,34 +1,53 @@
+import PaddleCheckoutButton from "./paddle-checkout-button";
+
 const plans = [
   {
-    name: "Free",
-    price: "$0",
-    desc: "For testing creator workflows and basic analysis.",
+    name: "Starter",
+    price: "$19",
+    desc: "For creators testing AI workflow optimization and hook analysis.",
     features: [
       "Basic hook analysis",
-      "Limited generations",
       "Workflow exploration",
+      "Short-form script generation",
+      "Thumbnail text checks",
     ],
-    cta: "Start Free",
+    cta: "Subscribe to Starter",
     premium: false,
+    priceId: process.env.NEXT_PUBLIC_PADDLE_STARTER_PRICE_ID,
   },
   {
     name: "Creator Pro",
-    price: "$19",
-    desc: "For creators optimizing retention and workflow quality.",
+    price: "$49",
+    desc: "For creators optimizing retention and professional publishing workflows.",
     features: [
       "Advanced retention insights",
       "Premium rewrites",
       "Saved workflows",
       "Priority creator tools",
     ],
-    cta: "Coming Soon",
+    cta: "Upgrade to Pro",
     premium: true,
+    priceId: process.env.NEXT_PUBLIC_PADDLE_PRO_PRICE_ID,
+  },
+  {
+    name: "Elite",
+    price: "$99",
+    desc: "Full access to premium creator intelligence workflows and future releases.",
+    features: [
+      "Unlimited workflow access",
+      "Advanced creator analytics",
+      "Priority feature access",
+      "Premium support layer",
+    ],
+    cta: "Get Elite Access",
+    premium: true,
+    priceId: process.env.NEXT_PUBLIC_PADDLE_ELITE_PRICE_ID,
   },
 ];
 
 export default function PricingPreview() {
   return (
-    <section className="mt-14">
+    <section className="mt-14" id="pricing">
       <div className="rounded-[32px] border border-white/10 bg-white/[0.03] p-7 md:p-10">
         <div className="max-w-3xl">
           <p className="text-sm font-bold uppercase tracking-[0.16em] text-emerald-300">
@@ -40,11 +59,11 @@ export default function PricingPreview() {
           </h2>
 
           <p className="mt-5 text-lg leading-8 text-white/55">
-            HookSignals is evolving into a connected creator intelligence platform with advanced workflow tools, retention systems and saved analysis capabilities.
+            HookSignals combines AI hook analysis, script workflows, title optimization and thumbnail clarity systems into one connected creator platform.
           </p>
         </div>
 
-        <div className="mt-10 grid gap-5 lg:grid-cols-2">
+        <div className="mt-10 grid gap-5 lg:grid-cols-3">
           {plans.map((plan) => (
             <div
               key={plan.name}
@@ -73,9 +92,7 @@ export default function PricingPreview() {
                 <span className="text-5xl font-black tracking-[-0.05em]">
                   {plan.price}
                 </span>
-                {plan.premium && (
-                  <span className="pb-1 text-white/45">/month</span>
-                )}
+                <span className="pb-1 text-white/45">/month</span>
               </div>
 
               <div className="mt-8 space-y-3">
@@ -90,15 +107,12 @@ export default function PricingPreview() {
                 ))}
               </div>
 
-              <button
-                className={`mt-8 w-full rounded-2xl px-5 py-4 font-bold transition ${
-                  plan.premium
-                    ? "bg-emerald-400 text-black hover:bg-emerald-300"
-                    : "border border-white/10 bg-white/[0.04] text-white hover:bg-white/10"
-                }`}
+              <PaddleCheckoutButton
+                priceId={plan.priceId}
+                variant={plan.premium ? "primary" : "secondary"}
               >
                 {plan.cta}
-              </button>
+              </PaddleCheckoutButton>
             </div>
           ))}
         </div>
