@@ -1,3 +1,4 @@
+import PremiumToolShell from "../components/premium-tool-shell";
 import FAQSchema from "../components/faq-schema";
 import FAQBlock from "../components/faq-block";
 
@@ -33,126 +34,96 @@ const hookExamples = [
   "This simple hook formula makes people stay longer.",
 ];
 
+const hookPrinciples = [
+  ["Clarity", "Make the promise instantly understandable."],
+  ["Curiosity", "Open a gap the viewer wants closed."],
+  ["Retention", "Connect the hook to the next 5–10 seconds."],
+];
+
 export default function YouTubeHookGeneratorPage() {
   return (
-    <main className="min-h-screen bg-[#070708] text-white">
+    <>
       <FAQSchema items={faqItems} />
+      <PremiumToolShell
+        badge="YouTube creator tool"
+        title="YouTube Hook Generator"
+        description="Create stronger opening lines for YouTube videos, Shorts and creator content. A good hook gives viewers a reason to keep watching in the first few seconds."
+        primaryHref="/hook-analyzer"
+        primaryLabel="Analyze Hook"
+      >
+        <section className="rounded-[24px] border border-white/10 bg-black/30 p-5 md:p-7">
+          <label className="mb-3 block text-sm font-semibold text-white/62">
+            Describe your video idea
+          </label>
 
-      <section className="mx-auto max-w-6xl px-6 py-8">
-        <nav className="mb-10 flex items-center justify-between">
-          <a href="/" className="text-sm text-white/50">
-            ← HookSignals
-          </a>
+          <textarea
+            placeholder="Example: A video about why small YouTube channels stop growing..."
+            className="min-h-[160px] w-full resize-none rounded-2xl border border-white/10 bg-[#050505] p-5 text-base leading-7 text-white outline-none placeholder:text-white/25 focus:border-emerald-300/35"
+          />
 
-          <a
-            href="/hook-analyzer"
-            className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-white/70"
-          >
-            Analyze Hook
-          </a>
-        </nav>
+          <div className="mt-5 flex flex-col gap-3 sm:flex-row">
+            <a
+              href="/hook-analyzer"
+              className="rounded-2xl bg-emerald-400 px-7 py-4 text-center font-bold text-black shadow-lg shadow-emerald-500/20 transition hover:bg-emerald-300"
+            >
+              Analyze Your Hook
+            </a>
 
-        <section className="rounded-[36px] border border-white/10 bg-gradient-to-b from-white/[0.07] to-white/[0.025] p-7 md:p-12">
-          <p className="mb-4 text-sm font-semibold text-emerald-300">
-            YouTube Creator Tool
-          </p>
-
-          <h1 className="max-w-4xl text-5xl font-semibold tracking-tight md:text-7xl">
-            YouTube Hook Generator
-          </h1>
-
-          <p className="mt-6 max-w-3xl text-lg leading-8 text-white/60">
-            Create stronger opening lines for YouTube videos, Shorts and creator
-            content. A good hook gives viewers a reason to keep watching in the
-            first few seconds.
-          </p>
-
-          <div className="mt-8 rounded-3xl border border-white/10 bg-black/40 p-5 md:p-7">
-            <label className="mb-3 block text-sm font-medium text-white/60">
-              Describe your video idea
-            </label>
-
-            <textarea
-              placeholder="Example: A video about why small YouTube channels stop growing..."
-              className="min-h-[150px] w-full rounded-2xl border border-white/10 bg-[#050505] p-5 text-base text-white outline-none placeholder:text-white/25"
-            />
-
-            <div className="mt-5 flex flex-col gap-3 sm:flex-row">
-              <a
-                href="/hook-analyzer"
-                className="rounded-2xl bg-emerald-400 px-7 py-4 text-center font-semibold text-black"
-              >
-                Analyze Your Hook
-              </a>
-
-              <a
-                href="#examples"
-                className="rounded-2xl border border-white/10 bg-white/5 px-7 py-4 text-center font-semibold text-white"
-              >
-                See Examples
-              </a>
-            </div>
+            <a
+              href="#examples"
+              className="rounded-2xl border border-white/10 bg-white/[0.04] px-7 py-4 text-center font-bold text-white transition hover:bg-white/10"
+            >
+              See Examples
+            </a>
           </div>
         </section>
 
-        <section className="mt-10 grid gap-4 md:grid-cols-3">
-          {[
-            ["Clarity", "Make the promise instantly understandable."],
-            ["Curiosity", "Open a gap the viewer wants closed."],
-            ["Retention", "Connect the hook to the next 5–10 seconds."],
-          ].map(([title, desc]) => (
-            <div
-              key={title}
-              className="rounded-3xl border border-white/10 bg-white/[0.035] p-6"
-            >
-              <h2 className="text-xl font-semibold">{title}</h2>
+        <section className="mt-6 grid gap-4 md:grid-cols-3">
+          {hookPrinciples.map(([title, desc]) => (
+            <div key={title} className="rounded-[22px] border border-white/10 bg-black/20 p-5">
+              <h2 className="text-xl font-bold">{title}</h2>
               <p className="mt-3 leading-7 text-white/50">{desc}</p>
             </div>
           ))}
         </section>
 
-        <section id="examples" className="mt-14">
-          <p className="mb-3 text-sm font-semibold text-emerald-300">
+        <section id="examples" className="mt-8 rounded-[24px] border border-white/10 bg-white/[0.03] p-5 md:p-7">
+          <p className="mb-3 text-sm font-bold uppercase tracking-[0.14em] text-emerald-300">
             Hook examples
           </p>
 
-          <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">
+          <h2 className="text-2xl font-black tracking-tight md:text-3xl">
             Copy the structure, not the exact words.
           </h2>
 
           <div className="mt-6 grid gap-4">
             {hookExamples.map((hook) => (
-              <div
-                key={hook}
-                className="rounded-2xl border border-white/10 bg-white/[0.035] p-5 text-white/70"
-              >
+              <div key={hook} className="rounded-2xl border border-white/10 bg-black/25 p-5 text-white/72">
                 “{hook}”
               </div>
             ))}
           </div>
         </section>
 
-        <section className="mt-14 rounded-[32px] border border-emerald-300/20 bg-emerald-300/[0.06] p-7 md:p-10">
-          <h2 className="text-3xl font-semibold">
+        <section className="mt-6 rounded-[24px] border border-emerald-300/20 bg-emerald-300/[0.06] p-6 md:p-8">
+          <h2 className="text-2xl font-black tracking-tight md:text-3xl">
             Test your hook before publishing.
           </h2>
 
           <p className="mt-4 max-w-3xl leading-8 text-white/60">
-            Do not guess if your opening line is strong. Run it through
-            HookSignals and check clarity, curiosity and retention strength
-            before the video goes live.
+            Do not guess if your opening line is strong. Run it through HookSignals and check clarity, curiosity and retention strength before the video goes live.
           </p>
 
           <a
             href="/hook-analyzer"
-            className="mt-7 inline-block rounded-2xl bg-emerald-400 px-7 py-4 font-semibold text-black"
+            className="mt-7 inline-flex rounded-2xl bg-emerald-400 px-7 py-4 font-bold text-black shadow-lg shadow-emerald-500/20 transition hover:bg-emerald-300"
           >
             Open Hook Analyzer
           </a>
         </section>
 
         <FAQBlock items={faqItems} />
-      </section>
-    </main>
+      </PremiumToolShell>
+    </>
   );
 }
