@@ -1,5 +1,14 @@
 import SiteFooter from "./components/site-footer";
 
+export const metadata = {
+  title: "HookSignals | AI Creator Workflow Tools for YouTube and Shorts",
+  description:
+    "AI-powered tools for creators to improve hooks, titles, thumbnails, Shorts scripts and retention before publishing. Free to use.",
+  alternates: {
+    canonical: "https://hooksignals.com",
+  },
+};
+
 const primaryTools = [
   {
     name: "Hook Analyzer",
