@@ -5,33 +5,85 @@ import PricingPreview from "./components/pricing-preview";
 import WorkspacePreview from "./components/workspace-preview";
 
 export const metadata = {
-  title: "HookSignals | Premium AI Creator Tools for YouTube and Shorts",
+  title: "HookSignals | AI Hook Analyzer, Script Generator & Creator SEO Tools",
   description:
-    "AI-powered creator workflow tools for hooks, scripts, thumbnails and retention. Analyze, improve and generate better video ideas before publishing.",
+    "Analyze hooks, generate Shorts scripts, improve titles, test thumbnail text and build a sharper creator workflow before publishing.",
   alternates: {
     canonical: "https://hooksignals.com",
   },
 };
 
 const productTools = [
-  ["Hook Analyzer", "Find what works", "/hook-analyzer", "↗"],
-  ["Hook Improver", "Make it sharper", "/hook-improver", "✦"],
-  ["Script Generator", "Build Shorts scripts", "/shorts-script-generator", "▣"],
-  ["Thumbnail Checker", "Improve clarity", "/thumbnail-text-checker", "◈"],
+  ["AI Hook Analyzer", "Score clarity, curiosity and retention risk.", "/hook-analyzer", "↗"],
+  ["Hook Improver", "Rewrite weak openings into sharper hooks.", "/hook-improver", "✦"],
+  ["Shorts Script Generator", "Create structured short-form scripts fast.", "/shorts-script-generator", "▣"],
+  ["Thumbnail Text Checker", "Make thumbnail copy clearer before posting.", "/thumbnail-text-checker", "◈"],
 ];
 
 const stats = [
-  ["Hook", "Analyze the first seconds."],
-  ["Title", "Clarify click intent."],
-  ["Script", "Structure retention."],
-  ["Package", "Improve first impression."],
+  ["Hook", "Analyze the first 3 seconds."],
+  ["Title", "Sharpen search and click intent."],
+  ["Script", "Build retention structure."],
+  ["Package", "Improve the pre-publish offer."],
 ];
 
 const authority = [
-  ["Creator psychology", "A stronger opening reduces early drop-off and gives the viewer a clear reason to stay."],
-  ["Workflow discipline", "HookSignals connects hook, title, script and packaging instead of treating each tool as isolated."],
-  ["Pre-publish clarity", "Use the system before posting so weak ideas are improved before they reach the feed."],
+  ["SEO-ready creator tools", "Built around high-intent workflows: hook analyzer, YouTube title generator, Shorts script generator and thumbnail text checker."],
+  ["Professional output system", "Every tool pushes toward clearer messaging, stronger viewer curiosity and cleaner pre-publish decision making."],
+  ["No fake growth claims", "HookSignals improves creative workflow quality. It does not promise views, income or platform outcomes."],
 ];
+
+const videoMocks = [
+  ["Hook teardown", "00:18", "Opening risk detected", "Clarity 82"],
+  ["Shorts script", "00:42", "Retention beat map", "Pacing 91"],
+  ["Thumbnail check", "00:09", "Text overload reduced", "Readability 88"],
+];
+
+function LogoMark() {
+  return (
+    <div className="relative flex h-11 w-11 items-center justify-center rounded-2xl border border-emerald-300/30 bg-gradient-to-br from-emerald-300/20 via-sky-400/10 to-violet-400/15 shadow-lg shadow-emerald-500/15">
+      <div className="absolute inset-1 rounded-xl border border-white/10" />
+      <span className="text-lg font-black tracking-[-0.08em] text-emerald-200">HS</span>
+    </div>
+  );
+}
+
+function VideoMockup() {
+  return (
+    <div className="relative">
+      <div className="absolute -inset-6 rounded-[44px] bg-gradient-to-br from-emerald-400/18 via-sky-400/10 to-violet-500/18 blur-3xl" />
+      <div className="relative overflow-hidden rounded-[36px] border border-white/10 bg-[#070b10]/90 p-4 shadow-2xl shadow-black/50 backdrop-blur-xl">
+        <div className="aspect-[16/10] overflow-hidden rounded-[28px] border border-white/10 bg-[radial-gradient(circle_at_28%_20%,rgba(52,211,153,0.22),transparent_28%),radial-gradient(circle_at_78%_30%,rgba(129,140,248,0.22),transparent_26%),linear-gradient(135deg,#0b1118,#05070b)] p-5">
+          <div className="flex items-center justify-between text-xs text-white/55">
+            <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">Homepage demo</span>
+            <span>AI workflow preview</span>
+          </div>
+          <div className="mt-10 max-w-md">
+            <p className="text-sm font-bold uppercase tracking-[0.18em] text-emerald-300">Video idea audit</p>
+            <h2 className="mt-3 text-3xl font-black tracking-[-0.05em] text-white md:text-4xl">Your first line decides the scroll.</h2>
+            <p className="mt-4 leading-7 text-white/58">Run the hook, title, script and thumbnail through one pre-publish check before posting.</p>
+          </div>
+          <div className="mt-8 h-2 overflow-hidden rounded-full bg-white/10">
+            <div className="h-full w-[72%] rounded-full bg-emerald-300" />
+          </div>
+        </div>
+        <div className="mt-4 grid gap-3 md:grid-cols-3">
+          {videoMocks.map(([title, time, desc, score]) => (
+            <div key={title} className="rounded-2xl border border-white/10 bg-white/[0.035] p-4">
+              <div className="mb-4 flex items-center justify-between text-xs text-white/45">
+                <span>{time}</span>
+                <span className="text-emerald-300">●</span>
+              </div>
+              <p className="font-bold text-white">{title}</p>
+              <p className="mt-1 text-sm text-white/45">{desc}</p>
+              <p className="mt-3 text-sm font-black text-emerald-300">{score}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function Home() {
   return (
@@ -43,10 +95,8 @@ export default function Home() {
 
         <div className="relative mx-auto max-w-[1480px] px-5 py-5 md:px-8">
           <nav className="flex items-center justify-between rounded-[24px] border border-white/10 bg-white/[0.035] px-4 py-3 shadow-2xl shadow-black/30 backdrop-blur-xl md:px-6">
-            <a href="/" className="flex items-center gap-3">
-              <div className="relative flex h-10 w-10 items-center justify-center rounded-2xl border border-emerald-300/25 bg-emerald-400/10 shadow-lg shadow-emerald-500/10">
-                <span className="text-xl font-black text-emerald-300">↗</span>
-              </div>
+            <a href="/" className="flex items-center gap-3" aria-label="HookSignals home">
+              <LogoMark />
               <span className="text-xl font-semibold tracking-tight">HookSignals</span>
             </a>
 
@@ -58,18 +108,8 @@ export default function Home() {
             </div>
 
             <div className="flex items-center gap-3">
-              <a
-                href="/pricing"
-                className="hidden rounded-2xl border border-white/10 bg-white/[0.035] px-5 py-2.5 text-sm font-semibold text-white/80 transition hover:bg-white/10 md:inline-flex"
-              >
-                Pricing
-              </a>
-              <a
-                href="/hook-analyzer"
-                className="rounded-2xl bg-emerald-400 px-5 py-2.5 text-sm font-bold text-black shadow-lg shadow-emerald-500/20 transition hover:bg-emerald-300"
-              >
-                Start Free
-              </a>
+              <a href="/pricing" className="hidden rounded-2xl border border-white/10 bg-white/[0.035] px-5 py-2.5 text-sm font-semibold text-white/80 transition hover:bg-white/10 md:inline-flex">Pricing</a>
+              <a href="/hook-analyzer" className="rounded-2xl bg-emerald-400 px-5 py-2.5 text-sm font-bold text-black shadow-lg shadow-emerald-500/20 transition hover:bg-emerald-300">Start Free</a>
             </div>
           </nav>
 
@@ -77,7 +117,7 @@ export default function Home() {
             <div>
               <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-violet-400/30 bg-violet-500/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] text-violet-100 shadow-lg shadow-violet-500/10">
                 <span className="text-emerald-300">✦</span>
-                AI-powered creator workflow
+                AI hook analyzer, script generator and creator SEO toolkit
               </div>
 
               <h1 className="max-w-4xl text-5xl font-black leading-[0.94] tracking-[-0.06em] text-white md:text-7xl xl:text-[88px]">
@@ -85,35 +125,18 @@ export default function Home() {
               </h1>
 
               <p className="mt-7 max-w-2xl text-lg leading-8 text-white/62 md:text-xl">
-                A premium creator intelligence workflow for hooks, titles, scripts and retention before your content goes live.
+                HookSignals helps creators analyze video hooks, improve titles, generate Shorts scripts and check thumbnail text before publishing.
               </p>
 
               <div className="mt-9 flex flex-col gap-4 sm:flex-row">
-                <a
-                  href="/tools"
-                  className="group inline-flex items-center justify-center gap-3 rounded-2xl bg-emerald-400 px-8 py-4 text-base font-bold text-black shadow-2xl shadow-emerald-500/18 transition hover:bg-emerald-300"
-                >
-                  Explore All Tools
-                  <span className="transition group-hover:translate-x-1">→</span>
-                </a>
-                <a
-                  href="/hook-analyzer"
-                  className="inline-flex items-center justify-center gap-3 rounded-2xl border border-white/15 bg-white/[0.035] px-8 py-4 text-base font-bold text-white transition hover:bg-white/10"
-                >
-                  Analyze a Hook
-                </a>
+                <a href="/tools" className="group inline-flex items-center justify-center gap-3 rounded-2xl bg-emerald-400 px-8 py-4 text-base font-bold text-black shadow-2xl shadow-emerald-500/18 transition hover:bg-emerald-300">Explore All Tools <span className="transition group-hover:translate-x-1">→</span></a>
+                <a href="/hook-analyzer" className="inline-flex items-center justify-center gap-3 rounded-2xl border border-white/15 bg-white/[0.035] px-8 py-4 text-base font-bold text-white transition hover:bg-white/10">Analyze a Hook</a>
               </div>
 
               <div className="mt-9 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
                 {productTools.map(([name, desc, href, icon]) => (
-                  <a
-                    key={href}
-                    href={href}
-                    className="group rounded-[20px] border border-white/10 bg-white/[0.035] p-4 transition hover:border-emerald-300/30 hover:bg-white/[0.07]"
-                  >
-                    <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl border border-emerald-300/20 bg-emerald-400/10 text-emerald-300 shadow-lg shadow-emerald-500/10">
-                      {icon}
-                    </div>
+                  <a key={href} href={href} className="group rounded-[20px] border border-white/10 bg-white/[0.035] p-4 transition hover:border-emerald-300/30 hover:bg-white/[0.07]">
+                    <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl border border-emerald-300/20 bg-emerald-400/10 text-emerald-300 shadow-lg shadow-emerald-500/10">{icon}</div>
                     <p className="font-semibold text-white">{name}</p>
                     <p className="mt-1 text-sm text-white/45">{desc}</p>
                   </a>
@@ -121,10 +144,7 @@ export default function Home() {
               </div>
             </div>
 
-            <BrandOrb
-              title="Built for serious creator workflows."
-              description="HookSignals connects hook analysis, title clarity, script pacing and packaging signals inside one premium pre-publish system."
-            />
+            <VideoMockup />
           </section>
 
           <div className="grid gap-3 rounded-[24px] border border-white/10 bg-white/[0.035] p-4 shadow-2xl shadow-black/20 sm:grid-cols-2 lg:grid-cols-4">
@@ -140,14 +160,9 @@ export default function Home() {
 
           <section className="mt-12 grid gap-4 md:grid-cols-3">
             {authority.map(([title, desc]) => (
-              <div
-                key={title}
-                className="rounded-[28px] border border-white/10 bg-white/[0.03] p-6 shadow-xl shadow-black/20"
-              >
-                <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl border border-emerald-300/20 bg-emerald-300/[0.06] text-sm font-black text-emerald-300">
-                  HS
-                </div>
-                <h2 className="text-2xl font-black tracking-tight">{title}</h2>
+              <div key={title} className="rounded-[28px] border border-white/10 bg-white/[0.03] p-6 shadow-xl shadow-black/20">
+                <LogoMark />
+                <h2 className="mt-5 text-2xl font-black tracking-tight">{title}</h2>
                 <p className="mt-4 leading-7 text-white/52">{desc}</p>
               </div>
             ))}
@@ -158,21 +173,10 @@ export default function Home() {
 
           <section className="py-16 md:py-20">
             <div className="rounded-[32px] border border-emerald-300/20 bg-emerald-300/[0.06] p-7 md:p-10">
-              <p className="text-sm font-bold uppercase tracking-[0.16em] text-emerald-300">
-                Start with the hook
-              </p>
-              <h2 className="mt-4 max-w-4xl text-3xl font-black tracking-[-0.04em] md:text-5xl">
-                Improve the first seconds before the algorithm gets a vote.
-              </h2>
-              <p className="mt-5 max-w-3xl leading-8 text-white/58">
-                Use HookSignals to check clarity, curiosity and retention risk before publishing. Then move through title, script and packaging tools in one connected workflow.
-              </p>
-              <a
-                href="/hook-analyzer"
-                className="mt-8 inline-flex rounded-2xl bg-emerald-400 px-7 py-4 font-bold text-black shadow-lg shadow-emerald-500/20 transition hover:bg-emerald-300"
-              >
-                Open Hook Analyzer
-              </a>
+              <p className="text-sm font-bold uppercase tracking-[0.16em] text-emerald-300">Start with the hook</p>
+              <h2 className="mt-4 max-w-4xl text-3xl font-black tracking-[-0.04em] md:text-5xl">Improve the first seconds before the algorithm gets a vote.</h2>
+              <p className="mt-5 max-w-3xl leading-8 text-white/58">Use HookSignals to check clarity, curiosity and retention risk before publishing. Then move through title, script and packaging tools in one connected workflow.</p>
+              <a href="/hook-analyzer" className="mt-8 inline-flex rounded-2xl bg-emerald-400 px-7 py-4 font-bold text-black shadow-lg shadow-emerald-500/20 transition hover:bg-emerald-300">Open Hook Analyzer</a>
             </div>
           </section>
         </div>
