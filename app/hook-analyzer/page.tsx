@@ -5,46 +5,16 @@ import { useState } from "react";
 import RelatedTools from "../components/related-tools";
 import CopyButton from "../components/copy-button";
 
-function analyzeHook(text: string) {
-  let score = 45;
-  const clean = text.toLowerCase();
-  const wordCount = text.trim().split(/\s+/).filter(Boolean).length;
-
-  if (text.length >= 35) score += 8;
-  if (text.length >= 70) score += 6;
-  if (text.includes("?")) score += 7;
-  if (wordCount <= 18) score += 6;
-
-  ["mistake", "stop", "secret", "grow", "viral", "views", "why", "hidden", "simple"].forEach(
-    (word) => {
-      if (clean.includes(word)) score += 4;
-    }
-  );
-
-  score = Math.min(100, score);
-
-  return {
-    score,
-    clarity: Math.min(100, Math.max(35, score - 4)),
-    curiosity: Math.min(100, Math.max(35, score + 5)),
-    retention: Math.min(100, Math.max(35, score - 1)),
-    grade:
-      score >= 85 ? "Excellent" : score >= 72 ? "Strong" : score >= 58 ? "Decent" : "Weak",
-    verdict:
-      score >= 85
-        ? "This hook is sharp, specific and likely to stop the scroll."
-        : score >= 72
-        ? "This hook is strong, but it can become more specific."
-        : score >= 58
-        ? "This hook is usable, but it needs more tension and clarity."
-        : "This hook is too vague. Make the promise sharper and faster.",
-    improved: [
-      "If your videos stop growing, your first 3 seconds are probably the reason.",
-      "Stop posting until your opening line creates a clear reason to keep watching.",
-      "Most creators lose viewers before the value of the video is even clear.",
-    ],
-  };
-}
+type HookAnalysis = {
+  score: number;
+  clarity: number;
+  curiosity: number;
+  retention: number;
+  grade: string;
+  verdict: string;
+  feedback: string[];
+  improved: string[];
+};
 
 function ScoreBar({ label, value }: { label: string; value: number }) {
   return (
@@ -66,19 +36,47 @@ function ScoreBar({ label, value }: { label: string; value: number }) {
 
 export default function HookAnalyzerPage() {
   const [hook, setHook] = useState("");
-  const [result, setResult] = useState<null | ReturnType<typeof analyzeHook>>(null);
+  const [result, setResult] = useState<null | HookAnalysis>(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [mode, setMode] = useState<"ai" | "fallback" | "">("");
 
-  function handleAnalyze() {
-    if (!hook.trim()) return;
+  async function handleAnalyze() {
+    const trimmedHook = hook.trim();
+
+    if (trimmedHook.length < 8) {
+      setError("Enter a hook with at least 8 characters.");
+      setResult(null);
+      return;
+    }
 
     setLoading(true);
+    setError("");
     setResult(null);
+    setMode("");
 
-    setTimeout(() => {
-      setResult(analyzeHook(hook));
+    try {
+      const response = await fetch("/api/analyze-hook", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ hook: trimmedHook }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data?.analysis) {
+        throw new Error(data?.error || "Hook analysis failed.");
+      }
+
+      setResult(data.analysis);
+      setMode(data.mode === "ai" ? "ai" : "fallback");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Hook analysis failed. Try again.");
+    } finally {
       setLoading(false);
-    }, 650);
+    }
   }
 
   return (
@@ -123,12 +121,23 @@ export default function HookAnalyzerPage() {
                 className="min-h-[180px] w-full rounded-2xl border border-white/10 bg-[#050505] p-5 text-base text-white outline-none placeholder:text-white/25"
               />
 
+              {error && (
+                <p className="mt-3 rounded-2xl border border-red-400/20 bg-red-400/10 p-3 text-sm text-red-200">
+                  {error}
+                </p>
+              )}
+
               <button
                 onClick={handleAnalyze}
-                className="mt-5 w-full rounded-2xl bg-emerald-400 px-7 py-4 font-semibold text-black"
+                disabled={loading}
+                className="mt-5 w-full rounded-2xl bg-emerald-400 px-7 py-4 font-semibold text-black transition hover:bg-emerald-300 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {loading ? "Analyzing..." : "Analyze Hook"}
               </button>
+
+              <p className="mt-4 text-xs leading-5 text-white/35">
+                Early access: analysis quality may vary while the scoring engine is being tuned.
+              </p>
             </div>
 
             <div className="rounded-3xl border border-white/10 bg-white/[0.035] p-6">
@@ -179,7 +188,14 @@ export default function HookAnalyzerPage() {
 
               {result && (
                 <div>
-                  <p className="text-sm text-white/45">Overall Score</p>
+                  <div className="flex items-center justify-between gap-3">
+                    <p className="text-sm text-white/45">Overall Score</p>
+                    {mode && (
+                      <span className="rounded-full border border-white/10 bg-black/30 px-3 py-1 text-xs text-white/40">
+                        {mode === "ai" ? "AI analysis" : "Beta fallback"}
+                      </span>
+                    )}
+                  </div>
 
                   <div className="mt-3 flex items-end gap-3">
                     <h2 className="text-7xl font-bold text-emerald-300">
@@ -194,6 +210,17 @@ export default function HookAnalyzerPage() {
                   <p className="mt-5 rounded-2xl border border-white/10 bg-black/30 p-4 leading-7 text-white/65">
                     {result.verdict}
                   </p>
+
+                  {result.feedback?.length > 0 && (
+                    <div className="mt-5 rounded-2xl border border-white/10 bg-black/20 p-4">
+                      <p className="mb-3 text-sm font-semibold text-white/55">Key feedback</p>
+                      <ul className="space-y-2 text-sm leading-6 text-white/58">
+                        {result.feedback.map((item) => (
+                          <li key={item}>• {item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
 
                   <div className="mt-6 space-y-5">
                     <ScoreBar label="Clarity" value={result.clarity} />
