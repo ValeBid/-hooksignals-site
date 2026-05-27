@@ -3,7 +3,7 @@ type FAQ = {
   answer: string;
 };
 
-export default function FAQSchema({ items }: { items: FAQ[] }) {
+export default function FAQSchema({ items }: { items: readonly FAQ[] }) {
   const schema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
