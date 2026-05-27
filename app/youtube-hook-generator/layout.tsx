@@ -2,11 +2,11 @@ import ToolSEOContent from "../components/tool-seo-content";
 
 export const metadata = {
   alternates: {
-    canonical: "https://hooksignals.com/thumbnail-text-checker",
+    canonical: "https://hooksignals.com/youtube-hook-generator",
   },
 };
 
-export default function Layout({
+export default function YouTubeHookGeneratorLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -14,7 +14,7 @@ export default function Layout({
   return (
     <>
       {children}
-      <ToolSEOContent tool="thumbnail-text-checker" />
+      <ToolSEOContent tool="youtube-hook-generator" />
     </>
   );
 }
