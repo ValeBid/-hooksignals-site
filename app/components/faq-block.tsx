@@ -3,7 +3,7 @@ type FAQ = {
   answer: string;
 };
 
-export default function FAQBlock({ items }: { items: FAQ[] }) {
+export default function FAQBlock({ items }: { items: readonly FAQ[] }) {
   return (
     <section className="mt-14">
       <div className="rounded-[32px] border border-white/10 bg-white/[0.035] p-7 md:p-10">
