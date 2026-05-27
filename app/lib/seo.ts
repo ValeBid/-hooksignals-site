@@ -187,6 +187,15 @@ export const seoRoutes: SeoRoute[] = [
     intent: "education",
   },
   {
+    path: "/youtube-ctr-tips",
+    title: "YouTube CTR Tips | HookSignals",
+    description:
+      "Learn practical YouTube CTR principles for titles, thumbnails and first-impression packaging.",
+    priority: 0.76,
+    changeFrequency: "weekly",
+    intent: "education",
+  },
+  {
     path: "/youtube-thumbnail-tips",
     title: "YouTube Thumbnail Tips | HookSignals",
     description:
