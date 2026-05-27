@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 const OPENAI_URL = "https://api.openai.com/v1/chat/completions";
-const MODEL = process.env.OPENAI_MODEL || "gpt-5.5";
+const MODEL = process.env.OPENAI_MODEL || "gpt-4.1-mini";
 
 type HookAnalysis = {
   score: number;
