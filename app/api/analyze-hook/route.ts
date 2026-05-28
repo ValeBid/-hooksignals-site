@@ -7,14 +7,15 @@ const MAX_REQUESTS_PER_WINDOW = 10;
 const requestLog = new Map<string, { count: number; resetAt: number }>();
 
 type HookAnalysis = {
-  score: number;
-  clarity: number;
-  curiosity: number;
-  retention: number;
-  grade: string;
-  verdict: string;
-  feedback: string[];
-  improved: string[];
+  hookScore: number;
+  clarityScore: number;
+  curiosityScore: number;
+  retentionRisk: number;
+  pattern: string;
+  weakness: string;
+  improvedHook: string;
+  variants: string[];
+  retentionNotes: string[];
 };
 
 function getClientKey(request: Request) {
@@ -47,44 +48,36 @@ function clampScore(value: unknown, fallback: number) {
 }
 
 function fallbackAnalysis(hook: string): HookAnalysis {
-  const clean = hook.toLowerCase();
-  const wordCount = hook.trim().split(/\s+/).filter(Boolean).length;
-  let score = 48;
+  const trimmed = hook.trim();
+  const clean = trimmed.toLowerCase();
+  const wordCount = trimmed.split(/\s+/).filter(Boolean).length;
+  const hasNumber = /\d/.test(trimmed);
+  const hasQuestion = trimmed.includes("?");
+  const hasTension = /mistake|secret|stop|why|hidden|truth|avoid|but|instead|failed|lost/i.test(trimmed);
 
-  if (hook.length >= 35) score += 8;
-  if (hook.length >= 70) score += 5;
-  if (hook.includes("?")) score += 7;
-  if (wordCount <= 18) score += 6;
-
-  ["mistake", "stop", "secret", "grow", "viral", "views", "why", "hidden", "simple", "truth"].forEach((word) => {
-    if (clean.includes(word)) score += 4;
-  });
-
-  score = Math.min(100, score);
+  const clarityScore = Math.min(95, Math.max(40, 68 + (wordCount <= 16 ? 10 : -8) + (hasNumber ? 7 : 0)));
+  const curiosityScore = Math.min(95, Math.max(40, 60 + (hasQuestion ? 8 : 0) + (hasTension ? 14 : 0) + (hasNumber ? 6 : 0)));
+  const retentionRisk = Math.min(90, Math.max(12, 52 + (wordCount > 20 ? 18 : 0) - (hasTension ? 10 : 0) - (hasNumber ? 6 : 0)));
+  const hookScore = Math.round((clarityScore + curiosityScore + (100 - retentionRisk)) / 3);
+  const base = trimmed.replace(/[?.!]+$/g, "");
 
   return {
-    score,
-    clarity: Math.min(100, Math.max(35, score - 4)),
-    curiosity: Math.min(100, Math.max(35, score + 5)),
-    retention: Math.min(100, Math.max(35, score - 1)),
-    grade: score >= 85 ? "Excellent" : score >= 72 ? "Strong" : score >= 58 ? "Decent" : "Weak",
-    verdict:
-      score >= 85
-        ? "This hook is sharp, specific and likely to stop the scroll."
-        : score >= 72
-        ? "This hook is strong, but it can become more specific."
-        : score >= 58
-        ? "This hook is usable, but it needs more tension and clarity."
-        : "This hook is too vague. Make the promise sharper and faster.",
-    feedback: [
-      "Make the viewer understand the payoff faster.",
-      "Add a clearer curiosity gap or stronger contrast.",
-      "Keep the opening specific enough to feel useful, not generic.",
+    hookScore,
+    clarityScore,
+    curiosityScore,
+    retentionRisk,
+    pattern: hasNumber ? "Specific promise with numeric framing" : hasTension ? "Curiosity gap with unresolved tension" : "General creator promise",
+    weakness: wordCount > 18 ? "The hook takes too long to reach the payoff. Make the first second more direct." : "The idea is usable, but it needs a sharper contrast or more specific stakes.",
+    improvedHook: hasNumber ? `${base} — but one detail changed the result` : `I tested ${base.toLowerCase()}, and one result surprised me`,
+    variants: [
+      `Most creators miss this before they publish: ${base}`,
+      `I fixed one part of this hook and the promise became clearer`,
+      `Before you post this idea, tighten the first 3 seconds`,
     ],
-    improved: [
-      `The real reason ${hook.replace(/[?.!]+$/g, "").toLowerCase()}`,
-      `Most creators miss this: ${hook.replace(/[?.!]+$/g, "")}`,
-      `Before you post, fix this hook: ${hook.replace(/[?.!]+$/g, "")}`,
+    retentionNotes: [
+      "Open with the payoff faster so viewers understand why they should stay.",
+      "Add a clearer curiosity gap instead of a broad setup.",
+      "Make the promise specific enough to feel useful, not generic.",
     ],
   };
 }
@@ -93,18 +86,19 @@ function normalizeAnalysis(raw: any, hook: string): HookAnalysis {
   const fallback = fallbackAnalysis(hook);
 
   return {
-    score: clampScore(raw?.score, fallback.score),
-    clarity: clampScore(raw?.clarity, fallback.clarity),
-    curiosity: clampScore(raw?.curiosity, fallback.curiosity),
-    retention: clampScore(raw?.retention, fallback.retention),
-    grade: typeof raw?.grade === "string" ? raw.grade.slice(0, 40) : fallback.grade,
-    verdict: typeof raw?.verdict === "string" ? raw.verdict.slice(0, 220) : fallback.verdict,
-    feedback: Array.isArray(raw?.feedback)
-      ? raw.feedback.slice(0, 3).map((item: unknown) => String(item).slice(0, 180))
-      : fallback.feedback,
-    improved: Array.isArray(raw?.improved)
-      ? raw.improved.slice(0, 3).map((item: unknown) => String(item).slice(0, 160))
-      : fallback.improved,
+    hookScore: clampScore(raw?.hookScore ?? raw?.score, fallback.hookScore),
+    clarityScore: clampScore(raw?.clarityScore ?? raw?.clarity, fallback.clarityScore),
+    curiosityScore: clampScore(raw?.curiosityScore ?? raw?.curiosity, fallback.curiosityScore),
+    retentionRisk: clampScore(raw?.retentionRisk, fallback.retentionRisk),
+    pattern: typeof raw?.pattern === "string" ? raw.pattern.slice(0, 160) : fallback.pattern,
+    weakness: typeof raw?.weakness === "string" ? raw.weakness.slice(0, 220) : fallback.weakness,
+    improvedHook: typeof raw?.improvedHook === "string" ? raw.improvedHook.slice(0, 180) : fallback.improvedHook,
+    variants: Array.isArray(raw?.variants)
+      ? raw.variants.slice(0, 3).map((item: unknown) => String(item).slice(0, 180))
+      : fallback.variants,
+    retentionNotes: Array.isArray(raw?.retentionNotes)
+      ? raw.retentionNotes.slice(0, 3).map((item: unknown) => String(item).slice(0, 180))
+      : fallback.retentionNotes,
   };
 }
 
@@ -141,11 +135,11 @@ export async function POST(request: Request) {
         messages: [
           {
             role: "system",
-            content: "You analyze YouTube and Shorts opening hooks. Return only valid JSON with scores from 0 to 100.",
+            content: "You analyze YouTube, Shorts and TikTok opening hooks. Return only valid JSON with hookScore, clarityScore, curiosityScore, retentionRisk, pattern, weakness, improvedHook, variants and retentionNotes.",
           },
           {
             role: "user",
-            content: `Analyze this hook: ${cleanedHook}\nReturn JSON: {"score":number,"clarity":number,"curiosity":number,"retention":number,"grade":string,"verdict":string,"feedback":string[],"improved":string[]}`,
+            content: `Analyze this hook: ${cleanedHook}\nReturn JSON: {"hookScore":number,"clarityScore":number,"curiosityScore":number,"retentionRisk":number,"pattern":string,"weakness":string,"improvedHook":string,"variants":string[],"retentionNotes":string[]}`,
           },
         ],
       }),
