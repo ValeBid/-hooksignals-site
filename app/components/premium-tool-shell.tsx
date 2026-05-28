@@ -42,10 +42,7 @@ export default function PremiumToolShell({
         <div className="relative mx-auto max-w-[1320px] px-5 py-5 md:px-8">
           <nav className="sticky top-4 z-50 flex items-center justify-between rounded-[26px] border border-white/10 bg-black/30 px-4 py-3 shadow-2xl shadow-black/30 backdrop-blur-2xl md:px-6">
             <a href="/" className="flex items-center gap-3" aria-label="HookSignals home">
-              <div className="relative flex h-11 w-11 items-center justify-center rounded-2xl border border-cyan-300/30 bg-gradient-to-br from-cyan-300/20 via-sky-400/10 to-violet-400/15 shadow-lg shadow-cyan-500/15">
-                <div className="absolute inset-1 rounded-xl border border-white/10" />
-                <span className="text-lg font-black tracking-[-0.08em] text-cyan-100">HS</span>
-              </div>
+              <img src="/hs-logo.svg" alt="HookSignals logo" className="h-12 w-12 rounded-2xl border border-cyan-300/20 bg-black/30 object-cover shadow-[0_0_40px_rgba(34,211,238,.18)]" />
               <div>
                 <span className="block text-xl font-black tracking-tight">HookSignals</span>
                 <span className="hidden text-xs uppercase tracking-[0.16em] text-cyan-300 sm:block">Creator Intelligence</span>
@@ -89,9 +86,7 @@ export default function PremiumToolShell({
             </p>
           </section>
 
-          <section className="rounded-[32px] border border-white/10 bg-white/[0.04] p-4 shadow-[0_35px_110px_rgba(0,0,0,.42)] backdrop-blur-2xl md:rounded-[38px] md:p-7">
-            {children}
-          </section>
+          {children}
 
           {footer}
         </div>
