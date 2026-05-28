@@ -70,32 +70,38 @@ const plans = [
   {
     name: "Starter",
     price: "$9.99",
-    desc: "A focused credit pack for testing HookSignals without committing to a monthly workflow.",
-    features: ["Starter credits", "Hook analysis", "Shorts script drafts", "Thumbnail text checks"],
+    cadence: "/pack",
+    desc: "A one-time credit pack for validating hooks, scripts and thumbnails before committing to a monthly workflow.",
+    fit: "Best for testing the product with a few real videos.",
+    features: ["One-time starter credits", "Hook analysis", "Shorts script drafts", "Thumbnail text checks"],
     cta: "Buy Starter Pack",
     priceId: starterPriceId,
     premium: false,
-    note: "Best for first tests",
+    note: "One-time pack",
   },
   {
     name: "Creator Pro",
     price: "$19",
-    desc: "The main workflow plan for creators who publish consistently and want faster pre-publish decisions.",
-    features: ["Saved workflows", "Advanced retention insights", "Project memory", "Priority creator tools"],
+    cadence: "/month",
+    desc: "The core plan for creators who publish consistently and want a repeatable pre-publish workflow.",
+    fit: "Best for solo creators publishing every week.",
+    features: ["Saved creator workflows", "Advanced retention insights", "Project memory", "Priority creator tools"],
     cta: "Start Creator Pro",
     priceId: proPriceId,
     premium: true,
-    note: "Most practical plan",
+    note: "Recommended",
   },
   {
     name: "Elite",
     price: "$49",
-    desc: "Higher-tier creator workflow access for teams, agencies and serious publishing systems.",
+    cadence: "/month",
+    desc: "A heavier workflow tier for teams, agencies and creators managing larger publishing systems.",
+    fit: "Best for teams, agencies and high-output creators.",
     features: ["Team workflows", "Creator dashboards", "Publishing systems", "Priority support"],
     cta: "Start Elite",
     priceId: elitePriceId,
-    premium: true,
-    note: "For heavier output",
+    premium: false,
+    note: "High-output workflow",
   },
 ];
 
@@ -111,38 +117,40 @@ export default function PricingPreview() {
 
   return (
     <section className="mt-14" id="pricing">
-      <div className="rounded-[32px] border border-white/10 bg-white/[0.03] p-7 shadow-[0_30px_100px_rgba(0,0,0,.35)] md:p-10">
+      <div className="rounded-[32px] border border-white/10 bg-white/[0.025] p-6 shadow-[0_24px_80px_rgba(0,0,0,.30)] md:p-10">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-3xl">
-            <p className="text-sm font-bold uppercase tracking-[0.16em] text-cyan-300">Creator pricing</p>
-            <h2 className="mt-4 text-4xl font-black tracking-[-0.05em]">Simple plans for modern creator workflows.</h2>
-            <p className="mt-5 text-lg leading-8 text-white/55">Start small with a credit pack or move into a recurring workflow when HookSignals becomes part of your publishing system.</p>
+            <p className="text-sm font-bold uppercase tracking-[0.14em] text-cyan-300">Creator pricing</p>
+            <h2 className="mt-4 text-4xl font-black tracking-[-0.045em] md:text-5xl">Choose how serious your publishing workflow is.</h2>
+            <p className="mt-5 text-lg leading-8 text-white/55">Start with a one-time pack, then upgrade only when HookSignals becomes part of your weekly creator process.</p>
           </div>
-          <div className="rounded-2xl border border-cyan-300/20 bg-cyan-300/[0.07] px-5 py-4 text-sm leading-6 text-white/62">
-            Secure checkout is handled by Paddle. If checkout fails, support opens automatically by email.
+          <div className="max-w-sm rounded-2xl border border-white/10 bg-black/25 px-5 py-4 text-sm leading-6 text-white/58">
+            Secure checkout is handled by Paddle in production. If checkout fails, the button falls back to support email automatically.
           </div>
         </div>
 
         <div className="mt-10 grid gap-5 lg:grid-cols-3">
           {plans.map((plan) => (
-            <div key={plan.name} className={`relative overflow-hidden rounded-[30px] border p-7 ${plan.premium ? "border-cyan-300/25 bg-cyan-300/[0.05]" : "border-white/10 bg-black/25"}`}>
-              {plan.name === "Creator Pro" && <div className="absolute right-5 top-5 rounded-full bg-white px-3 py-1 text-xs font-black uppercase tracking-[0.12em] text-black">Recommended</div>}
-              <div className="flex items-start justify-between gap-4 pr-20">
-                <div>
-                  <p className="text-2xl font-black tracking-tight">{plan.name}</p>
-                  <p className="mt-3 max-w-sm leading-7 text-white/50">{plan.desc}</p>
+            <div key={plan.name} className={`relative overflow-hidden rounded-[30px] border p-7 ${plan.premium ? "border-cyan-300/35 bg-cyan-300/[0.055] shadow-[0_28px_90px_rgba(34,211,238,.10)]" : "border-white/10 bg-black/24"}`}>
+              {plan.note && (
+                <div className={`mb-6 inline-flex rounded-full px-3 py-1 text-xs font-black uppercase tracking-[0.12em] ${plan.premium ? "bg-cyan-300 text-black" : "border border-white/10 bg-white/[0.04] text-white/55"}`}>
+                  {plan.note}
                 </div>
+              )}
+
+              <div>
+                <p className="text-2xl font-black tracking-tight">{plan.name}</p>
+                <p className="mt-3 max-w-sm leading-7 text-white/52">{plan.desc}</p>
               </div>
 
               <div className="mt-8 flex items-end gap-2">
                 <span className="text-5xl font-black tracking-[-0.05em]">{plan.price}</span>
-                <span className="pb-1 text-white/45">
-                  {plan.name === "Starter" ? "/pack" : "/month"}
-                </span>
+                <span className="pb-1 text-white/45">{plan.cadence}</span>
               </div>
-              <p className="mt-3 text-sm font-semibold text-cyan-300">{plan.note}</p>
 
-              <div className="mt-8 space-y-3">
+              <p className="mt-5 rounded-2xl border border-white/10 bg-white/[0.035] px-4 py-3 text-sm leading-6 text-white/55">{plan.fit}</p>
+
+              <div className="mt-7 space-y-3">
                 {plan.features.map((feature) => (
                   <div key={feature} className="flex items-center gap-3 text-white/70">
                     <div className="h-2 w-2 rounded-full bg-cyan-300" />
@@ -154,7 +162,7 @@ export default function PricingPreview() {
               <button
                 type="button"
                 onClick={() => openCheckout(plan.priceId)}
-                className={`mt-8 inline-flex w-full justify-center rounded-2xl px-6 py-3 font-black transition ${plan.premium ? "bg-white text-black hover:bg-white/90" : "border border-white/10 bg-white/[0.04] text-white hover:bg-white/10"}`}
+                className={`mt-8 inline-flex w-full justify-center rounded-2xl px-6 py-3 font-black transition ${plan.premium ? "bg-white text-black hover:bg-white/90" : "border border-white/10 bg-white/[0.045] text-white hover:bg-white/10"}`}
               >
                 {plan.cta}
               </button>
@@ -163,9 +171,9 @@ export default function PricingPreview() {
         </div>
 
         <div className="mt-7 grid gap-3 text-sm text-white/45 md:grid-cols-3">
-          <p>✓ Production Paddle checkout</p>
-          <p>✓ Clear upgrade path</p>
-          <p>✓ Support fallback included</p>
+          <p>✓ Paddle production checkout</p>
+          <p>✓ One-time and monthly options</p>
+          <p>✓ Support fallback if checkout fails</p>
         </div>
       </div>
     </section>
