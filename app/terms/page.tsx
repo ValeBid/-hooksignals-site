@@ -1,6 +1,9 @@
 export const metadata = {
-  title: "Terms of Service | HookSignals",
+  title: "Terms of Service",
   description: "Terms of service for HookSignals creator workflow platform.",
+  alternates: {
+    canonical: "https://hooksignals.com/terms",
+  },
 };
 
 export default function TermsPage() {
@@ -28,13 +31,6 @@ export default function TermsPage() {
             <h2 className="text-xl font-bold text-white">Limitations</h2>
             <p className="mt-3 leading-8">
               HookSignals does not guarantee audience growth, platform performance, monetization results or publishing outcomes.
-            </p>
-          </section>
-
-          <section>
-            <h2 className="text-xl font-bold text-white">Contact</h2>
-            <p className="mt-3 leading-8">
-              Questions regarding these terms can be sent to support@hooksignals.com.
             </p>
           </section>
         </div>
