@@ -1,6 +1,7 @@
 import { headers } from 'next/headers';
 import { NextResponse } from 'next/server';
 import { supabase } from '../../../lib/supabase';
+import { verifyPaddleSignature } from '../../../lib/paddle';
 
 export async function POST(request: Request) {
   try {
@@ -23,6 +24,13 @@ export async function POST(request: Request) {
       );
     }
 
+    if (!verifyPaddleSignature({ rawBody: body, signatureHeader: signature, webhookSecret })) {
+      return NextResponse.json(
+        { error: 'Invalid Paddle signature' },
+        { status: 401 }
+      );
+    }
+
     const payload = JSON.parse(body);
     const eventType = payload?.event_type;
     const data = payload?.data;
@@ -37,16 +45,28 @@ export async function POST(request: Request) {
         const status = data?.status || 'active';
 
         const customData = data?.custom_data || {};
-        const clerkUserId = customData.clerk_user_id || 'preview-user';
+        const clerkUserId = customData.clerk_user_id;
+
+        if (!clerkUserId) {
+          return NextResponse.json(
+            { error: 'Missing Clerk user mapping' },
+            { status: 400 }
+          );
+        }
 
         const priceId = data?.items?.[0]?.price?.id || '';
 
         let plan = 'starter';
 
-        if (priceId.includes('elite')) {
+        if (priceId === 'pri_01ksnn757pd4582jcvn8g0g165') {
           plan = 'elite';
-        } else if (priceId.includes('pro')) {
+        } else if (priceId === 'pri_01ksnnbh8fc2452se12nr37tmz') {
           plan = 'pro';
+        } else if (priceId !== 'pri_01ksqr6vp07e48ktwm6x5jzw1y') {
+          return NextResponse.json(
+            { error: 'Unknown Paddle price id' },
+            { status: 400 }
+          );
         }
 
         const creditsByPlan: Record<string, number> = {
@@ -86,7 +106,14 @@ export async function POST(request: Request) {
 
       case 'subscription.canceled': {
         const customData = data?.custom_data || {};
-        const clerkUserId = customData.clerk_user_id || 'preview-user';
+        const clerkUserId = customData.clerk_user_id;
+
+        if (!clerkUserId) {
+          return NextResponse.json(
+            { error: 'Missing Clerk user mapping' },
+            { status: 400 }
+          );
+        }
 
         await supabase
           .from('subscriptions')
