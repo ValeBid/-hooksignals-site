@@ -1,7 +1,5 @@
 "use client";
 
-import { useUser } from "@clerk/nextjs";
-
 const paddleToken = "live_af5c9cec32aec5fc5c8f8c35773";
 const starterPriceId = "pri_01ksqr6vp07e48ktwm6x5jzw1y";
 const proPriceId = "pri_01ksnnbh8fc2452se12nr37tmz";
@@ -16,11 +14,7 @@ type PaddleWindow = Window & {
     };
     Initialize: (options: { token: string }) => void;
     Checkout: {
-      open: (options: {
-        items: Array<{ priceId: string; quantity: number }>;
-        customData?: Record<string, string>;
-        customer?: { email?: string };
-      }) => void;
+      open: (options: { items: Array<{ priceId: string; quantity: number }> }) => void;
     };
   };
 };
@@ -75,7 +69,7 @@ function loadPaddle() {
 const plans = [
   {
     name: "Starter",
-    price: "$9.99",
+    price: "$10",
     cadence: "/pack",
     desc: "A one-time credit pack for validating hooks, scripts and thumbnails before committing to a monthly workflow.",
     fit: "Best for testing the product with a few real videos.",
@@ -87,7 +81,7 @@ const plans = [
   },
   {
     name: "Creator Pro",
-    price: "$19",
+    price: "$20",
     cadence: "/month",
     desc: "The core plan for creators who publish consistently and want a repeatable pre-publish workflow.",
     fit: "Best for solo creators publishing every week.",
@@ -99,7 +93,7 @@ const plans = [
   },
   {
     name: "Elite",
-    price: "$49",
+    price: "$50",
     cadence: "/month",
     desc: "A heavier workflow tier for teams, agencies and creators managing larger publishing systems.",
     fit: "Best for teams, agencies and high-output creators.",
@@ -112,20 +106,10 @@ const plans = [
 ];
 
 export default function PricingPreview() {
-  const { user, isSignedIn } = useUser();
-
   async function openCheckout(priceId: string) {
     try {
       await loadPaddle();
-
-      const email = user?.primaryEmailAddress?.emailAddress;
-      const customData = isSignedIn && user?.id ? { clerk_user_id: user.id } : undefined;
-
-      getPaddleWindow().Paddle?.Checkout.open({
-        items: [{ priceId, quantity: 1 }],
-        ...(customData ? { customData } : {}),
-        ...(email ? { customer: { email } } : {}),
-      });
+      getPaddleWindow().Paddle?.Checkout.open({ items: [{ priceId, quantity: 1 }] });
     } catch {
       window.location.href = "mailto:support@hooksignals.com?subject=HookSignals%20Checkout";
     }
