@@ -125,7 +125,7 @@ export default function PricingPreview() {
             <p className="mt-5 text-lg leading-8 text-white/55">Start with a one-time pack, then upgrade only when HookSignals becomes part of your weekly creator process.</p>
           </div>
           <div className="max-w-sm rounded-2xl border border-white/10 bg-black/25 px-5 py-4 text-sm leading-6 text-white/58">
-            Secure checkout is handled by Paddle in production. If checkout fails, the button falls back to support email automatically.
+            Secure checkout by Paddle. Use HookSignals to make clearer pre-publish decisions before every upload.
           </div>
         </div>
 
@@ -173,7 +173,7 @@ export default function PricingPreview() {
         <div className="mt-7 grid gap-3 text-sm text-white/45 md:grid-cols-3">
           <p>✓ Paddle production checkout</p>
           <p>✓ One-time and monthly options</p>
-          <p>✓ Support fallback if checkout fails</p>
+          <p>✓ Support available at support@hooksignals.com</p>
         </div>
       </div>
     </section>
