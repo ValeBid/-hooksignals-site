@@ -6,7 +6,7 @@ import { siteConfig } from "./lib/seo";
 export const metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
-    default: "HookSignals | Free AI Creator Tools",
+    default: "HookSignals | AI Creator Intelligence Tools",
     template: "%s | HookSignals",
   },
   description: siteConfig.description,
@@ -22,27 +22,36 @@ export const metadata = {
     "tiktok hook generator",
   ],
   icons: {
-    icon: "/icon.svg",
-    shortcut: "/icon.svg",
-    apple: "/icon.svg",
+    icon: "/hs-logo.svg",
+    shortcut: "/hs-logo.svg",
+    apple: "/hs-logo.svg",
   },
   alternates: {
     canonical: siteConfig.url,
   },
   category: "creator tools",
   openGraph: {
-    title: "HookSignals | Free AI Creator Tools",
+    title: "HookSignals | AI Creator Intelligence Tools",
     description:
-      "Free creator tools for hooks, titles, thumbnails, scripts and retention checks before publishing.",
+      "Creator intelligence tools for hooks, titles, thumbnails, scripts and retention checks before publishing.",
     url: siteConfig.url,
     siteName: siteConfig.name,
     type: "website",
+    images: [
+      {
+        url: "/hs-logo.svg",
+        width: 1024,
+        height: 1024,
+        alt: "HookSignals logo",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "HookSignals | Free AI Creator Tools",
+    title: "HookSignals | AI Creator Intelligence Tools",
     description:
-      "Free creator tools for hooks, titles, thumbnails and retention checks before publishing.",
+      "Creator intelligence tools for hooks, titles, thumbnails and retention checks before publishing.",
+    images: ["/hs-logo.svg"],
   },
   robots: {
     index: true,
