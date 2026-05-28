@@ -1,67 +1,54 @@
 const toolLinks = [
   ["Hook Analyzer", "/hook-analyzer"],
   ["Hook Improver", "/hook-improver"],
-  ["YouTube Hook Generator", "/youtube-hook-generator"],
-  ["Shorts Script Generator", "/shorts-script-generator"],
+  ["Title Generator", "/youtube-title-generator"],
   ["Thumbnail Checker", "/thumbnail-text-checker"],
 ];
 
 const resourceLinks = [
   ["YouTube CTR Tips", "/youtube-ctr-tips"],
-  ["Viewer Retention Tips", "/viewer-retention-tips"],
+  ["Retention Tips", "/viewer-retention-tips"],
   ["Hook Psychology", "/hook-psychology"],
   ["All Tools", "/tools"],
-  ["Sitemap", "/sitemap.xml"],
-];
-
-const platformLinks = [
-  ["Pricing", "/pricing"],
-  ["Workspace", "/workspace"],
-  ["Tools Dashboard", "/tools"],
-  ["Contact Support", "mailto:support@hooksignals.com"],
 ];
 
 const legalLinks = [
   ["Terms", "/terms"],
   ["Privacy", "/privacy"],
   ["Refund Policy", "/refund-policy"],
+  ["Sitemap", "/sitemap.xml"],
 ];
 
 export default function SiteFooter() {
   return (
-    <footer className="relative overflow-hidden border-t border-white/10 bg-[#020406] px-5 pb-10 pt-20 md:px-8">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_0%,rgba(34,211,238,0.10),transparent_26%),radial-gradient(circle_at_80%_0%,rgba(124,58,237,0.12),transparent_30%)]" />
+    <footer className="relative overflow-hidden border-t border-white/10 bg-[#020406] px-5 py-10 md:px-8">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_0%,rgba(34,211,238,0.08),transparent_28%),radial-gradient(circle_at_80%_0%,rgba(124,58,237,0.08),transparent_30%)]" />
 
       <div className="relative mx-auto max-w-[1480px]">
-        <div className="grid gap-12 border-b border-white/10 pb-14 lg:grid-cols-[1.2fr_0.8fr_0.8fr_0.8fr]">
+        <div className="grid gap-8 border-b border-white/10 pb-8 lg:grid-cols-[1.15fr_0.7fr_0.7fr_0.9fr]">
           <div className="max-w-md">
             <div className="flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-cyan-300/25 bg-cyan-400/10 shadow-lg shadow-cyan-500/10">
-                <span className="text-lg font-black tracking-[-0.08em] text-cyan-300">HS</span>
+              <div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-cyan-300/25 bg-cyan-400/10 shadow-lg shadow-cyan-500/10">
+                <span className="text-sm font-black tracking-[-0.08em] text-cyan-300">HS</span>
               </div>
               <div>
-                <p className="text-2xl font-black tracking-tight">HookSignals</p>
-                <p className="text-sm text-white/40">AI creator intelligence workflows</p>
+                <p className="text-xl font-black tracking-tight">HookSignals</p>
+                <p className="text-xs text-white/40">Creator intelligence workflow</p>
               </div>
             </div>
 
-            <p className="mt-6 text-base leading-8 text-white/52">
-              Analyze hooks, improve scripts, validate thumbnails and optimize creator decisions before publishing your next video.
+            <p className="mt-4 text-sm leading-7 text-white/52">
+              Analyze hooks, improve scripts and check packaging before publishing.
             </p>
 
-            <p className="mt-5 text-sm text-white/45">
+            <p className="mt-3 text-sm text-white/42">
               Support: <a className="text-cyan-300 transition hover:text-cyan-200" href="mailto:support@hooksignals.com">support@hooksignals.com</a>
             </p>
-
-            <div className="mt-8 flex flex-wrap gap-3">
-              <a href="/tools" className="rounded-2xl bg-cyan-300 px-5 py-3 text-sm font-bold text-black shadow-lg shadow-cyan-500/20 transition hover:bg-cyan-200">Explore Tools</a>
-              <a href="/pricing" className="rounded-2xl border border-white/10 bg-white/[0.035] px-5 py-3 text-sm font-bold text-white/80 transition hover:bg-white/10">View Pricing</a>
-            </div>
           </div>
 
           <div>
-            <p className="mb-5 text-sm font-bold uppercase tracking-[0.16em] text-white/38">Product</p>
-            <div className="space-y-4 text-white/58">
+            <p className="mb-4 text-xs font-bold uppercase tracking-[0.16em] text-white/35">Product</p>
+            <div className="space-y-3 text-sm text-white/58">
               {toolLinks.map(([label, href]) => (
                 <a key={label} href={href} className="block transition hover:text-white">{label}</a>
               ))}
@@ -69,36 +56,30 @@ export default function SiteFooter() {
           </div>
 
           <div>
-            <p className="mb-5 text-sm font-bold uppercase tracking-[0.16em] text-white/38">Resources</p>
-            <div className="space-y-4 text-white/58">
+            <p className="mb-4 text-xs font-bold uppercase tracking-[0.16em] text-white/35">Resources</p>
+            <div className="space-y-3 text-sm text-white/58">
               {resourceLinks.map(([label, href]) => (
                 <a key={label} href={href} className="block transition hover:text-white">{label}</a>
               ))}
             </div>
           </div>
 
-          <div>
-            <p className="mb-5 text-sm font-bold uppercase tracking-[0.16em] text-white/38">Platform</p>
-            <div className="space-y-4 text-white/58">
-              {platformLinks.map(([label, href]) => (
-                <a key={label} href={href} className="block transition hover:text-white">{label}</a>
-              ))}
-            </div>
-
-            <div className="mt-8 rounded-[28px] border border-cyan-300/20 bg-cyan-300/[0.08] p-6">
-              <p className="text-xl font-bold tracking-tight">Built for serious creators</p>
-              <p className="mt-3 text-sm leading-7 text-white/55">HookSignals is designed for YouTube creators, Shorts editors, solo operators and growth-focused content teams.</p>
+          <div className="rounded-[24px] border border-cyan-300/15 bg-cyan-300/[0.06] p-5">
+            <p className="text-lg font-black tracking-tight">Ready to test a hook?</p>
+            <p className="mt-2 text-sm leading-6 text-white/52">Start with the analyzer, then upgrade when the workflow becomes useful.</p>
+            <div className="mt-4 flex flex-wrap gap-3">
+              <a href="/hook-analyzer" className="rounded-2xl bg-cyan-300 px-4 py-2.5 text-sm font-bold text-black transition hover:bg-cyan-200">Analyze hook</a>
+              <a href="/pricing" className="rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm font-bold text-white/80 transition hover:bg-white/10">Pricing</a>
             </div>
           </div>
         </div>
 
-        <div className="flex flex-col gap-5 pt-8 text-sm text-white/35 md:flex-row md:items-center md:justify-between">
+        <div className="flex flex-col gap-4 pt-6 text-xs text-white/35 md:flex-row md:items-center md:justify-between">
           <p>© 2026 HookSignals. All rights reserved.</p>
-          <div className="flex flex-wrap gap-5">
+          <div className="flex flex-wrap gap-4">
             {legalLinks.map(([label, href]) => (
               <a key={label} href={href} className="transition hover:text-white">{label}</a>
             ))}
-            <a href="/sitemap.xml" className="transition hover:text-white">Sitemap</a>
           </div>
         </div>
       </div>
