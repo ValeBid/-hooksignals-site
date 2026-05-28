@@ -54,17 +54,22 @@ export async function POST(request: Request) {
 
     const analysis = fallbackAnalysis(hook);
 
-    await supabase.from('generations').insert({
-      clerk_user_id: user.id,
-      tool_name: 'hook-analyzer',
-      input: hook,
-      output: JSON.stringify(analysis),
-      credits_spent: 1,
-    });
+    const { data: generation } = await supabase
+      .from('generations')
+      .insert({
+        clerk_user_id: user.id,
+        tool_name: 'hook-analyzer',
+        input: hook,
+        output: JSON.stringify(analysis),
+        credits_spent: 1,
+      })
+      .select('id')
+      .single();
 
     return NextResponse.json({
       success: true,
       analysis,
+      shareId: generation?.id || null,
     });
   } catch (error) {
     return NextResponse.json({ success: false, error: 'analysis_failed' }, { status: 500 });
