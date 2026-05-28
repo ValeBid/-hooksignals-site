@@ -1,0 +1,31 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="120" y1="120" x2="900" y2="900" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#06131F"/>
+      <stop offset="0.45" stop-color="#090B1A"/>
+      <stop offset="1" stop-color="#1B0A35"/>
+    </linearGradient>
+    <linearGradient id="stroke" x1="120" y1="170" x2="900" y2="850" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#20E7FF"/>
+      <stop offset="0.48" stop-color="#3B82F6"/>
+      <stop offset="1" stop-color="#A855F7"/>
+    </linearGradient>
+    <linearGradient id="mark" x1="250" y1="330" x2="760" y2="700" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#22F2FF"/>
+      <stop offset="0.48" stop-color="#38BDF8"/>
+      <stop offset="1" stop-color="#A855F7"/>
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="16" result="blur"/>
+      <feColorMatrix in="blur" type="matrix" values="0 0 0 0 0.18 0 0 0 0 0.78 0 0 0 0 1 0 0 0 0.65 0"/>
+      <feBlend in2="SourceGraphic" mode="screen"/>
+    </filter>
+  </defs>
+  <rect x="116" y="116" width="792" height="792" rx="178" fill="url(#bg)"/>
+  <rect x="116" y="116" width="792" height="792" rx="178" stroke="url(#stroke)" stroke-width="8" filter="url(#glow)"/>
+  <path d="M285 332V692" stroke="url(#mark)" stroke-width="58" stroke-linecap="square" filter="url(#glow)"/>
+  <path d="M495 332V692" stroke="url(#mark)" stroke-width="58" stroke-linecap="square" filter="url(#glow)"/>
+  <path d="M313 512H390L421 456L459 570L493 512H548" stroke="url(#mark)" stroke-width="30" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)"/>
+  <path d="M748 397C716 363 672 343 625 343C534 343 470 399 470 472C470 537 518 576 600 590L640 597C684 605 705 621 705 649C705 684 671 704 621 704C573 704 534 688 501 654" stroke="url(#mark)" stroke-width="58" stroke-linecap="square" stroke-linejoin="round" filter="url(#glow)"/>
+  <path d="M734 494C724 548 681 584 613 584" stroke="url(#mark)" stroke-width="58" stroke-linecap="square" filter="url(#glow)"/>
+</svg>
