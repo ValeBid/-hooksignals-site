@@ -3,6 +3,12 @@ import { NextResponse } from 'next/server';
 import { supabase } from '../../../lib/supabase';
 import { verifyPaddleSignature } from '../../../lib/paddle';
 
+const creditsByPlan: Record<string, number> = {
+  starter: 250,
+  pro: 2000,
+  elite: 10000,
+};
+
 export async function POST(request: Request) {
   try {
     const body = await request.text();
@@ -68,12 +74,6 @@ export async function POST(request: Request) {
             { status: 400 }
           );
         }
-
-        const creditsByPlan: Record<string, number> = {
-          starter: 100,
-          pro: 1000,
-          elite: 10000,
-        };
 
         await supabase.from('subscriptions').upsert(
           {
