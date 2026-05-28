@@ -37,10 +37,10 @@ const productTools = [
 ];
 
 const proofStats = [
-  ["Free", "Start with public creator tools"],
-  ["Beta", "Premium workflows are early access"],
-  ["4", "Core pre-publish checks"],
-  ["SEO", "Built for creator search intent"],
+  ["10+", "Specialized creator workflow tools"],
+  ["Fast", "Built for instant pre-publish analysis"],
+  ["4", "Core publishing workflow categories"],
+  ["SEO", "Search-first creator acquisition engine"],
 ];
 
 function LogoMark() {
@@ -91,13 +91,13 @@ export default function Home() {
                 <LogoMark />
                 <div>
                   <span className="block text-xl font-black tracking-tight">HookSignals</span>
-                  <span className="hidden text-xs uppercase tracking-[0.16em] text-cyan-300 sm:block">Creator Tools</span>
+                  <span className="hidden text-xs uppercase tracking-[0.16em] text-cyan-300 sm:block">Creator Intelligence</span>
                 </div>
               </a>
               <div className="hidden items-center gap-8 text-sm text-white/58 lg:flex">
                 <a className="transition hover:text-white" href="/tools">Tools</a>
                 <a className="transition hover:text-white" href="/hook-analyzer">Analyzer</a>
-                <a className="transition hover:text-white" href="/pricing">Beta</a>
+                <a className="transition hover:text-white" href="/pricing">Pricing</a>
                 <a className="transition hover:text-white" href="/blog">Resources</a>
                 <a className="transition hover:text-white" href="/seo">SEO Hub</a>
               </div>
@@ -107,7 +107,7 @@ export default function Home() {
             <section className="grid gap-10 pb-16 pt-14 lg:grid-cols-[0.92fr_1.08fr] lg:items-center lg:pb-24 lg:pt-24 hs-mobile-stack">
               <div>
                 <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-violet-400/30 bg-violet-500/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.18em] text-violet-100 shadow-lg shadow-violet-500/10 hs-slide-up">
-                  <span className="text-cyan-300">✦</span>Free creator workflow tools
+                  <span className="text-cyan-300">✦</span>AI creator workflow system
                 </div>
                 <h1 className="max-w-5xl text-6xl font-black leading-[0.92] tracking-[-0.08em] text-white md:text-7xl xl:text-[92px] hs-slide-up hs-delay-1">
                   Analyze.<br />
