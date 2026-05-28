@@ -3,9 +3,15 @@ export const metadata = {
   description: 'Sign in to your HookSignals creator workspace.',
 };
 
-const clerkSignInUrl = 'https://accounts.hooksignals.com/sign-in';
+function getClerkHost() {
+  const key = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || '';
+  const host = key.split('$')[1];
+  return host ? `https://${host}` : '/dashboard';
+}
 
 export default function SignInPage() {
+  const clerkSignInUrl = `${getClerkHost()}/sign-in?redirect_url=https://hooksignals.com/dashboard`;
+
   return (
     <main className="min-h-screen bg-[#030507] px-5 py-16 text-white md:px-8">
       <div className="mx-auto flex max-w-3xl flex-col items-center text-center">
