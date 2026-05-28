@@ -2,7 +2,7 @@ export const siteConfig = {
   name: "HookSignals",
   url: "https://hooksignals.com",
   description:
-    "Free creator tools for improving hooks, titles, thumbnails, Shorts scripts and retention before publishing.",
+    "Creator workflow tools for improving hooks, titles, thumbnails, Shorts scripts and retention before publishing.",
 };
 
 export type SeoRoute = {
@@ -15,8 +15,8 @@ export type SeoRoute = {
 };
 
 export const seoRoutes: SeoRoute[] = [
-  { path: "/", title: "HookSignals | Free AI Creator Tools for YouTube and Shorts", description: "Analyze hooks, improve titles, generate Shorts scripts and check creator packaging before publishing.", priority: 1, changeFrequency: "daily", intent: "workflow" },
-  { path: "/tools", title: "Free AI Creator Tools | HookSignals", description: "Explore free HookSignals tools for hooks, titles, scripts, thumbnails and viewer retention.", priority: 0.92, changeFrequency: "weekly", intent: "workflow" },
+  { path: "/", title: "HookSignals | AI Creator Workflow Tools for YouTube and Shorts", description: "Analyze hooks, improve titles, generate Shorts scripts and check creator packaging before publishing.", priority: 1, changeFrequency: "daily", intent: "workflow" },
+  { path: "/tools", title: "AI Creator Tools | HookSignals", description: "Explore HookSignals tools for hooks, titles, scripts, thumbnails and viewer retention.", priority: 0.92, changeFrequency: "weekly", intent: "workflow" },
   { path: "/hook-analyzer", title: "Hook Analyzer | Score Your Video Hook | HookSignals", description: "Score your YouTube, TikTok or Shorts hook for clarity, curiosity and retention risk before publishing.", priority: 0.95, changeFrequency: "weekly", intent: "tool" },
   { path: "/hook-improver", title: "Hook Improver | Rewrite Weak Hooks | HookSignals", description: "Rewrite weak video hooks into clearer, sharper and more retention-focused opening lines.", priority: 0.9, changeFrequency: "weekly", intent: "tool" },
   { path: "/youtube-hook-generator", title: "YouTube Hook Generator | Create Better Video Hooks | HookSignals", description: "Generate stronger YouTube hooks for Shorts, long-form videos and creator content.", priority: 0.88, changeFrequency: "weekly", intent: "tool" },
@@ -24,7 +24,7 @@ export const seoRoutes: SeoRoute[] = [
   { path: "/youtube-title-generator", title: "YouTube Title Generator | Create Better Video Titles | HookSignals", description: "Generate YouTube title ideas built around clarity, curiosity and click intent.", priority: 0.88, changeFrequency: "weekly", intent: "tool" },
   { path: "/shorts-script-generator", title: "Shorts Script Generator | AI Short-Form Script Tool | HookSignals", description: "Generate short-form script structures designed for hook strength, pacing and retention.", priority: 0.88, changeFrequency: "weekly", intent: "tool" },
   { path: "/thumbnail-text-checker", title: "Thumbnail Text Checker | Improve CTR Clarity | HookSignals", description: "Check whether your thumbnail text is readable, clear and built for stronger click intent.", priority: 0.84, changeFrequency: "weekly", intent: "tool" },
-  { path: "/pricing", title: "Beta Access | HookSignals", description: "Start with free HookSignals creator tools while advanced premium workflows remain in early beta.", priority: 0.7, changeFrequency: "monthly", intent: "workflow" },
+  { path: "/pricing", title: "Pricing | HookSignals Creator Plans", description: "Choose a HookSignals plan for hook analysis, creator workflows, script drafts and thumbnail checks before publishing.", priority: 0.7, changeFrequency: "monthly", intent: "workflow" },
   { path: "/hook-psychology", title: "Hook Psychology | Why Viewers Keep Watching | HookSignals", description: "Learn how curiosity, clarity and tension shape stronger short-form video openings.", priority: 0.82, changeFrequency: "weekly", intent: "education" },
   { path: "/clickable-title-formulas", title: "Clickable Title Formulas | HookSignals", description: "Use practical title formulas to improve clarity, curiosity and click intent.", priority: 0.8, changeFrequency: "weekly", intent: "education" },
   { path: "/viral-title-examples", title: "Viral Title Examples | HookSignals", description: "Study stronger title structures for YouTube, Shorts and creator content.", priority: 0.8, changeFrequency: "weekly", intent: "examples" },
