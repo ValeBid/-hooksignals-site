@@ -1,6 +1,9 @@
 export const metadata = {
-  title: "Refund Policy | HookSignals",
+  title: "Refund Policy",
   description: "Refund policy for HookSignals subscriptions and creator tools.",
+  alternates: {
+    canonical: "https://hooksignals.com/refund-policy",
+  },
 };
 
 export default function RefundPolicyPage() {
