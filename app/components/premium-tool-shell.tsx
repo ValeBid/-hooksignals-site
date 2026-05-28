@@ -1,5 +1,13 @@
 import SiteFooter from "./site-footer";
+import StickyCTA from "./sticky-cta";
 import type { ReactNode } from "react";
+
+const navLinks = [
+  ["Tools", "/tools"],
+  ["Pricing", "/pricing"],
+  ["Blog", "/blog"],
+  ["SEO Hub", "/seo"],
+];
 
 type PremiumToolShellProps = {
   badge: string;
@@ -25,20 +33,30 @@ export default function PremiumToolShell({
   footer,
 }: PremiumToolShellProps) {
   return (
-    <main className="min-h-screen overflow-hidden bg-[#030507] text-white">
+    <main className="min-h-screen overflow-hidden bg-[#020408] pb-28 text-white">
       <section className="relative overflow-hidden border-b border-white/10">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_12%_12%,rgba(34,197,94,0.12),transparent_28%),radial-gradient(circle_at_82%_8%,rgba(124,58,237,0.14),transparent_30%),radial-gradient(circle_at_70%_75%,rgba(14,165,233,0.08),transparent_26%),linear-gradient(180deg,#030507_0%,#05070b_55%,#030507_100%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_12%_12%,rgba(6,182,212,0.14),transparent_28%),radial-gradient(circle_at_82%_8%,rgba(124,58,237,0.16),transparent_30%),radial-gradient(circle_at_70%_75%,rgba(14,165,233,0.08),transparent_26%),linear-gradient(180deg,#020408_0%,#05070b_55%,#020408_100%)]" />
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.022)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.022)_1px,transparent_1px)] bg-[size:72px_72px] opacity-25" />
-        <div className="absolute left-1/2 top-0 h-[420px] w-[420px] -translate-x-1/2 rounded-full bg-emerald-400/8 blur-[110px]" />
+        <div className="absolute left-1/2 top-0 h-[460px] w-[460px] -translate-x-1/2 rounded-full bg-cyan-400/10 blur-[130px]" />
 
-        <div className="relative mx-auto max-w-[1240px] px-5 py-5 md:px-8">
-          <nav className="flex items-center justify-between rounded-[24px] border border-white/10 bg-white/[0.035] px-4 py-3 shadow-2xl shadow-black/30 backdrop-blur-xl md:px-6">
-            <a href="/" className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-emerald-300/25 bg-emerald-400/10 shadow-lg shadow-emerald-500/10">
-                <span className="text-xl font-black text-emerald-300">↗</span>
+        <div className="relative mx-auto max-w-[1320px] px-5 py-5 md:px-8">
+          <nav className="sticky top-4 z-50 flex items-center justify-between rounded-[26px] border border-white/10 bg-black/30 px-4 py-3 shadow-2xl shadow-black/30 backdrop-blur-2xl md:px-6">
+            <a href="/" className="flex items-center gap-3" aria-label="HookSignals home">
+              <div className="relative flex h-11 w-11 items-center justify-center rounded-2xl border border-cyan-300/30 bg-gradient-to-br from-cyan-300/20 via-sky-400/10 to-violet-400/15 shadow-lg shadow-cyan-500/15">
+                <div className="absolute inset-1 rounded-xl border border-white/10" />
+                <span className="text-lg font-black tracking-[-0.08em] text-cyan-100">HS</span>
               </div>
-              <span className="text-lg font-semibold tracking-tight md:text-xl">HookSignals</span>
+              <div>
+                <span className="block text-xl font-black tracking-tight">HookSignals</span>
+                <span className="hidden text-xs uppercase tracking-[0.16em] text-cyan-300 sm:block">Creator Intelligence</span>
+              </div>
             </a>
+
+            <div className="hidden items-center gap-7 text-sm text-white/58 lg:flex">
+              {navLinks.map(([label, href]) => (
+                <a key={href} className="transition hover:text-white" href={href}>{label}</a>
+              ))}
+            </div>
 
             <div className="flex items-center gap-3">
               <a
@@ -49,20 +67,20 @@ export default function PremiumToolShell({
               </a>
               <a
                 href={primaryHref}
-                className="rounded-2xl bg-emerald-400 px-5 py-2.5 text-sm font-bold text-black shadow-lg shadow-emerald-500/20 transition hover:bg-emerald-300"
+                className="rounded-2xl bg-gradient-to-r from-cyan-300 via-sky-400 to-violet-400 px-5 py-2.5 text-sm font-black text-black shadow-[0_20px_40px_rgba(34,211,238,.24)] transition hover:scale-[1.02]"
               >
                 {primaryLabel}
               </a>
             </div>
           </nav>
 
-          <section className="py-10 md:py-14">
+          <section className="py-12 md:py-16">
             <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-violet-400/30 bg-violet-500/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] text-violet-100 shadow-lg shadow-violet-500/10">
-              <span className="text-emerald-300">✦</span>
+              <span className="text-cyan-300">✦</span>
               {badge}
             </div>
 
-            <h1 className="max-w-5xl text-4xl font-black leading-[0.98] tracking-[-0.055em] text-white sm:text-5xl md:text-7xl">
+            <h1 className="max-w-5xl text-4xl font-black leading-[0.95] tracking-[-0.06em] text-white sm:text-5xl md:text-7xl">
               {title}
             </h1>
 
@@ -71,7 +89,7 @@ export default function PremiumToolShell({
             </p>
           </section>
 
-          <section className="rounded-[28px] border border-white/10 bg-white/[0.035] p-4 shadow-2xl shadow-black/25 backdrop-blur-xl md:rounded-[36px] md:p-7">
+          <section className="rounded-[32px] border border-white/10 bg-white/[0.04] p-4 shadow-[0_35px_110px_rgba(0,0,0,.42)] backdrop-blur-2xl md:rounded-[38px] md:p-7">
             {children}
           </section>
 
@@ -80,6 +98,7 @@ export default function PremiumToolShell({
       </section>
 
       <SiteFooter />
+      <StickyCTA />
     </main>
   );
 }
