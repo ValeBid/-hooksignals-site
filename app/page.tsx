@@ -12,6 +12,7 @@ import CreatorPaths from "./components/creator-paths";
 import TrustFoundation from "./components/trust-foundation";
 import StructuredData from "./components/structured-data";
 import ProductProof from "./components/product-proof";
+import CreatorCaseStudy from "./components/creator-case-study";
 import "./components/premium-motion.css";
 import "./components/mobile-cinematic.css";
 
@@ -144,6 +145,7 @@ export default function Home() {
 
             <LiveCreatorMetrics />
             <ProductProof />
+            <CreatorCaseStudy />
             <WorkflowBanner />
             <AnimatedDashboard />
             <VideoShowcase />
