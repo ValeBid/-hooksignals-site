@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
-export const alt = "HookSignals creator intelligence platform";
+export const alt = "HookSignals AI Creator Intelligence Platform";
 export const size = {
   width: 1200,
   height: 630,
@@ -13,12 +13,15 @@ export default function Image() {
     (
       <div
         style={{
+          position: "relative",
           width: "100%",
           height: "100%",
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          background: "#030507",
+          overflow: "hidden",
+          background:
+            "radial-gradient(circle at 16% 16%, rgba(34,211,238,0.30), transparent 32%), radial-gradient(circle at 84% 20%, rgba(139,92,246,0.28), transparent 32%), linear-gradient(135deg, #020408, #07111f 52%, #030507)",
           color: "white",
           padding: "64px",
           fontFamily: "Arial, sans-serif",
@@ -27,90 +30,101 @@ export default function Image() {
         <div
           style={{
             position: "absolute",
-            inset: 0,
-            background:
-              "radial-gradient(circle at 18% 15%, rgba(34,197,94,0.22), transparent 30%), radial-gradient(circle at 84% 18%, rgba(124,58,237,0.22), transparent 28%), radial-gradient(circle at 72% 82%, rgba(14,165,233,0.14), transparent 30%)",
+            right: -90,
+            top: 110,
+            width: 500,
+            height: 360,
+            border: "1px solid rgba(255,255,255,0.12)",
+            borderRadius: 42,
+            background: "rgba(255,255,255,0.05)",
+            transform: "rotate(-8deg)",
           }}
         />
 
-        <div style={{ display: "flex", alignItems: "center", gap: 18, zIndex: 1 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 20, zIndex: 1 }}>
           <div
             style={{
-              width: 64,
-              height: 64,
-              borderRadius: 20,
-              border: "1px solid rgba(110,231,183,0.35)",
-              background: "rgba(52,211,153,0.12)",
+              width: 76,
+              height: 76,
+              borderRadius: 24,
+              border: "1px solid rgba(125,211,252,0.48)",
+              background: "rgba(125,211,252,0.14)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              color: "#6ee7b7",
+              color: "#a5f3fc",
               fontSize: 30,
               fontWeight: 900,
+              letterSpacing: -3,
             }}
           >
             HS
           </div>
-          <div style={{ fontSize: 34, fontWeight: 800, letterSpacing: -1 }}>
-            HookSignals
+          <div>
+            <div style={{ fontSize: 36, fontWeight: 900, letterSpacing: -1 }}>
+              HookSignals
+            </div>
+            <div style={{ color: "#67e8f9", fontSize: 18, letterSpacing: 3, textTransform: "uppercase" }}>
+              Creator Intelligence Platform
+            </div>
           </div>
         </div>
 
-        <div style={{ zIndex: 1, maxWidth: 930 }}>
+        <div style={{ zIndex: 1, maxWidth: 935 }}>
           <div
             style={{
               display: "inline-flex",
-              border: "1px solid rgba(110,231,183,0.32)",
-              background: "rgba(52,211,153,0.1)",
-              color: "#6ee7b7",
+              border: "1px solid rgba(125,211,252,0.32)",
+              background: "rgba(14,165,233,0.12)",
+              color: "#67e8f9",
               borderRadius: 999,
               padding: "12px 18px",
-              fontSize: 22,
-              fontWeight: 800,
-              letterSpacing: 1.4,
+              fontSize: 20,
+              fontWeight: 900,
+              letterSpacing: 1.7,
               textTransform: "uppercase",
             }}
           >
-            Creator intelligence workflow
+            AI hooks • YouTube SEO • TikTok discovery
           </div>
 
           <div
             style={{
               marginTop: 28,
-              fontSize: 72,
-              lineHeight: 0.95,
-              fontWeight: 900,
-              letterSpacing: -4,
+              fontSize: 76,
+              lineHeight: 0.94,
+              fontWeight: 950,
+              letterSpacing: -5,
             }}
           >
-            Create hooks that stop the scroll.
+            Create content that wins attention instantly.
           </div>
 
           <div
             style={{
               marginTop: 28,
-              fontSize: 30,
-              lineHeight: 1.35,
-              color: "rgba(255,255,255,0.64)",
+              fontSize: 29,
+              lineHeight: 1.34,
+              color: "rgba(255,255,255,0.68)",
               maxWidth: 820,
             }}
           >
-            Analyze hooks, titles, scripts and packaging before publishing.
+            Analyze hooks, titles, scripts, thumbnails and retention before publishing.
           </div>
         </div>
 
         <div style={{ display: "flex", gap: 14, zIndex: 1 }}>
-          {["Hook", "Title", "Script", "Packaging", "Retention"].map((item) => (
+          {["AI Hooks", "Shorts SEO", "TikTok", "Retention"].map((item) => (
             <div
               key={item}
               style={{
-                border: "1px solid rgba(255,255,255,0.12)",
-                background: "rgba(255,255,255,0.05)",
-                borderRadius: 18,
-                padding: "14px 18px",
-                color: "rgba(255,255,255,0.74)",
-                fontSize: 22,
-                fontWeight: 700,
+                border: "1px solid rgba(255,255,255,0.13)",
+                background: "rgba(255,255,255,0.06)",
+                borderRadius: 999,
+                padding: "14px 20px",
+                color: "rgba(255,255,255,0.78)",
+                fontSize: 21,
+                fontWeight: 800,
               }}
             >
               {item}
