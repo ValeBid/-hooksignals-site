@@ -1,8 +1,8 @@
 const metrics = [
-  ["Hooks analyzed today", "18,420", "+12.8%"],
-  ["Scripts generated", "6,940", "+9.4%"],
-  ["Thumbnails checked", "4,810", "+16.2%"],
-  ["Creator workflows", "31,205", "+21.7%"],
+  ["Hook clarity", "86/100", "Sample"],
+  ["Retention pull", "67%", "Model"],
+  ["Thumbnail clarity", "9.4/10", "Preview"],
+  ["Workflow readiness", "Beta", "Early"],
 ];
 
 export default function LiveCreatorMetrics() {
@@ -10,10 +10,10 @@ export default function LiveCreatorMetrics() {
     <section className="mt-16 rounded-[34px] border border-white/10 bg-white/[0.035] p-6 shadow-[0_35px_110px_rgba(0,0,0,.42)] backdrop-blur-2xl md:p-8">
       <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <div className="max-w-3xl">
-          <p className="text-sm font-bold uppercase tracking-[0.18em] text-cyan-300">Live creator metrics</p>
-          <h2 className="mt-4 text-4xl font-black tracking-[-0.05em] md:text-5xl">A workflow that feels active, not static.</h2>
+          <p className="text-sm font-bold uppercase tracking-[0.18em] text-cyan-300">Creator workflow preview</p>
+          <h2 className="mt-4 text-4xl font-black tracking-[-0.05em] md:text-5xl">Useful creator signals before you publish.</h2>
         </div>
-        <p className="max-w-md text-sm leading-6 text-white/45">Representative platform activity layer for trust, clarity and product momentum. Final production counters can later connect to real analytics.</p>
+        <p className="max-w-md text-sm leading-6 text-white/45">HookSignals focuses on practical pre-publish checks: hook clarity, retention pull, thumbnail readability and workflow next steps.</p>
       </div>
 
       <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
