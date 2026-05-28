@@ -1,5 +1,7 @@
 "use client";
 
+import { useUser } from "@clerk/nextjs";
+
 const paddleToken = "live_af5c9cec32aec5fc5c8f8c35773";
 const starterPriceId = "pri_01ksqr6vp07e48ktwm6x5jzw1y";
 const proPriceId = "pri_01ksnnbh8fc2452se12nr37tmz";
@@ -14,7 +16,11 @@ type PaddleWindow = Window & {
     };
     Initialize: (options: { token: string }) => void;
     Checkout: {
-      open: (options: { items: Array<{ priceId: string; quantity: number }> }) => void;
+      open: (options: {
+        items: Array<{ priceId: string; quantity: number }>;
+        customData?: Record<string, string>;
+        customer?: { email?: string };
+      }) => void;
     };
   };
 };
@@ -106,10 +112,20 @@ const plans = [
 ];
 
 export default function PricingPreview() {
+  const { user, isSignedIn } = useUser();
+
   async function openCheckout(priceId: string) {
     try {
       await loadPaddle();
-      getPaddleWindow().Paddle?.Checkout.open({ items: [{ priceId, quantity: 1 }] });
+
+      const email = user?.primaryEmailAddress?.emailAddress;
+      const customData = isSignedIn && user?.id ? { clerk_user_id: user.id } : undefined;
+
+      getPaddleWindow().Paddle?.Checkout.open({
+        items: [{ priceId, quantity: 1 }],
+        ...(customData ? { customData } : {}),
+        ...(email ? { customer: { email } } : {}),
+      });
     } catch {
       window.location.href = "mailto:support@hooksignals.com?subject=HookSignals%20Checkout";
     }
