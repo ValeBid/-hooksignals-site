@@ -1,3 +1,21 @@
+"use client";
+
+import { useEffect, useState } from "react";
+
+declare global {
+  interface Window {
+    Paddle?: {
+      Initialize: (config: { token: string }) => void;
+      Checkout: {
+        open: (config: { items: { priceId: string; quantity: number }[] }) => void;
+      };
+    };
+  }
+}
+
+const paddleToken = "live_af5c9cec32aec5fc5c8f8c35773";
+const elitePriceId = "pri_01ksnn757pd4582jcvn8g0g165";
+
 const plans = [
   {
     name: "Free Tools",
@@ -7,28 +25,58 @@ const plans = [
     cta: "Start Free",
     href: "/tools",
     premium: false,
+    checkout: false,
+    disabled: false,
   },
   {
     name: "Creator Pro",
     price: "$19",
     desc: "Advanced creator workflows for faster publishing decisions and stronger retention systems.",
     features: ["Saved workflows", "Advanced retention insights", "Project memory", "Priority creator tools"],
-    cta: "Upgrade to Pro",
+    cta: "Pro price ID needed",
     href: "/pricing",
     premium: true,
+    checkout: false,
+    disabled: true,
   },
   {
-    name: "Studio",
+    name: "Elite",
     price: "$49",
-    desc: "Team-level creator workflows for agencies, editors and publishing operations.",
+    desc: "Higher-tier creator workflow access for serious publishing systems.",
     features: ["Team workflows", "Creator dashboards", "Publishing systems", "Priority support"],
-    cta: "Start Studio",
+    cta: "Start Elite",
     href: "/pricing",
     premium: true,
+    checkout: true,
+    disabled: false,
   },
 ];
 
 export default function PricingPreview() {
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    if (window.Paddle) {
+      window.Paddle.Initialize({ token: paddleToken });
+      setReady(true);
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.src = "https://cdn.paddle.com/paddle/v2/paddle.js";
+    script.async = true;
+    script.onload = () => {
+      window.Paddle?.Initialize({ token: paddleToken });
+      setReady(true);
+    };
+    document.body.appendChild(script);
+  }, []);
+
+  function openEliteCheckout() {
+    if (!ready || !window.Paddle) return;
+    window.Paddle.Checkout.open({ items: [{ priceId: elitePriceId, quantity: 1 }] });
+  }
+
   return (
     <section className="mt-14" id="pricing">
       <div className="rounded-[32px] border border-white/10 bg-white/[0.03] p-7 md:p-10">
@@ -46,7 +94,13 @@ export default function PricingPreview() {
               </div>
               <div className="mt-8 flex items-end gap-2"><span className="text-5xl font-black tracking-[-0.05em]">{plan.price}</span><span className="pb-1 text-white/45">/month</span></div>
               <div className="mt-8 space-y-3">{plan.features.map((feature) => <div key={feature} className="flex items-center gap-3 text-white/70"><div className="h-2 w-2 rounded-full bg-cyan-300" /><span>{feature}</span></div>)}</div>
-              <a href={plan.href} className={`mt-8 inline-flex w-full justify-center rounded-2xl px-6 py-3 font-black transition ${plan.premium ? "bg-white text-black hover:bg-white/90" : "border border-white/10 bg-white/[0.04] text-white hover:bg-white/10"}`}>{plan.cta}</a>
+              {plan.checkout ? (
+                <button type="button" onClick={openEliteCheckout} disabled={!ready} className="mt-8 inline-flex w-full justify-center rounded-2xl bg-white px-6 py-3 font-black text-black transition hover:bg-white/90 disabled:cursor-not-allowed disabled:opacity-60">{ready ? plan.cta : "Loading checkout..."}</button>
+              ) : plan.disabled ? (
+                <button type="button" disabled className="mt-8 inline-flex w-full justify-center rounded-2xl bg-white/40 px-6 py-3 font-black text-black opacity-70">{plan.cta}</button>
+              ) : (
+                <a href={plan.href} className="mt-8 inline-flex w-full justify-center rounded-2xl border border-white/10 bg-white/[0.04] px-6 py-3 font-black text-white transition hover:bg-white/10">{plan.cta}</a>
+              )}
             </div>
           ))}
         </div>
