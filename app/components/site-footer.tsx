@@ -55,7 +55,7 @@ export default function SiteFooter() {
 
             <div className="mt-8 flex flex-wrap gap-3">
               <a href="/tools" className="rounded-2xl bg-emerald-400 px-5 py-3 text-sm font-bold text-black shadow-lg shadow-emerald-500/20 transition hover:bg-emerald-300">Explore Tools</a>
-              <a href="/pricing" className="rounded-2xl border border-white/10 bg-white/[0.035] px-5 py-3 text-sm font-bold text-white/80 transition hover:bg-white/10">Pricing Preview</a>
+              <a href="/pricing" className="rounded-2xl border border-white/10 bg-white/[0.035] px-5 py-3 text-sm font-bold text-white/80 transition hover:bg-white/10">View Pricing</a>
             </div>
           </div>
 
