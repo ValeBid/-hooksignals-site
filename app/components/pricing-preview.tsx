@@ -1,5 +1,3 @@
-import { purchaseLinks } from "./purchase-links";
-
 const plans = [
   {
     name: "Free Tools",
@@ -7,7 +5,7 @@ const plans = [
     desc: "Use the public creator tools for hooks, scripts and thumbnail optimization.",
     features: ["Hook analysis", "Hook rewriting", "Shorts script drafts", "Thumbnail text checks"],
     cta: "Start Free",
-    href: purchaseLinks.free,
+    href: "/tools",
     premium: false,
   },
   {
@@ -16,7 +14,7 @@ const plans = [
     desc: "Advanced creator workflows for faster publishing decisions and stronger retention systems.",
     features: ["Saved workflows", "Advanced retention insights", "Project memory", "Priority creator tools"],
     cta: "Upgrade to Pro",
-    href: purchaseLinks.creatorPro,
+    href: "/checkout/creator-pro",
     premium: true,
   },
   {
@@ -25,7 +23,7 @@ const plans = [
     desc: "Team-level creator workflows for agencies, editors and publishing operations.",
     features: ["Team workflows", "Creator dashboards", "Publishing systems", "Priority support"],
     cta: "Start Studio",
-    href: purchaseLinks.studio,
+    href: "/checkout/studio",
     premium: true,
   },
 ];
