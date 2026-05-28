@@ -21,7 +21,7 @@ export const metadata = {
     "Analyze hooks, improve retention, check thumbnail clarity and build stronger creator workflows before publishing.",
   alternates: { canonical: "https://hooksignals.com" },
   openGraph: {
-    title: "HookSignals — AI Creator Tools",
+    title: "HookSignals — Free AI Creator Tools",
     description: "Analyze hooks, retention, thumbnails and creator workflows before publishing.",
     url: "https://hooksignals.com",
     siteName: "HookSignals",
