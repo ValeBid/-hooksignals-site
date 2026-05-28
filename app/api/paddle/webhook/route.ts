@@ -1,6 +1,6 @@
 import { headers } from 'next/headers';
 import { NextResponse } from 'next/server';
-import { supabase } from '@/app/lib/supabase';
+import { supabase } from '../../../lib/supabase';
 
 export async function POST(request: Request) {
   try {
@@ -81,12 +81,6 @@ export async function POST(request: Request) {
           }
         );
 
-        console.log('Paddle sync success:', {
-          clerkUserId,
-          plan,
-          status,
-        });
-
         break;
       }
 
@@ -94,9 +88,12 @@ export async function POST(request: Request) {
         const customData = data?.custom_data || {};
         const clerkUserId = customData.clerk_user_id || 'preview-user';
 
-        await supabase.from('subscriptions').update({
-          status: 'canceled',
-        }).eq('clerk_user_id', clerkUserId);
+        await supabase
+          .from('subscriptions')
+          .update({
+            status: 'canceled',
+          })
+          .eq('clerk_user_id', clerkUserId);
 
         break;
       }
