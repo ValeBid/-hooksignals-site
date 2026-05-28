@@ -2,6 +2,9 @@ import { NextResponse } from "next/server";
 
 const OPENAI_URL = "https://api.openai.com/v1/chat/completions";
 const MODEL = process.env.OPENAI_MODEL || "gpt-4.1-mini";
+const WINDOW_MS = 60 * 60 * 1000;
+const MAX_REQUESTS_PER_WINDOW = 10;
+const requestLog = new Map<string, { count: number; resetAt: number }>();
 
 type HookAnalysis = {
   score: number;
@@ -13,6 +16,30 @@ type HookAnalysis = {
   feedback: string[];
   improved: string[];
 };
+
+function getClientKey(request: Request) {
+  const forwardedFor = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim();
+  const realIp = request.headers.get("x-real-ip")?.trim();
+  return forwardedFor || realIp || "anonymous";
+}
+
+function isRateLimited(request: Request) {
+  const key = getClientKey(request);
+  const now = Date.now();
+  const current = requestLog.get(key);
+
+  if (!current || current.resetAt <= now) {
+    requestLog.set(key, { count: 1, resetAt: now + WINDOW_MS });
+    return false;
+  }
+
+  if (current.count >= MAX_REQUESTS_PER_WINDOW) {
+    return true;
+  }
+
+  current.count += 1;
+  return false;
+}
 
 function clampScore(value: unknown, fallback: number) {
   if (typeof value !== "number" || Number.isNaN(value)) return fallback;
@@ -83,6 +110,10 @@ function normalizeAnalysis(raw: any, hook: string): HookAnalysis {
 
 export async function POST(request: Request) {
   try {
+    if (isRateLimited(request)) {
+      return NextResponse.json({ error: "Free analysis limit reached. Choose a plan to keep analyzing hooks." }, { status: 429 });
+    }
+
     const body = await request.json();
     const hook = typeof body?.hook === "string" ? body.hook.trim() : "";
 
