@@ -1,7 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
 declare global {
   interface Window {
     Paddle?: {
@@ -16,6 +14,44 @@ declare global {
 const paddleToken = "live_af5c9cec32aec5fc5c8f8c35773";
 const elitePriceId = "pri_01ksnn757pd4582jcvn8g0g165";
 
+let paddleLoadingPromise: Promise<void> | null = null;
+
+function loadPaddle() {
+  if (typeof window === "undefined") return Promise.resolve();
+
+  if (window.Paddle) {
+    window.Paddle.Initialize({ token: paddleToken });
+    return Promise.resolve();
+  }
+
+  if (paddleLoadingPromise) return paddleLoadingPromise;
+
+  paddleLoadingPromise = new Promise((resolve, reject) => {
+    const existing = document.querySelector<HTMLScriptElement>('script[src="https://cdn.paddle.com/paddle/v2/paddle.js"]');
+
+    if (existing) {
+      existing.addEventListener("load", () => {
+        window.Paddle?.Initialize({ token: paddleToken });
+        resolve();
+      });
+      existing.addEventListener("error", reject);
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.src = "https://cdn.paddle.com/paddle/v2/paddle.js";
+    script.async = true;
+    script.onload = () => {
+      window.Paddle?.Initialize({ token: paddleToken });
+      resolve();
+    };
+    script.onerror = reject;
+    document.body.appendChild(script);
+  });
+
+  return paddleLoadingPromise;
+}
+
 const plans = [
   {
     name: "Free Tools",
@@ -26,18 +62,16 @@ const plans = [
     href: "/tools",
     premium: false,
     checkout: false,
-    disabled: false,
   },
   {
     name: "Creator Pro",
     price: "$19",
     desc: "Advanced creator workflows for faster publishing decisions and stronger retention systems.",
     features: ["Saved workflows", "Advanced retention insights", "Project memory", "Priority creator tools"],
-    cta: "Pro price ID needed",
-    href: "/pricing",
+    cta: "Pro setup pending",
+    href: "mailto:support@hooksignals.com?subject=HookSignals%20Creator%20Pro",
     premium: true,
     checkout: false,
-    disabled: true,
   },
   {
     name: "Elite",
@@ -48,33 +82,17 @@ const plans = [
     href: "/pricing",
     premium: true,
     checkout: true,
-    disabled: false,
   },
 ];
 
 export default function PricingPreview() {
-  const [ready, setReady] = useState(false);
-
-  useEffect(() => {
-    if (window.Paddle) {
-      window.Paddle.Initialize({ token: paddleToken });
-      setReady(true);
-      return;
+  async function openEliteCheckout() {
+    try {
+      await loadPaddle();
+      window.Paddle?.Checkout.open({ items: [{ priceId: elitePriceId, quantity: 1 }] });
+    } catch {
+      window.location.href = "mailto:support@hooksignals.com?subject=HookSignals%20Elite%20Checkout";
     }
-
-    const script = document.createElement("script");
-    script.src = "https://cdn.paddle.com/paddle/v2/paddle.js";
-    script.async = true;
-    script.onload = () => {
-      window.Paddle?.Initialize({ token: paddleToken });
-      setReady(true);
-    };
-    document.body.appendChild(script);
-  }, []);
-
-  function openEliteCheckout() {
-    if (!ready || !window.Paddle) return;
-    window.Paddle.Checkout.open({ items: [{ priceId: elitePriceId, quantity: 1 }] });
   }
 
   return (
@@ -95,11 +113,9 @@ export default function PricingPreview() {
               <div className="mt-8 flex items-end gap-2"><span className="text-5xl font-black tracking-[-0.05em]">{plan.price}</span><span className="pb-1 text-white/45">/month</span></div>
               <div className="mt-8 space-y-3">{plan.features.map((feature) => <div key={feature} className="flex items-center gap-3 text-white/70"><div className="h-2 w-2 rounded-full bg-cyan-300" /><span>{feature}</span></div>)}</div>
               {plan.checkout ? (
-                <button type="button" onClick={openEliteCheckout} disabled={!ready} className="mt-8 inline-flex w-full justify-center rounded-2xl bg-white px-6 py-3 font-black text-black transition hover:bg-white/90 disabled:cursor-not-allowed disabled:opacity-60">{ready ? plan.cta : "Loading checkout..."}</button>
-              ) : plan.disabled ? (
-                <button type="button" disabled className="mt-8 inline-flex w-full justify-center rounded-2xl bg-white/40 px-6 py-3 font-black text-black opacity-70">{plan.cta}</button>
+                <button type="button" onClick={openEliteCheckout} className="mt-8 inline-flex w-full justify-center rounded-2xl bg-white px-6 py-3 font-black text-black transition hover:bg-white/90">{plan.cta}</button>
               ) : (
-                <a href={plan.href} className="mt-8 inline-flex w-full justify-center rounded-2xl border border-white/10 bg-white/[0.04] px-6 py-3 font-black text-white transition hover:bg-white/10">{plan.cta}</a>
+                <a href={plan.href} className={`mt-8 inline-flex w-full justify-center rounded-2xl px-6 py-3 font-black transition ${plan.premium ? "bg-white text-black hover:bg-white/90" : "border border-white/10 bg-white/[0.04] text-white hover:bg-white/10"}`}>{plan.cta}</a>
               )}
             </div>
           ))}
