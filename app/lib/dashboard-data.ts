@@ -16,13 +16,23 @@ export async function getDashboardDataForUser(clerkUserId: string) {
   const [{ data: subscriptions }, { data: credits }, { data: generations }] = await Promise.all([
     supabase.from('subscriptions').select('*').eq('clerk_user_id', clerkUserId).limit(1),
     supabase.from('credits').select('*').eq('clerk_user_id', clerkUserId).limit(1),
-    supabase.from('generations').select('*').eq('clerk_user_id', clerkUserId).order('created_at', { ascending: false }).limit(5),
+    supabase.from('generations').select('*').eq('clerk_user_id', clerkUserId).order('created_at', { ascending: false }).limit(12),
   ]);
+
+  const safeGenerations = generations || [];
+  const totalGenerations = safeGenerations.length;
+  const recentToolNames = Array.from(new Set(safeGenerations.map((item: any) => item.tool_name).filter(Boolean)));
+  const creditsSpent = safeGenerations.reduce((sum: number, item: any) => sum + Number(item.credits_spent || 0), 0);
 
   return {
     subscription: subscriptions?.[0] || null,
     credits: credits?.[0] || null,
-    generations: generations || [],
+    generations: safeGenerations,
+    workspace: {
+      totalGenerations,
+      recentToolNames,
+      creditsSpent,
+    },
   };
 }
 
