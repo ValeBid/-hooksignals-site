@@ -5,7 +5,7 @@ import { siteConfig } from "./lib/seo";
 export const metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
-    default: "HookSignals | AI Creator Workflow Tools",
+    default: "HookSignals | Free AI Creator Tools",
     template: "%s | HookSignals",
   },
   description: siteConfig.description,
@@ -25,18 +25,18 @@ export const metadata = {
   },
   category: "creator tools",
   openGraph: {
-    title: "HookSignals | AI Creator Workflow Tools",
+    title: "HookSignals | Free AI Creator Tools",
     description:
-      "Improve hooks, titles, thumbnails and creator workflows before publishing.",
+      "Free creator tools for hooks, titles, thumbnails, scripts and retention checks before publishing.",
     url: siteConfig.url,
     siteName: siteConfig.name,
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "HookSignals | AI Creator Workflow Tools",
+    title: "HookSignals | Free AI Creator Tools",
     description:
-      "AI-powered creator tools for hooks, titles, thumbnails and retention.",
+      "Free creator tools for hooks, titles, thumbnails and retention checks before publishing.",
   },
   robots: {
     index: true,
