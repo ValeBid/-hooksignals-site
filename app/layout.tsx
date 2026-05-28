@@ -25,9 +25,6 @@ export const metadata = {
     shortcut: "/hs-logo.svg",
     apple: "/hs-logo.svg",
   },
-  alternates: {
-    canonical: siteConfig.url,
-  },
   category: "creator tools",
   openGraph: {
     title: "HookSignals | AI Creator Intelligence Tools",
@@ -38,10 +35,10 @@ export const metadata = {
     type: "website",
     images: [
       {
-        url: "/hs-logo.svg",
-        width: 1024,
-        height: 1024,
-        alt: "HookSignals logo",
+        url: "/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: "HookSignals AI Creator Intelligence Platform",
       },
     ],
   },
@@ -50,7 +47,7 @@ export const metadata = {
     title: "HookSignals | AI Creator Intelligence Tools",
     description:
       "Creator intelligence tools for hooks, titles, thumbnails and retention checks before publishing.",
-    images: ["/hs-logo.svg"],
+    images: ["/opengraph-image"],
   },
   robots: {
     index: true,
