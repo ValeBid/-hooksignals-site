@@ -27,7 +27,18 @@ function scoreLabel(score: number) {
 }
 
 function ScoreBar({ label, value }: { label: string; value: number }) {
-  return <div><div className="mb-2 flex justify-between text-sm"><span className="text-white/58">{label}</span><span className="font-semibold text-white/75">{value}/100</span></div><div className="h-2 rounded-full bg-white/10"><div className="h-2 rounded-full bg-gradient-to-r from-cyan-300 via-sky-400 to-violet-400" style={{ width: `${value}%` }} /></div></div>;</n}
+  return (
+    <div>
+      <div className="mb-2 flex justify-between text-sm">
+        <span className="text-white/58">{label}</span>
+        <span className="font-semibold text-white/75">{value}/100</span>
+      </div>
+      <div className="h-2 rounded-full bg-white/10">
+        <div className="h-2 rounded-full bg-gradient-to-r from-cyan-300 via-sky-400 to-violet-400" style={{ width: `${value}%` }} />
+      </div>
+    </div>
+  );
+}
 
 export default function HookAnalyzerPage() {
   const [hook, setHook] = useState("");
@@ -64,9 +75,7 @@ export default function HookAnalyzerPage() {
     try {
       const response = await fetch("/api/ai/analyze-hook", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ hook: trimmedHook }),
       });
 
