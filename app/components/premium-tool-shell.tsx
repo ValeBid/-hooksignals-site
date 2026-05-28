@@ -4,9 +4,9 @@ import type { ReactNode } from "react";
 
 const navLinks = [
   ["Tools", "/tools"],
+  ["Examples", "/viral-hook-examples"],
   ["Pricing", "/pricing"],
   ["Blog", "/blog"],
-  ["SEO Hub", "/seo"],
 ];
 
 type PremiumToolShellProps = {
