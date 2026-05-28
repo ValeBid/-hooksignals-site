@@ -1,0 +1,9 @@
+{
+  "redirects": [
+    {
+      "source": "https://www.hooksignals.com/:path*",
+      "destination": "https://hooksignals.com/:path*",
+      "permanent": true
+    }
+  ]
+}
