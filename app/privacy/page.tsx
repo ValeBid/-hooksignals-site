@@ -1,6 +1,9 @@
 export const metadata = {
-  title: "Privacy Policy | HookSignals",
+  title: "Privacy Policy",
   description: "Privacy policy for HookSignals creator workflow tools.",
+  alternates: {
+    canonical: "https://hooksignals.com/privacy",
+  },
 };
 
 export default function PrivacyPage() {
