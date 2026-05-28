@@ -5,6 +5,14 @@ export const metadata = {
   description:
     "Use free creator tools for hooks, titles, thumbnails, scripts and viewer retention before publishing.",
   alternates: { canonical: "https://hooksignals.com/tools" },
+  openGraph: {
+    title: "Free AI Creator Tools | HookSignals",
+    description:
+      "Use HookSignals tools to analyze hooks, improve titles, check thumbnail clarity and build stronger pre-publish workflows.",
+    url: "https://hooksignals.com/tools",
+    siteName: "HookSignals",
+    type: "website",
+  },
 };
 
 const tools = [
