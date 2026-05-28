@@ -1,6 +1,3 @@
-const creatorProCheckout = process.env.NEXT_PUBLIC_PADDLE_CREATOR_PRO_CHECKOUT_URL || "/pricing";
-const studioCheckout = process.env.NEXT_PUBLIC_PADDLE_STUDIO_CHECKOUT_URL || "/pricing";
-
 const plans = [
   {
     name: "Free Tools",
@@ -17,7 +14,7 @@ const plans = [
     desc: "Advanced creator workflows for faster publishing decisions and stronger retention systems.",
     features: ["Saved workflows", "Advanced retention insights", "Project memory", "Priority creator tools"],
     cta: "Upgrade to Pro",
-    href: creatorProCheckout,
+    href: "/pricing",
     premium: true,
   },
   {
@@ -26,7 +23,7 @@ const plans = [
     desc: "Team-level creator workflows for agencies, editors and publishing operations.",
     features: ["Team workflows", "Creator dashboards", "Publishing systems", "Priority support"],
     cta: "Start Studio",
-    href: studioCheckout,
+    href: "/pricing",
     premium: true,
   },
 ];
