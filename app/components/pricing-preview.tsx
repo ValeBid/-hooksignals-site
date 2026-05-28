@@ -1,26 +1,34 @@
 "use client";
 
-declare global {
-  interface Window {
-    Paddle?: {
-      Initialize: (config: { token: string }) => void;
-      Checkout: {
-        open: (config: { items: { priceId: string; quantity: number }[] }) => void;
-      };
-    };
-  }
-}
-
 const paddleToken = "live_af5c9cec32aec5fc5c8f8c35773";
 const elitePriceId = "pri_01ksnn757pd4582jcvn8g0g165";
 
 let paddleLoadingPromise: Promise<void> | null = null;
 
+type PaddleWindow = Window & {
+  Paddle?: {
+    Environment?: {
+      set: (environment: "sandbox" | "production") => void;
+    };
+    Initialize: (options: { token: string }) => void;
+    Checkout: {
+      open: (options: { items: Array<{ priceId: string; quantity: number }> }) => void;
+    };
+  };
+};
+
+function getPaddleWindow() {
+  return window as PaddleWindow;
+}
+
 function loadPaddle() {
   if (typeof window === "undefined") return Promise.resolve();
 
-  if (window.Paddle) {
-    window.Paddle.Initialize({ token: paddleToken });
+  const paddleWindow = getPaddleWindow();
+
+  if (paddleWindow.Paddle) {
+    paddleWindow.Paddle.Environment?.set("production");
+    paddleWindow.Paddle.Initialize({ token: paddleToken });
     return Promise.resolve();
   }
 
@@ -31,7 +39,9 @@ function loadPaddle() {
 
     if (existing) {
       existing.addEventListener("load", () => {
-        window.Paddle?.Initialize({ token: paddleToken });
+        const loadedWindow = getPaddleWindow();
+        loadedWindow.Paddle?.Environment?.set("production");
+        loadedWindow.Paddle?.Initialize({ token: paddleToken });
         resolve();
       });
       existing.addEventListener("error", reject);
@@ -42,7 +52,9 @@ function loadPaddle() {
     script.src = "https://cdn.paddle.com/paddle/v2/paddle.js";
     script.async = true;
     script.onload = () => {
-      window.Paddle?.Initialize({ token: paddleToken });
+      const loadedWindow = getPaddleWindow();
+      loadedWindow.Paddle?.Environment?.set("production");
+      loadedWindow.Paddle?.Initialize({ token: paddleToken });
       resolve();
     };
     script.onerror = reject;
@@ -89,7 +101,7 @@ export default function PricingPreview() {
   async function openEliteCheckout() {
     try {
       await loadPaddle();
-      window.Paddle?.Checkout.open({ items: [{ priceId: elitePriceId, quantity: 1 }] });
+      getPaddleWindow().Paddle?.Checkout.open({ items: [{ priceId: elitePriceId, quantity: 1 }] });
     } catch {
       window.location.href = "mailto:support@hooksignals.com?subject=HookSignals%20Elite%20Checkout";
     }
