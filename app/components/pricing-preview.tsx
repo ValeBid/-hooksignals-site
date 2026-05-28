@@ -71,9 +71,9 @@ const plans = [
     name: "Starter",
     price: "$10",
     cadence: "/pack",
-    desc: "A one-time credit pack for validating hooks, scripts and thumbnails before committing to a monthly workflow.",
-    fit: "Best for testing the product with a few real videos.",
-    features: ["One-time starter credits", "Hook analysis", "Shorts script drafts", "Thumbnail text checks"],
+    desc: "A low-friction pack for testing HookSignals with real hooks before moving into a weekly workflow.",
+    fit: "Best for validating a few upcoming videos.",
+    features: ["25 starter analyses", "Hook scoring", "Basic script drafts", "Thumbnail text checks"],
     cta: "Buy Starter Pack",
     priceId: starterPriceId,
     premium: false,
@@ -83,25 +83,25 @@ const plans = [
     name: "Creator Pro",
     price: "$20",
     cadence: "/month",
-    desc: "The core plan for creators who publish consistently and want a repeatable pre-publish workflow.",
+    desc: "The main workflow for creators who publish consistently and want stronger decisions before every upload.",
     fit: "Best for solo creators publishing every week.",
-    features: ["Saved creator workflows", "Advanced retention insights", "Project memory", "Priority creator tools"],
+    features: ["More monthly analyses", "Saved creator workflows", "Retention-focused feedback", "Hook, title and script tools"],
     cta: "Start Creator Pro",
     priceId: proPriceId,
     premium: true,
-    note: "Recommended",
+    note: "Best first upgrade",
   },
   {
     name: "Elite",
     price: "$50",
     cadence: "/month",
-    desc: "A heavier workflow tier for teams, agencies and creators managing larger publishing systems.",
-    fit: "Best for teams, agencies and high-output creators.",
-    features: ["Team workflows", "Creator dashboards", "Publishing systems", "Priority support"],
+    desc: "A heavier workflow for teams, agencies and high-output creators managing multiple content ideas.",
+    fit: "Best for teams, editors and high-output creators.",
+    features: ["Team-ready workflows", "More creator dashboards", "Publishing systems", "Priority support"],
     cta: "Start Elite",
     priceId: elitePriceId,
     premium: false,
-    note: "High-output workflow",
+    note: "For teams",
   },
 ];
 
@@ -121,17 +121,17 @@ export default function PricingPreview() {
         <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-3xl">
             <p className="text-sm font-bold uppercase tracking-[0.14em] text-cyan-300">Creator pricing</p>
-            <h2 className="mt-4 text-4xl font-black tracking-[-0.045em] md:text-5xl">Choose how serious your publishing workflow is.</h2>
-            <p className="mt-5 text-lg leading-8 text-white/55">Start with a one-time pack, then upgrade only when HookSignals becomes part of your weekly creator process.</p>
+            <h2 className="mt-4 text-4xl font-black tracking-[-0.045em] md:text-5xl">Start small. Upgrade when it becomes part of your publishing workflow.</h2>
+            <p className="mt-5 text-lg leading-8 text-white/55">Analyze real hooks for free, then choose a plan when you want more checks, stronger variants and repeatable pre-publish decisions.</p>
           </div>
-          <div className="max-w-sm rounded-2xl border border-white/10 bg-black/25 px-5 py-4 text-sm leading-6 text-white/58">
-            Secure checkout by Paddle. Use HookSignals to make clearer pre-publish decisions before every upload.
+          <div className="max-w-sm rounded-2xl border border-cyan-300/15 bg-cyan-300/[0.055] px-5 py-4 text-sm leading-6 text-white/62">
+            Secure checkout by Paddle. One-time and monthly plans are available. Support: support@hooksignals.com
           </div>
         </div>
 
         <div className="mt-10 grid gap-5 lg:grid-cols-3">
           {plans.map((plan) => (
-            <div key={plan.name} className={`relative overflow-hidden rounded-[30px] border p-7 ${plan.premium ? "border-cyan-300/35 bg-cyan-300/[0.055] shadow-[0_28px_90px_rgba(34,211,238,.10)]" : "border-white/10 bg-black/24"}`}>
+            <div key={plan.name} className={`relative overflow-hidden rounded-[30px] border p-7 ${plan.premium ? "border-cyan-300/45 bg-cyan-300/[0.075] shadow-[0_28px_100px_rgba(34,211,238,.16)]" : "border-white/10 bg-black/24"}`}>
               {plan.note && (
                 <div className={`mb-6 inline-flex rounded-full px-3 py-1 text-xs font-black uppercase tracking-[0.12em] ${plan.premium ? "bg-cyan-300 text-black" : "border border-white/10 bg-white/[0.04] text-white/55"}`}>
                   {plan.note}
@@ -148,11 +148,11 @@ export default function PricingPreview() {
                 <span className="pb-1 text-white/45">{plan.cadence}</span>
               </div>
 
-              <p className="mt-5 rounded-2xl border border-white/10 bg-white/[0.035] px-4 py-3 text-sm leading-6 text-white/55">{plan.fit}</p>
+              <p className="mt-5 rounded-2xl border border-white/10 bg-white/[0.035] px-4 py-3 text-sm leading-6 text-white/58">{plan.fit}</p>
 
               <div className="mt-7 space-y-3">
                 {plan.features.map((feature) => (
-                  <div key={feature} className="flex items-center gap-3 text-white/70">
+                  <div key={feature} className="flex items-center gap-3 text-white/72">
                     <div className="h-2 w-2 rounded-full bg-cyan-300" />
                     <span>{feature}</span>
                   </div>
@@ -172,8 +172,8 @@ export default function PricingPreview() {
 
         <div className="mt-7 grid gap-3 text-sm text-white/45 md:grid-cols-3">
           <p>✓ Paddle production checkout</p>
-          <p>✓ One-time and monthly options</p>
-          <p>✓ Support available at support@hooksignals.com</p>
+          <p>✓ Starter pack or monthly workflow</p>
+          <p>✓ No fake growth promises — improve the decision before upload</p>
         </div>
       </div>
     </section>
