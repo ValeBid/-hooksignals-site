@@ -1,13 +1,13 @@
 const showcases = [
-  ["YouTube Shorts teardown", "AI retention review", "14:22"],
-  ["TikTok SEO optimization", "Hook rewrite workflow", "09:11"],
-  ["Thumbnail packaging", "CTR clarity analysis", "06:48"],
+  ["YouTube Shorts teardown", "AI retention review", "14:22", "Hook clarity + pacing map"],
+  ["TikTok SEO optimization", "Hook rewrite workflow", "09:11", "Keyword-first opening"],
+  ["Thumbnail packaging", "CTR clarity analysis", "06:48", "Mobile readability pass"],
 ];
 
 export default function VideoShowcase() {
   return (
     <section className="mt-16 grid gap-5 lg:grid-cols-3">
-      {showcases.map(([title, subtitle, time], index) => (
+      {showcases.map(([title, subtitle, time, signal], index) => (
         <div
           key={title}
           className={`group relative overflow-hidden rounded-[34px] border border-white/10 bg-[#04070d] transition hover:-translate-y-1 hover:border-cyan-300/25 hs-slide-up hs-delay-${index + 1}`}
@@ -16,17 +16,26 @@ export default function VideoShowcase() {
             <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:42px_42px] opacity-40" />
 
             <div className="absolute left-5 top-5 rounded-full border border-cyan-300/20 bg-cyan-300/10 px-3 py-1 text-xs font-bold uppercase tracking-[0.14em] text-cyan-200">
-              Video breakdown
+              Workflow preview
             </div>
 
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="flex h-20 w-20 items-center justify-center rounded-full border border-white/10 bg-white/10 text-3xl text-white backdrop-blur-xl transition group-hover:scale-110">
-                ▶
+            <div className="absolute inset-x-6 top-20 space-y-3">
+              <div className="h-3 w-3/4 rounded-full bg-cyan-300/35" />
+              <div className="h-3 w-1/2 rounded-full bg-violet-300/30" />
+              <div className="mt-5 grid grid-cols-3 gap-3">
+                <div className="h-16 rounded-2xl border border-white/10 bg-white/[0.06]" />
+                <div className="h-16 rounded-2xl border border-white/10 bg-white/[0.04]" />
+                <div className="h-16 rounded-2xl border border-white/10 bg-white/[0.06]" />
               </div>
             </div>
 
-            <div className="absolute bottom-5 right-5 rounded-full border border-white/10 bg-black/40 px-3 py-1 text-xs font-bold text-white/80 backdrop-blur-xl">
-              {time}
+            <div className="absolute bottom-5 left-5 right-5 flex items-center justify-between gap-3">
+              <div className="rounded-full border border-white/10 bg-black/40 px-3 py-1 text-xs font-bold text-white/80 backdrop-blur-xl">
+                {signal}
+              </div>
+              <div className="rounded-full border border-white/10 bg-black/40 px-3 py-1 text-xs font-bold text-white/80 backdrop-blur-xl">
+                {time}
+              </div>
             </div>
           </div>
 
