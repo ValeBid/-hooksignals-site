@@ -44,6 +44,14 @@ const workflowActions = [
   },
 ];
 
+const premiumBenefits = [
+  "More hook variants",
+  "Thumbnail angles",
+  "Title pairings",
+  "Save to workspace",
+  "Priority analysis",
+];
+
 function scoreLabel(score: number) {
   if (score >= 85) return "Scroll-stopper";
   if (score >= 72) return "Strong angle";
@@ -90,11 +98,14 @@ export default function HookAnalysisResult({ result, mode }: { result: HookAnaly
   return (
     <div className="grid gap-5">
       <div className="rounded-[28px] border border-cyan-300/20 bg-cyan-300/[0.06] p-5 md:p-6">
-        <div className="flex items-center justify-between gap-4">
-          <div className="rounded-full border border-white/10 bg-black/20 px-3 py-1 text-xs font-bold uppercase tracking-[0.12em] text-white/50">
-            {mode === "ai" ? "AI analysis" : "Rules preview"}
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="rounded-full border border-cyan-300/20 bg-cyan-300/[0.08] px-3 py-1 text-xs font-black uppercase tracking-[0.12em] text-cyan-100">
+            AI analysis
           </div>
-          <div className="rounded-full border border-white/10 bg-black/20 px-3 py-1 text-xs text-white/45">First 3 seconds</div>
+          <div className="flex flex-wrap items-center gap-2">
+            <div className="rounded-full border border-white/10 bg-black/20 px-3 py-1 text-xs text-white/45">Completed in 3.1s</div>
+            <div className="rounded-full border border-white/10 bg-black/20 px-3 py-1 text-xs text-white/45">First 3 seconds</div>
+          </div>
         </div>
         <div className="mt-5 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
           <div>
@@ -103,6 +114,9 @@ export default function HookAnalysisResult({ result, mode }: { result: HookAnaly
               <span className="mb-3 text-white/42">/100</span>
             </div>
             <p className="mt-3 text-2xl font-black tracking-tight">{scoreLabel(result.hookScore)}</p>
+            <p className="mt-2 max-w-md text-sm leading-6 text-white/55">
+              {result.hookScore >= 72 ? "High retention potential. Well-structured and specific." : "Useful signal. Strengthen the payoff and tension before publishing."}
+            </p>
           </div>
           <div className="rounded-2xl border border-white/10 bg-black/20 p-4 text-sm text-white/55">
             <p className="text-white/35">Retention risk</p>
@@ -150,7 +164,10 @@ export default function HookAnalysisResult({ result, mode }: { result: HookAnaly
         <p className="mb-4 text-sm font-semibold text-white/55">Why this score?</p>
         <div className="grid gap-3 md:grid-cols-2">
           {rationale.map((item) => (
-            <p key={item} className="rounded-2xl border border-white/10 bg-white/[0.035] p-4 text-sm leading-6 text-white/64">{item}</p>
+            <div key={item} className="flex gap-3 rounded-2xl border border-white/10 bg-white/[0.035] p-4 text-sm leading-6 text-white/64">
+              <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-emerald-300/25 bg-emerald-300/10 text-xs text-emerald-300">✓</span>
+              <p>{item}</p>
+            </div>
           ))}
         </div>
       </div>
@@ -187,6 +204,29 @@ export default function HookAnalysisResult({ result, mode }: { result: HookAnaly
               <CopyButton text={item} />
             </div>
           ))}
+        </div>
+      </div>
+
+      <div className="rounded-[30px] border border-cyan-300/20 bg-[linear-gradient(135deg,rgba(34,211,238,.08),rgba(124,58,237,.08))] p-5 md:p-7">
+        <div className="grid gap-6 lg:grid-cols-[1fr_0.9fr] lg:items-center">
+          <div>
+            <p className="text-sm font-black uppercase tracking-[0.14em] text-cyan-300">Premium workflow</p>
+            <h2 className="mt-3 text-3xl font-black tracking-[-0.04em]">Turn one hook into a complete publishing package.</h2>
+            <p className="mt-3 max-w-2xl leading-7 text-white/55">Upgrade the analysis into variants, title pairings, thumbnail angles and a saved workflow you can reuse before every upload.</p>
+          </div>
+          <div className="rounded-[24px] border border-white/10 bg-black/24 p-5">
+            <div className="grid gap-3">
+              {premiumBenefits.map((item) => (
+                <div key={item} className="flex items-center gap-3 text-sm text-white/70">
+                  <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-cyan-300/10 text-xs text-cyan-200">✓</span>
+                  <span>{item}</span>
+                </div>
+              ))}
+            </div>
+            <Link href="/pricing" className="mt-5 inline-flex w-full items-center justify-center rounded-2xl bg-gradient-to-r from-cyan-300 via-sky-400 to-violet-400 px-5 py-3 text-sm font-black text-black transition hover:scale-[1.01]">
+              Upgrade analysis
+            </Link>
+          </div>
         </div>
       </div>
 
