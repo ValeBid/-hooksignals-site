@@ -71,9 +71,9 @@ const plans = [
     name: "Starter",
     price: "$10",
     cadence: "/pack",
-    desc: "A low-friction pack for testing HookSignals with real hooks before moving into a weekly workflow.",
-    fit: "Best for validating a few upcoming videos.",
-    features: ["25 starter analyses", "Hook scoring", "Basic script drafts", "Thumbnail text checks"],
+    desc: "A one-time pack for testing HookSignals with real hooks before moving into a weekly workflow.",
+    fit: "Best for validating upcoming videos without a subscription.",
+    features: ["250 credits included", "Free-level hook diagnosis", "Basic hook rewrites", "Title and thumbnail preview"],
     cta: "Buy Starter Pack",
     priceId: starterPriceId,
     premium: false,
@@ -83,9 +83,9 @@ const plans = [
     name: "Creator Pro",
     price: "$20",
     cadence: "/month",
-    desc: "The main workflow for creators who publish consistently and want stronger decisions before every upload.",
+    desc: "The main plan for creators who want deeper pre-publish decisions before every upload.",
     fit: "Best for solo creators publishing every week.",
-    features: ["More monthly analyses", "Saved creator workflows", "Retention-focused feedback", "Hook, title and script tools"],
+    features: ["2,000 monthly credits", "Premium hook analysis", "More hook variants", "Title pairings + thumbnail angles", "Saved creator history"],
     cta: "Start Creator Pro",
     priceId: proPriceId,
     premium: true,
@@ -95,9 +95,9 @@ const plans = [
     name: "Elite",
     price: "$50",
     cadence: "/month",
-    desc: "A heavier workflow for teams, agencies and high-output creators managing multiple content ideas.",
+    desc: "A heavier workflow tier for teams, agencies and high-output creators managing multiple content ideas.",
     fit: "Best for teams, editors and high-output creators.",
-    features: ["Team-ready workflows", "More creator dashboards", "Publishing systems", "Priority support"],
+    features: ["10,000 monthly credits", "Team-ready workflows", "Batch content analysis", "Creator dashboards", "Priority support"],
     cta: "Start Elite",
     priceId: elitePriceId,
     premium: false,
@@ -121,11 +121,11 @@ export default function PricingPreview() {
         <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-3xl">
             <p className="text-sm font-bold uppercase tracking-[0.14em] text-cyan-300">Creator pricing</p>
-            <h2 className="mt-4 text-4xl font-black tracking-[-0.045em] md:text-5xl">Start small. Upgrade when it becomes part of your publishing workflow.</h2>
-            <p className="mt-5 text-lg leading-8 text-white/55">Analyze real hooks for free, then choose a plan when you want more checks, stronger variants and repeatable pre-publish decisions.</p>
+            <h2 className="mt-4 text-4xl font-black tracking-[-0.045em] md:text-5xl">Start small. Upgrade when the workflow saves real publishing time.</h2>
+            <p className="mt-5 text-lg leading-8 text-white/55">Free analysis gives the diagnosis. Paid plans add credits, deeper analysis, saved history and packaging workflows.</p>
           </div>
           <div className="max-w-sm rounded-2xl border border-cyan-300/15 bg-cyan-300/[0.055] px-5 py-4 text-sm leading-6 text-white/62">
-            Secure checkout by Paddle. One-time and monthly plans are available. Support: support@hooksignals.com
+            Secure checkout by Paddle. Credits are applied to your HookSignals account after successful payment.
           </div>
         </div>
 
@@ -172,8 +172,8 @@ export default function PricingPreview() {
 
         <div className="mt-7 grid gap-3 text-sm text-white/45 md:grid-cols-3">
           <p>✓ Paddle production checkout</p>
-          <p>✓ Starter pack or monthly workflow</p>
-          <p>✓ No fake growth promises — improve the decision before upload</p>
+          <p>✓ 250 / 2,000 / 10,000 credit tiers</p>
+          <p>✓ Paid plans unlock deeper workflow value</p>
         </div>
       </div>
     </section>
