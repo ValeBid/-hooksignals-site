@@ -22,9 +22,21 @@ type HookAnalysis = {
 };
 
 type AnalyzerResponse = {
+  success?: boolean;
   analysis: HookAnalysis;
   mode?: "ai" | "rules";
   diagnostic?: string;
+  creditsSpent?: number;
+  creditsRemaining?: number;
+  shareId?: string | null;
+};
+
+const ERROR_MESSAGES: Record<string, string> = {
+  unauthorized: "Sign in to use premium hook analysis.",
+  insufficient_credits: "You do not have enough credits. Upgrade or refresh your plan.",
+  upgrade_required: "Your account is not on an active premium plan yet.",
+  missing_hook: "Enter a hook with at least 8 characters.",
+  analysis_failed: "Analysis failed. Check the production API logs.",
 };
 
 export default function HookAnalyzerPage() {
@@ -35,6 +47,7 @@ export default function HookAnalyzerPage() {
   const [result, setResult] = useState<null | HookAnalysis>(null);
   const [mode, setMode] = useState<"ai" | "rules" | null>(null);
   const [diagnostic, setDiagnostic] = useState<string | null>(null);
+  const [creditsRemaining, setCreditsRemaining] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -54,9 +67,10 @@ export default function HookAnalyzerPage() {
     setResult(null);
     setMode(null);
     setDiagnostic(null);
+    setCreditsRemaining(null);
 
     try {
-      const response = await fetch("/api/analyze-hook", {
+      const response = await fetch("/api/ai/analyze-hook", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ hook: trimmedHook, platform, niche, audience }),
@@ -65,12 +79,14 @@ export default function HookAnalyzerPage() {
       const data = (await response.json()) as AnalyzerResponse | { error?: string };
 
       if (!response.ok || !("analysis" in data) || !data.analysis) {
-        throw new Error("error" in data ? data.error || "Hook analysis failed." : "Hook analysis failed.");
+        const rawError = "error" in data ? data.error || "analysis_failed" : "analysis_failed";
+        throw new Error(ERROR_MESSAGES[rawError] || rawError);
       }
 
       setResult(data.analysis);
       setMode(data.mode || "ai");
       setDiagnostic(data.diagnostic || null);
+      setCreditsRemaining(typeof data.creditsRemaining === "number" ? data.creditsRemaining : null);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Hook analysis failed. Try again.");
     } finally {
@@ -109,7 +125,7 @@ export default function HookAnalyzerPage() {
 
           <div className="mt-3 flex items-center justify-between text-xs text-white/35">
             <span>{characterCount}/500 characters</span>
-            <span>{mode === "rules" ? "Rules preview" : "AI scoring preview"}</span>
+            <span>{creditsRemaining === null ? (mode === "rules" ? "Rules preview" : "AI scoring preview") : `${creditsRemaining} credits left`}</span>
           </div>
 
           <div className="mt-5 grid gap-3 md:grid-cols-3">
