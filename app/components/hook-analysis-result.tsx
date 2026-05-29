@@ -17,6 +17,33 @@ type HookAnalysis = {
   thumbnailAngles?: string[];
 };
 
+const workflowActions = [
+  {
+    step: "01",
+    name: "Improve Hook",
+    href: "/hook-improver",
+    desc: "Turn the strongest rewrite into more punchy first-line variants.",
+  },
+  {
+    step: "02",
+    name: "Generate Title",
+    href: "/youtube-title-generator",
+    desc: "Match the hook promise with a title that increases click intent.",
+  },
+  {
+    step: "03",
+    name: "Check Thumbnail",
+    href: "/thumbnail-text-checker",
+    desc: "Make sure the visual promise is readable and consistent with the hook.",
+  },
+  {
+    step: "04",
+    name: "Write Script Opener",
+    href: "/shorts-script-generator",
+    desc: "Build the first 10 seconds around the hook, title and thumbnail angle.",
+  },
+];
+
 function scoreLabel(score: number) {
   if (score >= 85) return "Scroll-stopper";
   if (score >= 72) return "Strong angle";
@@ -175,6 +202,22 @@ export default function HookAnalysisResult({ result, mode }: { result: HookAnaly
           <div className="mt-4 space-y-3">
             {thumbnailAngles.map((item) => <p key={item} className="rounded-2xl border border-white/10 bg-black/20 p-3 text-sm text-white/66">{item}</p>)}
           </div>
+        </div>
+      </div>
+
+      <div className="rounded-[30px] border border-cyan-300/20 bg-[linear-gradient(135deg,rgba(34,211,238,.08),rgba(124,58,237,.08))] p-5 md:p-7">
+        <p className="text-sm font-black uppercase tracking-[0.14em] text-cyan-300">Next recommended workflow</p>
+        <h2 className="mt-3 text-3xl font-black tracking-[-0.04em]">Do not stop at the hook. Package the whole idea.</h2>
+        <p className="mt-3 max-w-2xl leading-7 text-white/55">A strong hook still needs a matching title, thumbnail and first 10 seconds. Continue through the chain before publishing.</p>
+        <div className="mt-6 grid gap-3 md:grid-cols-2">
+          {workflowActions.map((tool) => (
+            <Link key={tool.href} href={tool.href} className="rounded-[22px] border border-white/10 bg-black/24 p-4 transition hover:border-cyan-300/30 hover:bg-cyan-300/[0.055]">
+              <p className="text-xs font-black uppercase tracking-[0.14em] text-cyan-300">Step {tool.step}</p>
+              <h3 className="mt-2 text-xl font-black text-white">{tool.name}</h3>
+              <p className="mt-2 text-sm leading-6 text-white/50">{tool.desc}</p>
+              <p className="mt-4 text-sm font-black text-cyan-200">Continue →</p>
+            </Link>
+          ))}
         </div>
       </div>
     </div>
