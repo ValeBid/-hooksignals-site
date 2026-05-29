@@ -35,14 +35,32 @@ type AnalyzerResponse = {
 };
 
 const ERROR_MESSAGES: Record<string, string> = {
-  unauthorized: "Sign in to use premium hook analysis.",
-  insufficient_credits: "You do not have enough credits. Upgrade or refresh your plan.",
-  upgrade_required: "Your account is not on an active premium plan yet.",
+  unauthorized: "Sign in to run a saved hook analysis.",
+  insufficient_credits: "You need more credits to run this analysis.",
+  upgrade_required: "Upgrade your plan to continue analyzing hooks.",
   missing_hook: "Enter a hook with at least 8 characters.",
-  credits_read_failed: "Credits could not be read from Supabase.",
-  credits_update_failed: "Credits could not be updated in Supabase.",
-  analysis_failed: "Analysis failed.",
+  credits_read_failed: "We could not load your credits. Refresh and try again.",
+  credits_update_failed: "We could not update your credits. Refresh and try again.",
+  analysis_failed: "Analysis failed. Try again in a moment.",
 };
+
+function getInsightNotice(mode: "ai" | "rules" | null, diagnostic: string | null, creditsRemaining: number | null) {
+  if (mode === "rules" && diagnostic === "low_quality_input") {
+    return "Quick check: this input is too vague to analyze deeply. Add a clear subject, result or tension for a stronger read.";
+  }
+
+  if (mode === "rules") {
+    return "Quick check completed. Add a clearer promise or result to unlock a sharper analysis.";
+  }
+
+  if (mode === "ai") {
+    return creditsRemaining === null
+      ? "Analysis saved. Your hook was checked for clarity, curiosity and retention pull."
+      : `Analysis saved. ${creditsRemaining} credits remaining.`;
+  }
+
+  return "1 analysis uses 5 credits. Your hook stays private and results are saved to your workspace.";
+}
 
 export default function HookAnalyzerPage() {
   const [hook, setHook] = useState("");
@@ -57,6 +75,7 @@ export default function HookAnalyzerPage() {
   const [error, setError] = useState("");
 
   const characterCount = hook.trim().length;
+  const insightNotice = getInsightNotice(mode, diagnostic, creditsRemaining);
 
   async function handleAnalyze() {
     const trimmedHook = hook.trim();
@@ -86,12 +105,12 @@ export default function HookAnalyzerPage() {
       if (!response.ok || !data.analysis) {
         const rawError = data.error || "analysis_failed";
         const baseMessage = ERROR_MESSAGES[rawError] || rawError;
-        throw new Error(data.detail ? `${baseMessage} Detail: ${data.detail}` : baseMessage);
+        throw new Error(data.detail ? `${baseMessage}` : baseMessage);
       }
 
       setResult(data.analysis);
       setMode(data.mode || "ai");
-      setDiagnostic(data.generationError ? `generation_error: ${data.generationError}` : data.diagnostic || null);
+      setDiagnostic(data.generationError ? "saved_with_warning" : data.diagnostic || null);
       setCreditsRemaining(typeof data.creditsRemaining === "number" ? data.creditsRemaining : null);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Hook analysis failed. Try again.");
@@ -104,7 +123,7 @@ export default function HookAnalyzerPage() {
     <PremiumToolShell
       badge="Creator signal engine"
       title="Hook Analyzer"
-      description="Score your first line for clarity, curiosity and retention pull before you publish. Built for Shorts, TikTok and short-form creator workflows."
+      description="Get an instant read on your hook's clarity, curiosity and retention pull before you publish."
       primaryHref="/hook-improver"
       primaryLabel="Improve Hook"
       secondaryHref="/tools"
@@ -131,7 +150,7 @@ export default function HookAnalyzerPage() {
 
           <div className="mt-3 flex items-center justify-between text-xs text-white/35">
             <span>{characterCount}/500 characters</span>
-            <span>{creditsRemaining === null ? (mode === "rules" ? "Rules preview" : "AI scoring preview") : `${creditsRemaining} credits left`}</span>
+            <span>{creditsRemaining === null ? "1 analysis = 5 credits" : `${creditsRemaining} credits left`}</span>
           </div>
 
           <div className="mt-5 grid gap-3 md:grid-cols-3">
@@ -149,7 +168,7 @@ export default function HookAnalyzerPage() {
               </select>
             </div>
             <div>
-              <label className="mb-2 block text-xs font-bold uppercase tracking-[0.14em] text-white/35">Niche</label>
+              <label className="mb-2 block text-xs font-bold uppercase tracking-[0.14em] text-white/35">Niche <span className="normal-case tracking-normal text-white/25">(optional)</span></label>
               <input
                 value={niche}
                 onChange={(e) => setNiche(e.target.value)}
@@ -158,7 +177,7 @@ export default function HookAnalyzerPage() {
               />
             </div>
             <div>
-              <label className="mb-2 block text-xs font-bold uppercase tracking-[0.14em] text-white/35">Audience</label>
+              <label className="mb-2 block text-xs font-bold uppercase tracking-[0.14em] text-white/35">Audience <span className="normal-case tracking-normal text-white/25">(optional)</span></label>
               <input
                 value={audience}
                 onChange={(e) => setAudience(e.target.value)}
@@ -178,11 +197,15 @@ export default function HookAnalyzerPage() {
             {loading ? "Analyzing hook signal..." : "Analyze Hook"}
           </button>
 
-          {mode === "rules" && (
-            <p className="mt-4 rounded-2xl border border-amber-300/20 bg-amber-300/10 p-3 text-xs leading-6 text-amber-100">
-              Running in rules preview mode{diagnostic ? `: ${diagnostic}` : ""}. Add a working OpenAI environment key for full AI scoring.
-            </p>
-          )}
+          <div className="mt-5 rounded-[22px] border border-amber-300/20 bg-[linear-gradient(135deg,rgba(251,191,36,.11),rgba(34,211,238,.04))] p-4 text-sm leading-6 text-amber-50/85 shadow-[0_18px_46px_rgba(0,0,0,.18)]">
+            <div className="flex gap-3">
+              <span className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-amber-200/20 bg-amber-300/12 text-xs text-amber-100">✦</span>
+              <div>
+                <p className="font-black text-white">{mode === "ai" ? "Analysis saved" : mode === "rules" ? "Quick check" : "Private, credit-based analysis"}</p>
+                <p className="mt-1 text-white/58">{insightNotice}</p>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div className="rounded-[28px] border border-white/10 bg-white/[0.04] p-5 shadow-[0_24px_80px_rgba(0,0,0,.3)] backdrop-blur-xl md:p-7">
@@ -191,7 +214,7 @@ export default function HookAnalyzerPage() {
               <p className="text-sm text-cyan-300">Result preview</p>
               <h2 className="mt-4 max-w-md text-3xl font-black tracking-tight">Your hook score will appear here.</h2>
               <p className="mt-4 max-w-lg leading-7 text-white/50">
-                HookSignals now checks the hook against platform, niche, audience trigger, retention risk and packaging fit.
+                HookSignals checks the opening promise, curiosity gap, audience fit and retention risk before publishing.
               </p>
             </div>
           )}
@@ -213,19 +236,19 @@ export default function HookAnalyzerPage() {
 
       <section className="mt-6 grid gap-4 md:grid-cols-3">
         <div className="rounded-[24px] border border-white/10 bg-white/[0.035] p-5">
-          <p className="text-xs font-bold uppercase tracking-[0.14em] text-cyan-300">Free</p>
-          <h3 className="mt-3 text-xl font-black">Fast diagnosis</h3>
-          <p className="mt-2 text-sm leading-6 text-white/50">Score, weakness, one improved hook and three variants.</p>
+          <p className="text-xs font-bold uppercase tracking-[0.14em] text-cyan-300">Private</p>
+          <h3 className="mt-3 text-xl font-black">Secure analysis</h3>
+          <p className="mt-2 text-sm leading-6 text-white/50">Your hook and results stay attached to your workspace.</p>
         </div>
         <div className="rounded-[24px] border border-cyan-300/20 bg-cyan-300/[0.06] p-5">
-          <p className="text-xs font-bold uppercase tracking-[0.14em] text-cyan-300">Pro</p>
-          <h3 className="mt-3 text-xl font-black">Creator workflow</h3>
-          <p className="mt-2 text-sm leading-6 text-white/55">More variants, niche angles, title pairing, script handoff and saved history.</p>
+          <p className="text-xs font-bold uppercase tracking-[0.14em] text-cyan-300">Credit based</p>
+          <h3 className="mt-3 text-xl font-black">5 credits per run</h3>
+          <p className="mt-2 text-sm leading-6 text-white/55">Run focused checks without noisy dashboards or fake vanity metrics.</p>
         </div>
         <div className="rounded-[24px] border border-violet-300/20 bg-violet-300/[0.05] p-5">
-          <p className="text-xs font-bold uppercase tracking-[0.14em] text-violet-200">Elite</p>
-          <h3 className="mt-3 text-xl font-black">Team system</h3>
-          <p className="mt-2 text-sm leading-6 text-white/55">Team dashboards, batch analysis, campaigns and priority support.</p>
+          <p className="text-xs font-bold uppercase tracking-[0.14em] text-violet-200">Fast</p>
+          <h3 className="mt-3 text-xl font-black">Actionable in seconds</h3>
+          <p className="mt-2 text-sm leading-6 text-white/55">Get a score, the weak point, and sharper hook options before publishing.</p>
         </div>
       </section>
 
