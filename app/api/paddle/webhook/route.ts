@@ -1,6 +1,6 @@
 import { headers } from 'next/headers';
 import { NextResponse } from 'next/server';
-import { supabase } from '../../../lib/supabase';
+import { supabaseAdmin } from '../../../lib/supabase';
 import { verifyPaddleSignature } from '../../../lib/paddle';
 
 const creditsByPlan: Record<string, number> = {
@@ -67,7 +67,7 @@ export async function POST(request: Request) {
           return NextResponse.json({ error: 'Unknown Paddle price id' }, { status: 400 });
         }
 
-        await supabase.from('subscriptions').upsert(
+        const { error: subscriptionError } = await supabaseAdmin.from('subscriptions').upsert(
           {
             clerk_user_id: clerkUserId,
             paddle_customer_id: customerId,
@@ -78,7 +78,12 @@ export async function POST(request: Request) {
           { onConflict: 'clerk_user_id' }
         );
 
-        await supabase.from('credits').upsert(
+        if (subscriptionError) {
+          console.error('Paddle subscription sync failed:', subscriptionError);
+          return NextResponse.json({ error: 'Subscription sync failed' }, { status: 500 });
+        }
+
+        const { error: creditsError } = await supabaseAdmin.from('credits').upsert(
           {
             clerk_user_id: clerkUserId,
             plan,
@@ -88,6 +93,11 @@ export async function POST(request: Request) {
           },
           { onConflict: 'clerk_user_id' }
         );
+
+        if (creditsError) {
+          console.error('Paddle credit sync failed:', creditsError);
+          return NextResponse.json({ error: 'Credit sync failed' }, { status: 500 });
+        }
 
         break;
       }
@@ -100,8 +110,8 @@ export async function POST(request: Request) {
           return NextResponse.json({ error: 'Missing Clerk user mapping' }, { status: 400 });
         }
 
-        await supabase.from('subscriptions').update({ status: 'canceled' }).eq('clerk_user_id', clerkUserId);
-        await supabase.from('credits').update({ plan: 'free', credits_total: 5, credits_used: 0, credits_remaining: 5 }).eq('clerk_user_id', clerkUserId);
+        await supabaseAdmin.from('subscriptions').update({ status: 'canceled' }).eq('clerk_user_id', clerkUserId);
+        await supabaseAdmin.from('credits').update({ plan: 'free', credits_total: 5, credits_used: 0, credits_remaining: 5 }).eq('clerk_user_id', clerkUserId);
 
         break;
       }
