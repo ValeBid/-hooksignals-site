@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
-import { auth } from '@clerk/nextjs/server';
+import { currentUser } from '@clerk/nextjs/server';
 import { createClient } from '@supabase/supabase-js';
+
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
 
 const CREDIT_COST = 5;
 
@@ -67,8 +70,8 @@ function errorDetail(error: unknown) {
 
 export async function POST(request: Request) {
   try {
-    const { userId } = await auth();
-    if (!userId) {
+    const user = await currentUser();
+    if (!user) {
       return NextResponse.json({ success: false, error: 'unauthorized' }, { status: 401 });
     }
 
@@ -83,7 +86,7 @@ export async function POST(request: Request) {
     const { data: credits, error: creditsError } = await supabaseAdmin
       .from('credits')
       .select('*')
-      .eq('clerk_user_id', userId)
+      .eq('clerk_user_id', user.id)
       .limit(1)
       .maybeSingle();
 
@@ -107,7 +110,7 @@ export async function POST(request: Request) {
     const { error: updateError } = await supabaseAdmin
       .from('credits')
       .update({ credits_used: nextUsed, credits_remaining: nextRemaining, updated_at: new Date().toISOString() })
-      .eq('clerk_user_id', userId);
+      .eq('clerk_user_id', user.id);
 
     if (updateError) {
       return NextResponse.json({ success: false, error: 'credits_update_failed', detail: updateError.message }, { status: 500 });
@@ -116,7 +119,7 @@ export async function POST(request: Request) {
     const { data: generation, error: generationError } = await supabaseAdmin
       .from('generations')
       .insert({
-        clerk_user_id: userId,
+        clerk_user_id: user.id,
         tool_name: 'hook-analyzer-pro',
         input: hook,
         output: JSON.stringify(analysis),
