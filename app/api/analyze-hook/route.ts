@@ -47,37 +47,80 @@ function clampScore(value: unknown, fallback: number) {
   return Math.max(0, Math.min(100, Math.round(value)));
 }
 
+function titleCase(text: string) {
+  return text
+    .trim()
+    .replace(/\s+/g, " ")
+    .replace(/^./, (char) => char.toUpperCase());
+}
+
 function fallbackAnalysis(hook: string): HookAnalysis {
-  const trimmed = hook.trim();
-  const clean = trimmed.toLowerCase();
-  const wordCount = trimmed.split(/\s+/).filter(Boolean).length;
+  const trimmed = titleCase(hook).slice(0, 500);
+  const lower = trimmed.toLowerCase();
+  const words = trimmed.split(/\s+/).filter(Boolean);
+  const wordCount = words.length;
   const hasNumber = /\d/.test(trimmed);
   const hasQuestion = trimmed.includes("?");
-  const hasTension = /mistake|secret|stop|why|hidden|truth|avoid|but|instead|failed|lost/i.test(trimmed);
+  const hasTension = /mistake|secret|stop|why|hidden|truth|avoid|but|instead|failed|lost|bad|lucky|unlucky|wrong|surprised|nobody|before|after/i.test(trimmed);
+  const hasSpecificObject = /\b(day|days|month|months|dollar|money|views|video|client|creator|youtube|tiktok|shorts|hook|title|thumbnail|result|test|experiment)\b/i.test(trimmed);
+  const isVague = wordCount < 6 || /^(very|really|just|today|this|that|something|lucky|bad|good)/i.test(lower);
 
-  const clarityScore = Math.min(95, Math.max(40, 68 + (wordCount <= 16 ? 10 : -8) + (hasNumber ? 7 : 0)));
-  const curiosityScore = Math.min(95, Math.max(40, 60 + (hasQuestion ? 8 : 0) + (hasTension ? 14 : 0) + (hasNumber ? 6 : 0)));
-  const retentionRisk = Math.min(90, Math.max(12, 52 + (wordCount > 20 ? 18 : 0) - (hasTension ? 10 : 0) - (hasNumber ? 6 : 0)));
-  const hookScore = Math.round((clarityScore + curiosityScore + (100 - retentionRisk)) / 3);
-  const base = trimmed.replace(/[?.!]+$/g, "");
+  let clarityScore = 54;
+  if (wordCount >= 6 && wordCount <= 14) clarityScore += 18;
+  if (wordCount > 18) clarityScore -= 12;
+  if (hasSpecificObject) clarityScore += 10;
+  if (isVague) clarityScore -= 16;
+
+  let curiosityScore = 46;
+  if (hasQuestion) curiosityScore += 8;
+  if (hasTension) curiosityScore += 16;
+  if (hasNumber) curiosityScore += 10;
+  if (isVague) curiosityScore -= 10;
+
+  let retentionRisk = 64;
+  if (hasTension) retentionRisk -= 12;
+  if (hasNumber) retentionRisk -= 8;
+  if (hasSpecificObject) retentionRisk -= 8;
+  if (isVague) retentionRisk += 14;
+  if (wordCount > 18) retentionRisk += 12;
+
+  clarityScore = clampScore(clarityScore, 54);
+  curiosityScore = clampScore(curiosityScore, 46);
+  retentionRisk = clampScore(retentionRisk, 64);
+  const hookScore = clampScore((clarityScore + curiosityScore + (100 - retentionRisk)) / 3, 50);
+
+  const subject = trimmed.replace(/[?.!]+$/g, "");
+  const improvedHook = isVague
+    ? `I thought ${subject.toLowerCase()} was random — then one detail changed the whole story`
+    : hasNumber
+      ? `${subject} — but the result exposed one mistake I did not expect`
+      : `I tested ${subject.toLowerCase()}, and the result exposed one mistake most creators miss`;
 
   return {
     hookScore,
     clarityScore,
     curiosityScore,
     retentionRisk,
-    pattern: hasNumber ? "Specific promise with numeric framing" : hasTension ? "Curiosity gap with unresolved tension" : "General creator promise",
-    weakness: wordCount > 18 ? "The hook takes too long to reach the payoff. Make the first second more direct." : "The idea is usable, but it needs a sharper contrast or more specific stakes.",
-    improvedHook: hasNumber ? `${base} — but one detail changed the result` : `I tested ${base.toLowerCase()}, and one result surprised me`,
+    pattern: isVague
+      ? "Vague personal opener"
+      : hasNumber
+        ? "Specific promise with numeric framing"
+        : hasTension
+          ? "Curiosity gap with unresolved tension"
+          : "General creator promise",
+    weakness: isVague
+      ? "The hook does not give viewers a clear reason to care. Add a specific event, consequence or contradiction."
+      : "The idea is understandable, but it needs sharper stakes and a clearer reason to keep watching.",
+    improvedHook,
     variants: [
-      `Most creators miss this before they publish: ${base}`,
-      `I fixed one part of this hook and the promise became clearer`,
-      `Before you post this idea, tighten the first 3 seconds`,
+      `I almost ignored ${subject.toLowerCase()} — then this happened`,
+      `The part nobody explains about ${subject.toLowerCase()}`,
+      `Before you judge ${subject.toLowerCase()}, watch the first detail`,
     ],
     retentionNotes: [
-      "Open with the payoff faster so viewers understand why they should stay.",
-      "Add a clearer curiosity gap instead of a broad setup.",
-      "Make the promise specific enough to feel useful, not generic.",
+      "Name the specific payoff in the first second so viewers understand why they should stay.",
+      "Add tension: what went wrong, what changed, or what the viewer does not know yet.",
+      "Replace vague emotion with a concrete object, result, number or consequence.",
     ],
   };
 }
@@ -91,13 +134,13 @@ function normalizeAnalysis(raw: any, hook: string): HookAnalysis {
     curiosityScore: clampScore(raw?.curiosityScore ?? raw?.curiosity, fallback.curiosityScore),
     retentionRisk: clampScore(raw?.retentionRisk, fallback.retentionRisk),
     pattern: typeof raw?.pattern === "string" ? raw.pattern.slice(0, 160) : fallback.pattern,
-    weakness: typeof raw?.weakness === "string" ? raw.weakness.slice(0, 220) : fallback.weakness,
-    improvedHook: typeof raw?.improvedHook === "string" ? raw.improvedHook.slice(0, 180) : fallback.improvedHook,
+    weakness: typeof raw?.weakness === "string" ? raw.weakness.slice(0, 240) : fallback.weakness,
+    improvedHook: typeof raw?.improvedHook === "string" ? raw.improvedHook.slice(0, 200) : fallback.improvedHook,
     variants: Array.isArray(raw?.variants)
-      ? raw.variants.slice(0, 3).map((item: unknown) => String(item).slice(0, 180))
+      ? raw.variants.slice(0, 3).map((item: unknown) => String(item).slice(0, 200))
       : fallback.variants,
     retentionNotes: Array.isArray(raw?.retentionNotes)
-      ? raw.retentionNotes.slice(0, 3).map((item: unknown) => String(item).slice(0, 180))
+      ? raw.retentionNotes.slice(0, 3).map((item: unknown) => String(item).slice(0, 220))
       : fallback.retentionNotes,
   };
 }
@@ -119,7 +162,7 @@ export async function POST(request: Request) {
     const apiKey = process.env.OPENAI_API_KEY;
 
     if (!apiKey) {
-      return NextResponse.json({ analysis: fallbackAnalysis(cleanedHook), mode: "fallback" });
+      return NextResponse.json({ analysis: fallbackAnalysis(cleanedHook), mode: "rules" });
     }
 
     const aiResponse = await fetch(OPENAI_URL, {
@@ -130,30 +173,31 @@ export async function POST(request: Request) {
       },
       body: JSON.stringify({
         model: MODEL,
-        temperature: 0.3,
+        temperature: 0.25,
         response_format: { type: "json_object" },
         messages: [
           {
             role: "system",
-            content: "You analyze YouTube, Shorts and TikTok opening hooks. Return only valid JSON with hookScore, clarityScore, curiosityScore, retentionRisk, pattern, weakness, improvedHook, variants and retentionNotes.",
+            content:
+              "You are a ruthless short-form content strategist. Analyze YouTube Shorts, TikTok and Reels opening hooks. Be specific, not generic. Score harshly. A vague hook should score low. Return only valid JSON with hookScore, clarityScore, curiosityScore, retentionRisk, pattern, weakness, improvedHook, variants and retentionNotes.",
           },
           {
             role: "user",
-            content: `Analyze this hook: ${cleanedHook}\nReturn JSON: {"hookScore":number,"clarityScore":number,"curiosityScore":number,"retentionRisk":number,"pattern":string,"weakness":string,"improvedHook":string,"variants":string[],"retentionNotes":string[]}`,
+            content: `Hook: ${cleanedHook}\n\nEvaluate whether a viewer would keep watching in the first 3 seconds. Return JSON only: {"hookScore":number,"clarityScore":number,"curiosityScore":number,"retentionRisk":number,"pattern":string,"weakness":string,"improvedHook":string,"variants":string[],"retentionNotes":string[]}`,
           },
         ],
       }),
     });
 
     if (!aiResponse.ok) {
-      return NextResponse.json({ analysis: fallbackAnalysis(cleanedHook), mode: "fallback" });
+      return NextResponse.json({ analysis: fallbackAnalysis(cleanedHook), mode: "rules" });
     }
 
     const data = await aiResponse.json();
     const content = data?.choices?.[0]?.message?.content;
 
     if (!content) {
-      return NextResponse.json({ analysis: fallbackAnalysis(cleanedHook), mode: "fallback" });
+      return NextResponse.json({ analysis: fallbackAnalysis(cleanedHook), mode: "rules" });
     }
 
     return NextResponse.json({ analysis: normalizeAnalysis(JSON.parse(content), cleanedHook), mode: "ai" });
