@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 const OPENAI_URL = "https://api.openai.com/v1/chat/completions";
-const MODEL = process.env.OPENAI_MODEL || "gpt-4.1-mini";
+const MODEL = process.env.OPENAI_MODEL || "gpt-5-mini";
 const WINDOW_MS = 60 * 60 * 1000;
 const MAX_REQUESTS_PER_WINDOW = 10;
 const requestLog = new Map<string, { count: number; resetAt: number }>();
@@ -34,10 +34,7 @@ function isRateLimited(request: Request) {
     return false;
   }
 
-  if (current.count >= MAX_REQUESTS_PER_WINDOW) {
-    return true;
-  }
-
+  if (current.count >= MAX_REQUESTS_PER_WINDOW) return true;
   current.count += 1;
   return false;
 }
@@ -48,10 +45,7 @@ function clampScore(value: unknown, fallback: number) {
 }
 
 function titleCase(text: string) {
-  return text
-    .trim()
-    .replace(/\s+/g, " ")
-    .replace(/^./, (char) => char.toUpperCase());
+  return text.trim().replace(/\s+/g, " ").replace(/^./, (char) => char.toUpperCase());
 }
 
 function fallbackAnalysis(hook: string): HookAnalysis {
@@ -69,25 +63,25 @@ function fallbackAnalysis(hook: string): HookAnalysis {
   if (wordCount >= 6 && wordCount <= 14) clarityScore += 18;
   if (wordCount > 18) clarityScore -= 12;
   if (hasSpecificObject) clarityScore += 10;
-  if (isVague) clarityScore -= 16;
+  if (isVague) clarityScore -= 22;
 
   let curiosityScore = 46;
   if (hasQuestion) curiosityScore += 8;
   if (hasTension) curiosityScore += 16;
   if (hasNumber) curiosityScore += 10;
-  if (isVague) curiosityScore -= 10;
+  if (isVague) curiosityScore -= 18;
 
   let retentionRisk = 64;
   if (hasTension) retentionRisk -= 12;
   if (hasNumber) retentionRisk -= 8;
   if (hasSpecificObject) retentionRisk -= 8;
-  if (isVague) retentionRisk += 14;
+  if (isVague) retentionRisk += 20;
   if (wordCount > 18) retentionRisk += 12;
 
   clarityScore = clampScore(clarityScore, 54);
   curiosityScore = clampScore(curiosityScore, 46);
   retentionRisk = clampScore(retentionRisk, 64);
-  const hookScore = clampScore((clarityScore + curiosityScore + (100 - retentionRisk)) / 3, 50);
+  const hookScore = clampScore((clarityScore + curiosityScore + (100 - retentionRisk)) / 3, 42);
 
   const subject = trimmed.replace(/[?.!]+$/g, "");
   const improvedHook = isVague
@@ -127,22 +121,52 @@ function fallbackAnalysis(hook: string): HookAnalysis {
 
 function normalizeAnalysis(raw: any, hook: string): HookAnalysis {
   const fallback = fallbackAnalysis(hook);
-
   return {
     hookScore: clampScore(raw?.hookScore ?? raw?.score, fallback.hookScore),
     clarityScore: clampScore(raw?.clarityScore ?? raw?.clarity, fallback.clarityScore),
     curiosityScore: clampScore(raw?.curiosityScore ?? raw?.curiosity, fallback.curiosityScore),
     retentionRisk: clampScore(raw?.retentionRisk, fallback.retentionRisk),
-    pattern: typeof raw?.pattern === "string" ? raw.pattern.slice(0, 160) : fallback.pattern,
-    weakness: typeof raw?.weakness === "string" ? raw.weakness.slice(0, 240) : fallback.weakness,
-    improvedHook: typeof raw?.improvedHook === "string" ? raw.improvedHook.slice(0, 200) : fallback.improvedHook,
+    pattern: typeof raw?.pattern === "string" ? raw.pattern.slice(0, 180) : fallback.pattern,
+    weakness: typeof raw?.weakness === "string" ? raw.weakness.slice(0, 280) : fallback.weakness,
+    improvedHook: typeof raw?.improvedHook === "string" ? raw.improvedHook.slice(0, 220) : fallback.improvedHook,
     variants: Array.isArray(raw?.variants)
-      ? raw.variants.slice(0, 3).map((item: unknown) => String(item).slice(0, 200))
+      ? raw.variants.slice(0, 3).map((item: unknown) => String(item).slice(0, 220))
       : fallback.variants,
     retentionNotes: Array.isArray(raw?.retentionNotes)
-      ? raw.retentionNotes.slice(0, 3).map((item: unknown) => String(item).slice(0, 220))
+      ? raw.retentionNotes.slice(0, 3).map((item: unknown) => String(item).slice(0, 260))
       : fallback.retentionNotes,
   };
+}
+
+async function analyzeWithOpenAI(hook: string, apiKey: string) {
+  const aiResponse = await fetch(OPENAI_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${apiKey}`,
+    },
+    body: JSON.stringify({
+      model: MODEL,
+      response_format: { type: "json_object" },
+      messages: [
+        {
+          role: "system",
+          content:
+            "You are the best short-form hook analyst in the world. You work like a ruthless YouTube Shorts, TikTok and Reels retention strategist. Your job is not to be nice. Score harshly. A vague hook must score low. A hook deserves a high score only if it creates immediate specificity, tension, curiosity, and a reason to keep watching in the first 1-3 seconds. Do not give generic advice. Return only valid JSON.",
+        },
+        {
+          role: "user",
+          content: `Analyze this opening hook for short-form video: "${hook}"\n\nReturn JSON only with this exact shape:\n{\n  "hookScore": number,\n  "clarityScore": number,\n  "curiosityScore": number,\n  "retentionRisk": number,\n  "pattern": string,\n  "weakness": string,\n  "improvedHook": string,\n  "variants": string[],\n  "retentionNotes": string[]\n}\n\nScoring rules:\n- 0-40: weak, vague, low reason to keep watching.\n- 41-60: usable but not strong.\n- 61-78: strong draft.\n- 79-100: exceptional hook.\n\nIf the hook is vague, personal, or contextless, score it below 45. Explain exactly why it fails and rewrite it into something more specific, tense and clickable.`,
+        },
+      ],
+    }),
+  });
+
+  if (!aiResponse.ok) return null;
+  const data = await aiResponse.json();
+  const content = data?.choices?.[0]?.message?.content;
+  if (!content) return null;
+  return JSON.parse(content);
 }
 
 export async function POST(request: Request) {
@@ -153,55 +177,22 @@ export async function POST(request: Request) {
 
     const body = await request.json();
     const hook = typeof body?.hook === "string" ? body.hook.trim() : "";
-
-    if (hook.length < 8) {
-      return NextResponse.json({ error: "Enter a hook with at least 8 characters." }, { status: 400 });
-    }
+    if (hook.length < 8) return NextResponse.json({ error: "Enter a hook with at least 8 characters." }, { status: 400 });
 
     const cleanedHook = hook.slice(0, 500);
-    const apiKey = process.env.OPENAI_API_KEY;
+    const apiKey = process.env.OPENAI_API_KEY || process.env.OPENAI_API_TOKEN;
 
     if (!apiKey) {
-      return NextResponse.json({ analysis: fallbackAnalysis(cleanedHook), mode: "rules" });
+      return NextResponse.json({ analysis: fallbackAnalysis(cleanedHook), mode: "rules", diagnostic: "missing_openai_key" });
     }
 
-    const aiResponse = await fetch(OPENAI_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({
-        model: MODEL,
-        temperature: 0.25,
-        response_format: { type: "json_object" },
-        messages: [
-          {
-            role: "system",
-            content:
-              "You are a ruthless short-form content strategist. Analyze YouTube Shorts, TikTok and Reels opening hooks. Be specific, not generic. Score harshly. A vague hook should score low. Return only valid JSON with hookScore, clarityScore, curiosityScore, retentionRisk, pattern, weakness, improvedHook, variants and retentionNotes.",
-          },
-          {
-            role: "user",
-            content: `Hook: ${cleanedHook}\n\nEvaluate whether a viewer would keep watching in the first 3 seconds. Return JSON only: {"hookScore":number,"clarityScore":number,"curiosityScore":number,"retentionRisk":number,"pattern":string,"weakness":string,"improvedHook":string,"variants":string[],"retentionNotes":string[]}`,
-          },
-        ],
-      }),
-    });
-
-    if (!aiResponse.ok) {
-      return NextResponse.json({ analysis: fallbackAnalysis(cleanedHook), mode: "rules" });
+    const rawAnalysis = await analyzeWithOpenAI(cleanedHook, apiKey);
+    if (!rawAnalysis) {
+      return NextResponse.json({ analysis: fallbackAnalysis(cleanedHook), mode: "rules", diagnostic: "openai_call_failed" });
     }
 
-    const data = await aiResponse.json();
-    const content = data?.choices?.[0]?.message?.content;
-
-    if (!content) {
-      return NextResponse.json({ analysis: fallbackAnalysis(cleanedHook), mode: "rules" });
-    }
-
-    return NextResponse.json({ analysis: normalizeAnalysis(JSON.parse(content), cleanedHook), mode: "ai" });
+    return NextResponse.json({ analysis: normalizeAnalysis(rawAnalysis, cleanedHook), mode: "ai" });
   } catch {
-    return NextResponse.json({ error: "Hook analysis failed. Try again." }, { status: 500 });
+    return NextResponse.json({ analysis: fallbackAnalysis("Untitled hook"), mode: "rules", diagnostic: "analysis_exception" });
   }
 }
