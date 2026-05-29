@@ -252,6 +252,32 @@ export default function HookAnalyzerPage() {
         </div>
       </section>
 
+      <div className="sticky bottom-4 z-40 mx-auto mt-8 max-w-5xl rounded-[24px] border border-white/10 bg-[#07101d]/90 px-5 py-4 shadow-[0_20px_80px_rgba(0,0,0,.45)] backdrop-blur-2xl">
+        <div className="grid gap-4 md:grid-cols-3">
+          <div className="flex items-center gap-3">
+            <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-emerald-300/20 bg-emerald-300/10 text-emerald-300">▱</span>
+            <div>
+              <p className="text-sm font-black text-white">Private & secure</p>
+              <p className="text-xs leading-5 text-white/48">Your hook and results are never shared.</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-amber-300/20 bg-amber-300/10 text-amber-200">⚡</span>
+            <div>
+              <p className="text-sm font-black text-white">Credit based</p>
+              <p className="text-xs leading-5 text-white/48">1 analysis uses 5 credits.</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-violet-300/20 bg-violet-300/10 text-violet-200">◴</span>
+            <div>
+              <p className="text-sm font-black text-white">Analyze in seconds</p>
+              <p className="text-xs leading-5 text-white/48">Get actionable insights instantly.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <RelatedTools />
     </PremiumToolShell>
   );
