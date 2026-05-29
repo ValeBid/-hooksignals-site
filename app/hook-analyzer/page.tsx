@@ -23,12 +23,15 @@ type HookAnalysis = {
 
 type AnalyzerResponse = {
   success?: boolean;
-  analysis: HookAnalysis;
+  analysis?: HookAnalysis;
   mode?: "ai" | "rules";
   diagnostic?: string;
   creditsSpent?: number;
   creditsRemaining?: number;
   shareId?: string | null;
+  error?: string;
+  detail?: string;
+  generationError?: string | null;
 };
 
 const ERROR_MESSAGES: Record<string, string> = {
@@ -36,7 +39,9 @@ const ERROR_MESSAGES: Record<string, string> = {
   insufficient_credits: "You do not have enough credits. Upgrade or refresh your plan.",
   upgrade_required: "Your account is not on an active premium plan yet.",
   missing_hook: "Enter a hook with at least 8 characters.",
-  analysis_failed: "Analysis failed. Check the production API logs.",
+  credits_read_failed: "Credits could not be read from Supabase.",
+  credits_update_failed: "Credits could not be updated in Supabase.",
+  analysis_failed: "Analysis failed.",
 };
 
 export default function HookAnalyzerPage() {
@@ -76,16 +81,17 @@ export default function HookAnalyzerPage() {
         body: JSON.stringify({ hook: trimmedHook, platform, niche, audience }),
       });
 
-      const data = (await response.json()) as AnalyzerResponse | { error?: string };
+      const data = (await response.json()) as AnalyzerResponse;
 
-      if (!response.ok || !("analysis" in data) || !data.analysis) {
-        const rawError = "error" in data ? data.error || "analysis_failed" : "analysis_failed";
-        throw new Error(ERROR_MESSAGES[rawError] || rawError);
+      if (!response.ok || !data.analysis) {
+        const rawError = data.error || "analysis_failed";
+        const baseMessage = ERROR_MESSAGES[rawError] || rawError;
+        throw new Error(data.detail ? `${baseMessage} Detail: ${data.detail}` : baseMessage);
       }
 
       setResult(data.analysis);
       setMode(data.mode || "ai");
-      setDiagnostic(data.diagnostic || null);
+      setDiagnostic(data.generationError ? `generation_error: ${data.generationError}` : data.diagnostic || null);
       setCreditsRemaining(typeof data.creditsRemaining === "number" ? data.creditsRemaining : null);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Hook analysis failed. Try again.");
@@ -162,7 +168,7 @@ export default function HookAnalyzerPage() {
             </div>
           </div>
 
-          {error && <p className="mt-4 rounded-2xl border border-red-400/20 bg-red-400/10 p-3 text-sm text-red-200">{error}</p>}
+          {error && <p className="mt-4 rounded-2xl border border-red-400/20 bg-red-400/10 p-3 text-sm leading-6 text-red-200">{error}</p>}
 
           <button
             onClick={handleAnalyze}
