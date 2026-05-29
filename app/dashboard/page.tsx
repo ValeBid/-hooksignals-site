@@ -13,6 +13,31 @@ type DashboardPageProps = {
   };
 };
 
+function ActivityList({ items, empty }: { items: any[]; empty: string }) {
+  return (
+    <div className="mt-5 grid gap-3">
+      {items.length === 0 && (
+        <div className="rounded-[20px] border border-dashed border-white/10 bg-black/20 p-5 text-sm leading-6 text-white/42">
+          {empty}
+        </div>
+      )}
+      {items.map((item: any) => (
+        <div key={item.id || item.created_at || item.input} className="rounded-[20px] border border-white/10 bg-black/24 p-4">
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <div>
+              <p className="text-xs font-black uppercase tracking-[0.14em] text-cyan-300">{item.tool_name || 'workspace item'}</p>
+              <p className="mt-2 line-clamp-2 text-sm leading-6 text-white/72">{item.input || item.output || 'Saved creator workflow'}</p>
+            </div>
+            <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-xs text-white/45">
+              {item.credits_spent || 0} credits
+            </span>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default async function DashboardPage({ searchParams }: DashboardPageProps) {
   const user = await currentUser();
 
@@ -36,162 +61,167 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
   const status = data.subscription?.status || 'inactive';
   const creditsTotal = data.credits?.credits_total ?? 0;
   const creditsRemaining = data.credits?.credits_remaining ?? 0;
+  const creditsUsed = Math.max(0, creditsTotal - creditsRemaining);
+  const creditPercent = creditsTotal ? Math.min(100, Math.round((creditsRemaining / creditsTotal) * 100)) : 0;
   const checkoutSuccess = searchParams?.checkout === 'success';
   const isPaid = plan !== 'free' && creditsTotal > 5;
+  const lastActivity = data.workspace.lastGenerationAt ? new Date(data.workspace.lastGenerationAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : 'No activity yet';
 
   return (
-    <main className="min-h-screen bg-[#030507] px-5 py-16 text-white md:px-8">
-      <div className="mx-auto max-w-6xl">
+    <main className="min-h-screen bg-[#030507] px-5 py-10 text-white md:px-8 md:py-16">
+      <div className="mx-auto max-w-7xl">
         {checkoutSuccess && (
           <section className="mb-6 overflow-hidden rounded-[34px] border border-cyan-300/25 bg-[radial-gradient(circle_at_20%_20%,rgba(34,211,238,.18),transparent_28%),linear-gradient(135deg,rgba(34,211,238,.08),rgba(124,58,237,.08))] p-7 shadow-[0_28px_100px_rgba(34,211,238,.12)] md:p-10">
             <p className="text-sm font-black uppercase tracking-[0.16em] text-cyan-200">Checkout complete</p>
             <h1 className="mt-4 text-5xl font-black tracking-[-0.06em]">Welcome to HookSignals {plan !== 'free' ? plan : ''}.</h1>
             <p className="mt-5 max-w-3xl text-lg leading-8 text-white/62">
-              Your payment is being connected to this account. Credits usually appear after Paddle confirms the webhook. If the credit count has not updated yet, refresh this dashboard in a minute.
+              Your payment is being connected to this account. Credits usually appear after Paddle confirms the webhook. If the count has not updated yet, refresh this dashboard in a minute.
             </p>
-            <div className="mt-7 grid gap-4 md:grid-cols-3">
-              <div className="rounded-[24px] border border-white/10 bg-black/25 p-5">
-                <p className="text-xs uppercase tracking-[0.14em] text-white/38">Current plan</p>
-                <p className="mt-3 text-3xl font-black capitalize">{plan}</p>
-              </div>
-              <div className="rounded-[24px] border border-white/10 bg-black/25 p-5">
-                <p className="text-xs uppercase tracking-[0.14em] text-white/38">Credits</p>
-                <p className="mt-3 text-3xl font-black">{creditsRemaining} / {creditsTotal}</p>
-              </div>
-              <div className="rounded-[24px] border border-white/10 bg-black/25 p-5">
-                <p className="text-xs uppercase tracking-[0.14em] text-white/38">Next step</p>
-                <a href="/hook-analyzer" className="mt-3 inline-flex rounded-2xl bg-cyan-300 px-5 py-3 text-sm font-black text-black transition hover:bg-cyan-200">
-                  Analyze first hook
-                </a>
-              </div>
-            </div>
           </section>
         )}
 
-        <div className="rounded-[32px] border border-white/10 bg-white/[0.03] p-7 md:p-10">
-          <div className="flex flex-col gap-5 md:flex-row md:items-start md:justify-between">
-            <div>
-              <p className="text-sm font-bold uppercase tracking-[0.16em] text-cyan-300">HookSignals dashboard</p>
-              <h1 className="mt-4 text-5xl font-black tracking-[-0.05em]">Creator operating room.</h1>
-              <p className="mt-5 max-w-3xl text-lg leading-8 text-white/55">
-                Welcome{fullName ? `, ${fullName}` : ''}. Your plan, credits and saved creator workflows are tied to your account.
-              </p>
-            </div>
-            <div className="rounded-2xl border border-cyan-300/20 bg-cyan-300/[0.06] px-5 py-4 text-sm text-cyan-100">
-              <span className="font-black capitalize">{plan}</span> · {creditsRemaining} credits remaining
-            </div>
-          </div>
-        </div>
-
-        <div className="mt-6 grid gap-5 md:grid-cols-4">
-          <div className="rounded-[28px] border border-cyan-300/20 bg-cyan-300/[0.05] p-6">
-            <p className="text-sm font-bold uppercase tracking-[0.14em] text-cyan-300">Plan</p>
-            <p className="mt-4 text-3xl font-black capitalize">{plan}</p>
-            <p className="mt-3 leading-7 text-white/50">Subscription status: {status}</p>
-          </div>
-
-          <div className="rounded-[28px] border border-white/10 bg-black/25 p-6">
-            <p className="text-sm font-bold uppercase tracking-[0.14em] text-white/38">Credits</p>
-            <p className="mt-4 text-3xl font-black">{creditsRemaining} / {creditsTotal}</p>
-            <p className="mt-3 leading-7 text-white/50">Live account credit data from Supabase.</p>
-          </div>
-
-          <div className="rounded-[28px] border border-white/10 bg-black/25 p-6">
-            <p className="text-sm font-bold uppercase tracking-[0.14em] text-white/38">Analyses</p>
-            <p className="mt-4 text-3xl font-black">{data.workspace.totalGenerations}</p>
-            <p className="mt-3 leading-7 text-white/50">Saved creator generations.</p>
-          </div>
-
-          <div className="rounded-[28px] border border-white/10 bg-black/25 p-6">
-            <p className="text-sm font-bold uppercase tracking-[0.14em] text-white/38">Credits spent</p>
-            <p className="mt-4 text-3xl font-black">{data.workspace.creditsSpent}</p>
-            <p className="mt-3 leading-7 text-white/50">Tracked workspace activity.</p>
-          </div>
-        </div>
-
-        <section className="mt-6 grid gap-4 md:grid-cols-3">
-          <div className="rounded-[26px] border border-white/10 bg-white/[0.035] p-6">
-            <p className="text-sm font-bold uppercase tracking-[0.14em] text-cyan-300">Step 1</p>
-            <h2 className="mt-3 text-2xl font-black">Analyze a real hook</h2>
-            <p className="mt-3 leading-7 text-white/50">Start with the first line of a video you actually plan to publish.</p>
-            <a href="/hook-analyzer" className="mt-5 inline-flex rounded-2xl bg-white px-5 py-3 text-sm font-black text-black">Open analyzer</a>
-          </div>
-          <div className="rounded-[26px] border border-white/10 bg-white/[0.035] p-6">
-            <p className="text-sm font-bold uppercase tracking-[0.14em] text-cyan-300">Step 2</p>
-            <h2 className="mt-3 text-2xl font-black">Improve the package</h2>
-            <p className="mt-3 leading-7 text-white/50">Move from hook to title, thumbnail and script opener before recording.</p>
-            <a href="/tools" className="mt-5 inline-flex rounded-2xl border border-white/10 bg-white/[0.04] px-5 py-3 text-sm font-black text-white">Open tools</a>
-          </div>
-          <div className="rounded-[26px] border border-cyan-300/20 bg-cyan-300/[0.06] p-6">
-            <p className="text-sm font-bold uppercase tracking-[0.14em] text-cyan-300">Step 3</p>
-            <h2 className="mt-3 text-2xl font-black">Build creator memory</h2>
-            <p className="mt-3 leading-7 text-white/55">Paid analyses are saved here so the workflow becomes easier to repeat.</p>
-            <p className="mt-5 rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-white/55">
-              {isPaid ? 'Premium workflow enabled.' : 'Upgrade to unlock saved premium analysis.'}
+        <section className="grid gap-6 lg:grid-cols-[0.82fr_1.18fr]">
+          <div className="rounded-[36px] border border-white/10 bg-white/[0.035] p-7 md:p-10">
+            <p className="text-sm font-black uppercase tracking-[0.16em] text-cyan-300">HookSignals workspace</p>
+            <h1 className="mt-4 text-5xl font-black tracking-[-0.06em] md:text-6xl">Welcome{fullName ? `, ${fullName.split(' ')[0]}` : ''}.</h1>
+            <p className="mt-5 leading-8 text-white/55">
+              Your creator workflow, credits and saved analyses live here. Start with a hook, then move through title, thumbnail and script packaging.
             </p>
+
+            <div className="mt-7 rounded-[28px] border border-cyan-300/20 bg-cyan-300/[0.06] p-5">
+              <div className="flex items-center justify-between gap-4">
+                <div>
+                  <p className="text-xs font-black uppercase tracking-[0.14em] text-cyan-200">Current plan</p>
+                  <p className="mt-2 text-3xl font-black capitalize">{plan}</p>
+                </div>
+                <span className="rounded-full border border-white/10 bg-black/20 px-3 py-1 text-xs uppercase tracking-[0.12em] text-white/55">{status}</span>
+              </div>
+              <div className="mt-5 h-2 overflow-hidden rounded-full bg-black/30">
+                <div className="h-full rounded-full bg-gradient-to-r from-cyan-300 via-sky-400 to-violet-400" style={{ width: `${creditPercent}%` }} />
+              </div>
+              <p className="mt-3 text-sm text-white/55">{creditsRemaining} of {creditsTotal} credits remaining.</p>
+            </div>
+
+            <div className="mt-5 grid gap-3 sm:grid-cols-2">
+              <a href="/hook-analyzer" className="rounded-2xl bg-white px-5 py-4 text-center text-sm font-black text-black">Analyze hook</a>
+              <a href="/pricing" className="rounded-2xl border border-white/10 bg-white/[0.04] px-5 py-4 text-center text-sm font-black text-white">Manage plan</a>
+            </div>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            <div className="rounded-[28px] border border-white/10 bg-black/24 p-6">
+              <p className="text-sm font-bold uppercase tracking-[0.14em] text-white/38">Credits</p>
+              <p className="mt-4 text-4xl font-black">{creditsRemaining}</p>
+              <p className="mt-3 leading-7 text-white/48">{creditsUsed} used / {creditsTotal} total</p>
+            </div>
+            <div className="rounded-[28px] border border-white/10 bg-black/24 p-6">
+              <p className="text-sm font-bold uppercase tracking-[0.14em] text-white/38">Analyses</p>
+              <p className="mt-4 text-4xl font-black">{data.workspace.totalGenerations}</p>
+              <p className="mt-3 leading-7 text-white/48">Saved workflow outputs</p>
+            </div>
+            <div className="rounded-[28px] border border-white/10 bg-black/24 p-6">
+              <p className="text-sm font-bold uppercase tracking-[0.14em] text-white/38">Last activity</p>
+              <p className="mt-4 text-2xl font-black">{lastActivity}</p>
+              <p className="mt-3 leading-7 text-white/48">Most recent saved output</p>
+            </div>
+            <div className="rounded-[28px] border border-white/10 bg-black/24 p-6">
+              <p className="text-sm font-bold uppercase tracking-[0.14em] text-white/38">Credits spent</p>
+              <p className="mt-4 text-4xl font-black">{data.workspace.creditsSpent}</p>
+              <p className="mt-3 leading-7 text-white/48">Tracked usage</p>
+            </div>
           </div>
         </section>
 
-        <div className="mt-6 grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-          <div className="rounded-[32px] border border-white/10 bg-white/[0.03] p-7 md:p-10">
+        <section className="mt-6 grid gap-4 md:grid-cols-4">
+          <div className="rounded-[26px] border border-cyan-300/20 bg-cyan-300/[0.055] p-5">
+            <p className="text-sm font-black uppercase tracking-[0.14em] text-cyan-300">Hooks</p>
+            <p className="mt-3 text-4xl font-black">{data.workspace.hookCount}</p>
+          </div>
+          <div className="rounded-[26px] border border-white/10 bg-white/[0.035] p-5">
+            <p className="text-sm font-black uppercase tracking-[0.14em] text-white/38">Titles</p>
+            <p className="mt-3 text-4xl font-black">{data.workspace.titleCount}</p>
+          </div>
+          <div className="rounded-[26px] border border-white/10 bg-white/[0.035] p-5">
+            <p className="text-sm font-black uppercase tracking-[0.14em] text-white/38">Scripts</p>
+            <p className="mt-3 text-4xl font-black">{data.workspace.scriptCount}</p>
+          </div>
+          <div className="rounded-[26px] border border-white/10 bg-white/[0.035] p-5">
+            <p className="text-sm font-black uppercase tracking-[0.14em] text-white/38">Thumbnails</p>
+            <p className="mt-3 text-4xl font-black">{data.workspace.thumbnailCount}</p>
+          </div>
+        </section>
+
+        <section className="mt-6 grid gap-6 lg:grid-cols-2">
+          <div className="rounded-[34px] border border-white/10 bg-white/[0.03] p-6 md:p-8">
             <div className="flex items-center justify-between gap-4">
               <div>
-                <h2 className="text-3xl font-black tracking-[-0.04em]">Recent creator generations</h2>
-                <p className="mt-3 max-w-2xl leading-8 text-white/55">Your saved hook analyses and creator workflow outputs.</p>
+                <p className="text-sm font-black uppercase tracking-[0.14em] text-cyan-300">Recent hooks</p>
+                <h2 className="mt-2 text-3xl font-black tracking-[-0.04em]">Hook analysis history</h2>
               </div>
-              <a href="/tools" className="rounded-2xl border border-white/10 bg-white/[0.04] px-5 py-3 text-sm font-black text-white">Open tools</a>
+              <a href="/hook-analyzer" className="rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm font-black text-white">New</a>
             </div>
-
-            <div className="mt-7 grid gap-4">
-              {data.generations.length === 0 && (
-                <div className="rounded-[24px] border border-dashed border-white/10 bg-black/20 p-6 text-white/45">
-                  No saved generations yet. Analyze your first hook to start building creator memory.
-                </div>
-              )}
-
-              {data.generations.map((generation: any) => (
-                <div key={generation.id || generation.created_at} className="rounded-[24px] border border-white/10 bg-black/20 p-5">
-                  <div className="flex flex-wrap items-center justify-between gap-3">
-                    <div>
-                      <p className="text-xs uppercase tracking-[0.16em] text-cyan-300">{generation.tool_name || 'tool'}</p>
-                      <h3 className="mt-2 text-xl font-bold text-white/90">{generation.input || 'Saved generation'}</h3>
-                    </div>
-                    <div className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-xs text-white/45">
-                      {generation.credits_spent || 0} credits
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
+            <ActivityList items={data.groups.hookAnalyses} empty="No hook analyses saved yet. Run your first premium hook analysis to build history." />
           </div>
 
-          <div className="rounded-[32px] border border-white/10 bg-white/[0.03] p-7 md:p-10">
-            <h2 className="text-3xl font-black tracking-[-0.04em]">Workspace memory</h2>
-            <p className="mt-4 leading-8 text-white/55">HookSignals tracks your creator workflow usage and builds persistent creator context.</p>
-
-            <div className="mt-7 grid gap-4">
-              <div className="rounded-[24px] border border-white/10 bg-black/20 p-5">
-                <p className="text-sm uppercase tracking-[0.14em] text-white/35">Recent tools</p>
-                <div className="mt-4 flex flex-wrap gap-2">
-                  {data.workspace.recentToolNames.length === 0 && (
-                    <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-2 text-sm text-white/45">No tools used yet</span>
-                  )}
-
-                  {data.workspace.recentToolNames.map((tool: string) => (
-                    <span key={tool} className="rounded-full border border-cyan-300/20 bg-cyan-300/[0.06] px-3 py-2 text-sm text-cyan-200">{tool}</span>
-                  ))}
-                </div>
+          <div className="rounded-[34px] border border-white/10 bg-white/[0.03] p-6 md:p-8">
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <p className="text-sm font-black uppercase tracking-[0.14em] text-cyan-300">Saved titles</p>
+                <h2 className="mt-2 text-3xl font-black tracking-[-0.04em]">Title ideas</h2>
               </div>
+              <a href="/youtube-title-generator" className="rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm font-black text-white">Generate</a>
+            </div>
+            <ActivityList items={data.groups.titleGenerations} empty="No saved titles yet. Generate titles after analyzing a hook." />
+          </div>
 
-              <div className="rounded-[24px] border border-white/10 bg-black/20 p-5">
-                <p className="text-sm uppercase tracking-[0.14em] text-white/35">Billing</p>
-                <h3 className="mt-3 text-2xl font-black">Manage subscription</h3>
-                <p className="mt-3 leading-7 text-white/50">Plan and credit data sync through Paddle checkout and webhook events.</p>
-                <a href="/pricing" className="mt-5 inline-flex rounded-2xl bg-white px-5 py-3 text-sm font-black text-black">Upgrade plan</a>
+          <div className="rounded-[34px] border border-white/10 bg-white/[0.03] p-6 md:p-8">
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <p className="text-sm font-black uppercase tracking-[0.14em] text-cyan-300">Script drafts</p>
+                <h2 className="mt-2 text-3xl font-black tracking-[-0.04em]">Saved scripts</h2>
               </div>
+              <a href="/shorts-script-generator" className="rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm font-black text-white">Write</a>
+            </div>
+            <ActivityList items={data.groups.scriptGenerations} empty="No saved scripts yet. Build a script opener from a stronger hook." />
+          </div>
+
+          <div className="rounded-[34px] border border-white/10 bg-white/[0.03] p-6 md:p-8">
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <p className="text-sm font-black uppercase tracking-[0.14em] text-cyan-300">Thumbnail reviews</p>
+                <h2 className="mt-2 text-3xl font-black tracking-[-0.04em]">Packaging checks</h2>
+              </div>
+              <a href="/thumbnail-text-checker" className="rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm font-black text-white">Check</a>
+            </div>
+            <ActivityList items={data.groups.thumbnailChecks} empty="No thumbnail checks yet. Pair your hook with a readable visual promise." />
+          </div>
+        </section>
+
+        <section className="mt-6 grid gap-6 lg:grid-cols-[1fr_0.8fr]">
+          <div className="rounded-[34px] border border-white/10 bg-black/24 p-6 md:p-8">
+            <p className="text-sm font-black uppercase tracking-[0.14em] text-cyan-300">Full activity stream</p>
+            <h2 className="mt-2 text-3xl font-black tracking-[-0.04em]">Recent creator generations</h2>
+            <ActivityList items={data.generations.slice(0, 8)} empty="No saved workflow activity yet." />
+          </div>
+
+          <div className="rounded-[34px] border border-white/10 bg-white/[0.03] p-6 md:p-8">
+            <p className="text-sm font-black uppercase tracking-[0.14em] text-cyan-300">Billing</p>
+            <h2 className="mt-3 text-3xl font-black tracking-[-0.04em]">Plan and credits</h2>
+            <p className="mt-4 leading-8 text-white/55">Plan and credit data sync through Paddle checkout and webhook events.</p>
+            <div className="mt-6 grid gap-3">
+              <div className="rounded-2xl border border-white/10 bg-black/24 p-4">
+                <p className="text-xs uppercase tracking-[0.14em] text-white/35">Plan</p>
+                <p className="mt-2 text-2xl font-black capitalize">{plan}</p>
+              </div>
+              <div className="rounded-2xl border border-white/10 bg-black/24 p-4">
+                <p className="text-xs uppercase tracking-[0.14em] text-white/35">Status</p>
+                <p className="mt-2 text-2xl font-black capitalize">{status}</p>
+              </div>
+              <a href="/pricing" className="rounded-2xl bg-white px-5 py-4 text-center text-sm font-black text-black">Upgrade or change plan</a>
+              <p className="text-xs leading-5 text-white/35">Billing portal connection is the next production step after Paddle customer sync is fully verified.</p>
             </div>
           </div>
-        </div>
+        </section>
       </div>
     </main>
   );
