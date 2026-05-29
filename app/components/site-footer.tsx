@@ -16,7 +16,6 @@ const legalLinks = [
   ["Terms", "/terms"],
   ["Privacy", "/privacy"],
   ["Refund Policy", "/refund-policy"],
-  ["Sitemap", "/sitemap.xml"],
 ];
 
 export default function SiteFooter() {
