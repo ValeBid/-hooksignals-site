@@ -1,4 +1,4 @@
-import { supabase } from './supabase';
+import { supabase, supabaseAdmin } from './supabase';
 
 function filterGenerations(generations: any[], matchers: string[]) {
   return generations.filter((item) => {
@@ -9,8 +9,8 @@ function filterGenerations(generations: any[], matchers: string[]) {
 
 export async function getDashboardPreviewData() {
   const [{ data: subscriptions }, { data: credits }] = await Promise.all([
-    supabase.from('subscriptions').select('*').limit(1),
-    supabase.from('credits').select('*').limit(1),
+    supabaseAdmin.from('subscriptions').select('*').limit(1),
+    supabaseAdmin.from('credits').select('*').limit(1),
   ]);
 
   return {
@@ -21,9 +21,9 @@ export async function getDashboardPreviewData() {
 
 export async function getDashboardDataForUser(clerkUserId: string) {
   const [{ data: subscriptions }, { data: credits }, { data: generations }] = await Promise.all([
-    supabase.from('subscriptions').select('*').eq('clerk_user_id', clerkUserId).limit(1),
-    supabase.from('credits').select('*').eq('clerk_user_id', clerkUserId).limit(1),
-    supabase.from('generations').select('*').eq('clerk_user_id', clerkUserId).order('created_at', { ascending: false }).limit(30),
+    supabaseAdmin.from('subscriptions').select('*').eq('clerk_user_id', clerkUserId).limit(1),
+    supabaseAdmin.from('credits').select('*').eq('clerk_user_id', clerkUserId).limit(1),
+    supabaseAdmin.from('generations').select('*').eq('clerk_user_id', clerkUserId).order('created_at', { ascending: false }).limit(30),
   ]);
 
   const safeGenerations = generations || [];
@@ -65,7 +65,7 @@ export async function bootstrapUserProfile(input: {
   fullName?: string | null;
   avatarUrl?: string | null;
 }) {
-  await supabase.from('profiles').upsert(
+  await supabaseAdmin.from('profiles').upsert(
     {
       clerk_user_id: input.clerkUserId,
       email: input.email || null,
@@ -77,14 +77,14 @@ export async function bootstrapUserProfile(input: {
     }
   );
 
-  const { data: existingCredits } = await supabase
+  const { data: existingCredits } = await supabaseAdmin
     .from('credits')
     .select('id')
     .eq('clerk_user_id', input.clerkUserId)
     .limit(1);
 
   if (!existingCredits?.length) {
-    await supabase.from('credits').insert({
+    await supabaseAdmin.from('credits').insert({
       clerk_user_id: input.clerkUserId,
       plan: 'free',
       credits_total: 5,
