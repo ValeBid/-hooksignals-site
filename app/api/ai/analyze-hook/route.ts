@@ -25,6 +25,12 @@ type AnalysisPayload = {
   thumbnailAngles: string[];
 };
 
+type ContextInput = {
+  platform: string;
+  niche: string;
+  audience: string;
+};
+
 function getSupabaseAdmin() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -43,30 +49,53 @@ function cleanArray(value: unknown, fallback: string[], limit = 5) {
   return clean.length ? clean : fallback;
 }
 
-function signals(hook: string) {
+function contextSignals(context: ContextInput) {
+  const platform = cleanText(context.platform, 80);
+  const niche = cleanText(context.niche, 80);
+  const audience = cleanText(context.audience, 120);
+  return {
+    platform,
+    niche,
+    audience,
+    hasPlatformContext: platform.length > 2,
+    hasNicheContext: niche.length > 2,
+    hasAudienceContext: audience.length > 2,
+    platformLower: platform.toLowerCase(),
+    nicheLower: niche.toLowerCase(),
+    audienceLower: audience.toLowerCase(),
+  };
+}
+
+function signals(hook: string, context: ContextInput = { platform: '', niche: '', audience: '' }) {
   const clean = cleanText(hook, 500);
   const words = clean.split(/\s+/).filter(Boolean);
   const lower = clean.toLowerCase();
+  const ctx = contextSignals(context);
+  const combined = `${lower} ${ctx.platformLower} ${ctx.nicheLower} ${ctx.audienceLower}`;
   return {
     clean,
     words,
     wordCount: words.length,
     uniqueWords: new Set(words.map((w) => w.toLowerCase().replace(/[^a-z0-9]/g, ''))).size,
     hasNumber: /\d/.test(clean),
-    hasPlatform: /youtube|shorts|tiktok|reels|instagram|video|channel|creator/i.test(clean),
+    hasPlatform: /youtube|shorts|tiktok|reels|instagram|video|channel|creator/i.test(combined),
     hasOutcome: /doubled|changed|increased|grew|saved|lost|failed|worked|result|retention|views|click|ctr|sales|revenue|growth|followers|subscribers/i.test(clean),
     hasTimeframe: /hour|hours|day|days|week|weeks|month|months|year|years|48|24|30|7/i.test(clean),
     hasTension: /but|only|why|secret|mistake|avoid|stop|failed|lost|truth|before|after|changed|surprised|nobody|one/i.test(clean),
     hasTest: /tested|uploaded|tried|analyzed|compared|reviewed|studied|experiment/i.test(clean),
-    hasAudience: /creator|founder|coach|student|freelancer|business|marketer|viewer|beginner|youtuber/i.test(clean),
+    hasAudience: /creator|founder|coach|student|freelancer|business|marketer|viewer|beginner|youtuber/i.test(combined),
+    hasNicheContext: ctx.hasNicheContext,
+    hasAudienceContext: ctx.hasAudienceContext,
+    hasFullContext: ctx.hasPlatformContext && ctx.hasNicheContext && ctx.hasAudienceContext,
+    ctx,
     lower,
   };
 }
 
-function isLowQualityInput(hook: string) {
-  const s = signals(hook);
+function isLowQualityInput(hook: string, context: ContextInput = { platform: '', niche: '', audience: '' }) {
+  const s = signals(hook, context);
   const alphaChars = (s.clean.match(/[a-zA-Z]/g) || []).length;
-  const hasConcreteSignal = s.hasNumber || s.hasPlatform || s.hasOutcome || s.hasTimeframe || s.hasTest || s.hasAudience;
+  const hasConcreteSignal = s.hasNumber || s.hasPlatform || s.hasOutcome || s.hasTimeframe || s.hasTest || s.hasAudience || s.hasNicheContext || s.hasAudienceContext;
   return s.clean.length < 12 || s.wordCount < 4 || alphaChars < 10 || s.uniqueWords < 3 || (!hasConcreteSignal && s.wordCount < 6);
 }
 
@@ -89,56 +118,61 @@ function invalidAnalysis(hook: string): AnalysisPayload {
   };
 }
 
-function calibratedScores(hook: string) {
-  if (isLowQualityInput(hook)) return { hookScore: 4, clarityScore: 5, curiosityScore: 4, retentionRisk: 92 };
-  const s = signals(hook);
+function calibratedScores(hook: string, context: ContextInput = { platform: '', niche: '', audience: '' }) {
+  if (isLowQualityInput(hook, context)) return { hookScore: 4, clarityScore: 5, curiosityScore: 4, retentionRisk: 92 };
+  const s = signals(hook, context);
   let score = 25;
   if (s.wordCount >= 7 && s.wordCount <= 18) score += 12;
   if (s.hasNumber) score += 14;
-  if (s.hasPlatform) score += 10;
+  if (s.hasPlatform) score += 8;
   if (s.hasOutcome) score += 15;
   if (s.hasTimeframe) score += 8;
   if (s.hasTension) score += 10;
   if (s.hasTest) score += 8;
   if (s.hasAudience) score += 4;
+  if (s.hasNicheContext) score += 4;
+  if (s.hasAudienceContext) score += 5;
+  if (s.hasFullContext) score += 3;
   if (s.wordCount > 22) score -= 10;
   if (!s.hasOutcome) score -= 8;
   if (!s.hasTension) score -= 6;
-  const hookScore = Math.max(8, Math.min(92, Math.round(score)));
-  const clarityScore = Math.max(10, Math.min(95, Math.round(35 + (s.hasPlatform ? 16 : 0) + (s.hasOutcome ? 18 : 0) + (s.hasNumber ? 12 : 0) + (s.wordCount >= 7 && s.wordCount <= 18 ? 10 : 0))));
-  const curiosityScore = Math.max(10, Math.min(95, Math.round(30 + (s.hasTension ? 22 : 0) + (s.hasOutcome ? 14 : 0) + (s.hasNumber ? 12 : 0) + (s.hasTest ? 8 : 0))));
-  const retentionRisk = Math.max(8, Math.min(95, Math.round(85 - hookScore + (s.wordCount > 20 ? 8 : 0))));
+  const hookScore = Math.max(8, Math.min(94, Math.round(score)));
+  const clarityScore = Math.max(10, Math.min(96, Math.round(32 + (s.hasPlatform ? 12 : 0) + (s.hasOutcome ? 16 : 0) + (s.hasNumber ? 10 : 0) + (s.hasNicheContext ? 10 : 0) + (s.hasAudienceContext ? 10 : 0) + (s.wordCount >= 7 && s.wordCount <= 18 ? 8 : 0))));
+  const curiosityScore = Math.max(10, Math.min(96, Math.round(30 + (s.hasTension ? 22 : 0) + (s.hasOutcome ? 14 : 0) + (s.hasNumber ? 12 : 0) + (s.hasTest ? 8 : 0) + (s.hasAudienceContext ? 5 : 0))));
+  const retentionRisk = Math.max(6, Math.min(95, Math.round(88 - hookScore + (s.wordCount > 20 ? 8 : 0) - (s.hasFullContext ? 4 : 0))));
   return { hookScore, clarityScore, curiosityScore, retentionRisk };
 }
 
-function fallbackAnalysis(hook: string): AnalysisPayload {
-  if (isLowQualityInput(hook)) return invalidAnalysis(hook);
-  const s = signals(hook);
-  const scores = calibratedScores(hook);
+function fallbackAnalysis(hook: string, context: ContextInput = { platform: '', niche: '', audience: '' }): AnalysisPayload {
+  if (isLowQualityInput(hook, context)) return invalidAnalysis(hook);
+  const s = signals(hook, context);
+  const scores = calibratedScores(hook, context);
   const trimmed = s.clean;
+  const audienceLabel = s.ctx.audience || 'creators';
+  const nicheLabel = s.ctx.niche || 'this topic';
   return {
     ...scores,
     pattern: s.hasNumber && s.hasOutcome ? 'Specific test with measurable payoff' : s.hasNumber ? 'Specific promise with numeric framing' : s.hasTension ? 'Curiosity gap with tension' : 'General hook angle',
-    weakness: scores.hookScore >= 75 ? 'Strong premise. The main improvement is to sharpen the emotional stakes and make the payoff more concrete.' : 'The premise is usable, but it needs sharper stakes, a clearer audience, or a stronger reason to keep watching.',
-    improvedHook: s.hasOutcome ? trimmed : `${trimmed.replace(/[?.!]+$/g, '')} — and the result exposed one mistake viewers should avoid`,
+    weakness: scores.hookScore >= 75 ? `Strong premise for ${audienceLabel}. Sharpen the emotional stakes and make the payoff even more concrete.` : `The premise is usable, but it needs sharper stakes for ${audienceLabel}, clearer ${nicheLabel} context, or a stronger reason to keep watching.`,
+    improvedHook: s.hasOutcome ? trimmed : `${trimmed.replace(/[?.!]+$/g, '')} — and the result exposed one mistake ${audienceLabel} should avoid`,
     variants: [
-      s.hasNumber ? `I tested ${s.hasNumber ? trimmed.match(/\d+[^ ]*/)?.[0] || 'multiple' : 'multiple'} hooks and one result changed everything` : `The mistake behind ${trimmed.toLowerCase().replace(/[?.!]+$/g, '')}`,
-      'The one change that made viewers stay longer',
-      'Before you publish your next video, fix this first-second mistake',
+      s.hasNumber ? `I tested ${trimmed.match(/\d+[^ ]*/)?.[0] || 'multiple'} hooks for ${nicheLabel} and one result changed everything` : `The mistake behind ${trimmed.toLowerCase().replace(/[?.!]+$/g, '')}`,
+      `The one change that made ${audienceLabel} stay longer`,
+      `Before you publish on ${s.ctx.platform || 'your channel'}, fix this first-second mistake`,
     ],
-    retentionNotes: ['Open with the concrete payoff before the setup.', 'Make the contrast sharper: what failed versus what worked.', 'Pair the first line with a title and thumbnail that repeat the same promise.'],
-    scoreRationale: [s.hasNumber ? 'The number gives scale.' : 'A number would make the promise more concrete.', s.hasOutcome ? 'The hook includes a measurable result.' : 'The result needs to be clearer.', s.hasTension ? 'The tension creates curiosity.' : 'The hook needs stronger tension.'],
-    audienceTrigger: s.hasPlatform ? 'Creators want to know which specific change improved performance.' : 'The viewer needs a clearer category and promised outcome.',
-    titlePairings: ['The Hook That Changed Retention', 'What Worked After Testing Multiple Hooks', 'The First-Second Fix Creators Miss'],
-    thumbnailAngles: ['Retention graph before and after', 'One winning hook highlighted', 'Failed hooks crossed out beside the winner'],
+    retentionNotes: [`Open with the concrete payoff for ${audienceLabel} before the setup.`, 'Make the contrast sharper: what failed versus what worked.', `Pair the first line with a ${s.ctx.platform || 'platform'} title and thumbnail that repeat the same promise.`],
+    scoreRationale: [s.hasNumber ? 'The number gives scale.' : 'A number would make the promise more concrete.', s.hasOutcome ? 'The hook includes a measurable result.' : 'The result needs to be clearer.', s.hasAudienceContext ? 'The audience context improves relevance.' : 'A sharper audience would improve relevance.'],
+    audienceTrigger: s.hasAudienceContext ? `${audienceLabel} want to know which specific change improves ${nicheLabel} performance.` : 'Creators want to know which specific change improved performance.',
+    titlePairings: [`The ${nicheLabel} Hook That Changed Retention`, `What Worked After Testing Multiple ${s.ctx.platform || 'Video'} Hooks`, `The First-Second Fix ${audienceLabel} Miss`],
+    thumbnailAngles: ['Retention graph before and after', 'One winning hook highlighted', `Failed ${nicheLabel} hooks crossed out beside the winner`],
   };
 }
 
-function normalizeAnalysis(raw: any, hook: string): AnalysisPayload {
-  const fallback = fallbackAnalysis(hook);
-  const calibrated = calibratedScores(hook);
+function normalizeAnalysis(raw: any, hook: string, context: ContextInput): AnalysisPayload {
+  const fallback = fallbackAnalysis(hook, context);
+  const calibrated = calibratedScores(hook, context);
   const modelScore = Number(raw?.hookScore);
-  const useCalibrated = Number.isFinite(modelScore) && Math.abs(modelScore - calibrated.hookScore) > 35;
+  const useCalibrated = Number.isFinite(modelScore) && Math.abs(modelScore - calibrated.hookScore) > 30;
   return {
     hookScore: useCalibrated ? calibrated.hookScore : Math.max(0, Math.min(100, Math.round(Number.isFinite(modelScore) ? modelScore : fallback.hookScore))),
     clarityScore: Math.max(0, Math.min(100, Math.round(Number.isFinite(Number(raw?.clarityScore)) ? Number(raw.clarityScore) : calibrated.clarityScore))),
@@ -157,10 +191,11 @@ function normalizeAnalysis(raw: any, hook: string): AnalysisPayload {
 }
 
 async function analyzeWithOpenAI(hook: string, platform: string, niche: string, audience: string) {
-  if (isLowQualityInput(hook)) return { analysis: invalidAnalysis(hook), mode: 'rules' as const, diagnostic: 'low_quality_input' };
+  const context = { platform: cleanText(platform, 80), niche: cleanText(niche, 80), audience: cleanText(audience, 120) };
+  if (isLowQualityInput(hook, context)) return { analysis: invalidAnalysis(hook), mode: 'rules' as const, diagnostic: 'low_quality_input' };
   const apiKey = process.env.OPENAI_API_KEY || process.env.OPENAI_API_TOKEN;
-  if (!apiKey) return { analysis: fallbackAnalysis(hook), mode: 'rules' as const, diagnostic: 'missing_openai_key' };
-  const calibration = calibratedScores(hook);
+  if (!apiKey) return { analysis: fallbackAnalysis(hook, context), mode: 'rules' as const, diagnostic: 'missing_openai_key' };
+  const calibration = calibratedScores(hook, context);
   try {
     const response = await fetch(OPENAI_URL, {
       method: 'POST',
@@ -170,21 +205,21 @@ async function analyzeWithOpenAI(hook: string, platform: string, niche: string, 
         temperature: 0.1,
         response_format: { type: 'json_object' },
         messages: [
-          { role: 'system', content: 'You are HookSignals, a strict short-form video hook strategist. Return only valid JSON. Be harsh but calibrated. Do not invent a niche that was not provided. Never flatter weak input.' },
-          { role: 'user', content: `Analyze this creator hook.\nHook: "${hook}"\nPlatform: "${platform || 'not provided'}"\nNiche: "${niche || 'not provided'}"\nAudience: "${audience || 'not provided'}"\n\nReturn JSON only with these exact keys: hookScore, clarityScore, curiosityScore, retentionRisk, pattern, weakness, improvedHook, variants, retentionNotes, scoreRationale, audienceTrigger, titlePairings, thumbnailAngles.\n\nScoring calibration:\n90-100 = elite hook with specific audience, sharp tension, measurable payoff, and immediate curiosity.\n75-89 = strong hook with clear curiosity and payoff.\n50-74 = average hook with usable premise but weak stakes.\n20-49 = weak hook with unclear payoff or broad promise.\n0-19 = nonsense, filler, or meaningless text.\n\nExamples:\n"I tested 37 YouTube hooks and one doubled retention in 48 hours" => hookScore 82, clarityScore 86, curiosityScore 84, retentionRisk 18.\n"I uploaded 100 shorts in 30 days and only one changed everything" => hookScore 76, clarityScore 78, curiosityScore 82, retentionRisk 25.\n"Sadly madly dadly" => hookScore 3, clarityScore 5, curiosityScore 4, retentionRisk 92.\n\nThis hook's heuristic baseline is hookScore ${calibration.hookScore}, clarityScore ${calibration.clarityScore}, curiosityScore ${calibration.curiosityScore}, retentionRisk ${calibration.retentionRisk}. Stay close unless there is a strong reason.\nDo not infer family, finance, fitness, AI or any niche unless the hook or context says so.`, },
+          { role: 'system', content: 'You are HookSignals, a strict short-form video hook strategist. Return only valid JSON. Be harsh but calibrated. Use platform, niche and audience as scoring context. Do not invent a niche that was not provided. Never flatter weak input.' },
+          { role: 'user', content: `Analyze this creator hook.\nHook: "${hook}"\nPlatform: "${context.platform || 'not provided'}"\nNiche: "${context.niche || 'not provided'}"\nAudience: "${context.audience || 'not provided'}"\n\nReturn JSON only with these exact keys: hookScore, clarityScore, curiosityScore, retentionRisk, pattern, weakness, improvedHook, variants, retentionNotes, scoreRationale, audienceTrigger, titlePairings, thumbnailAngles.\n\nScoring calibration:\n90-100 = elite hook with specific audience, sharp tension, measurable payoff, and immediate curiosity.\n75-89 = strong hook with clear curiosity and payoff.\n50-74 = average hook with usable premise but weak stakes.\n20-49 = weak hook with unclear payoff or broad promise.\n0-19 = nonsense, filler, or meaningless text.\n\nContext rules:\n- Platform changes pacing and packaging advice. YouTube Shorts needs fast payoff, TikTok needs pattern interruption, Reels needs instantly visual promise, long-form needs stronger title curiosity.\n- Niche makes the output specific. Use it in weakness, audienceTrigger, titlePairings and thumbnailAngles.\n- Audience changes the trigger. Beginners need clarity, founders need ROI/time leverage, creators need retention/growth proof, experts need novelty.\n- Reward complete context, but do not rescue a bad hook only because context is filled.\n\nExamples:\n"I tested 37 YouTube hooks and one doubled retention in 48 hours" with Platform YouTube Shorts, Niche creator growth, Audience YouTubers => hookScore 84, clarityScore 88, curiosityScore 86, retentionRisk 16.\n"I uploaded 100 shorts in 30 days and only one changed everything" with Platform YouTube Shorts, Niche creator growth, Audience new creators => hookScore 78, clarityScore 82, curiosityScore 84, retentionRisk 22.\n"Sadly madly dadly" => hookScore 3, clarityScore 5, curiosityScore 4, retentionRisk 92.\n\nThis hook's heuristic baseline is hookScore ${calibration.hookScore}, clarityScore ${calibration.clarityScore}, curiosityScore ${calibration.curiosityScore}, retentionRisk ${calibration.retentionRisk}. Stay close unless there is a strong reason.`, },
         ],
       }),
     });
     if (!response.ok) {
       const text = await response.text().catch(() => '');
-      return { analysis: fallbackAnalysis(hook), mode: 'rules' as const, diagnostic: `openai_${response.status}_${text.slice(0, 80)}` };
+      return { analysis: fallbackAnalysis(hook, context), mode: 'rules' as const, diagnostic: `openai_${response.status}_${text.slice(0, 80)}` };
     }
     const data = await response.json();
     const content = data?.choices?.[0]?.message?.content;
-    if (!content) return { analysis: fallbackAnalysis(hook), mode: 'rules' as const, diagnostic: 'empty_openai_response' };
-    return { analysis: normalizeAnalysis(JSON.parse(content), hook), mode: 'ai' as const, diagnostic: null };
+    if (!content) return { analysis: fallbackAnalysis(hook, context), mode: 'rules' as const, diagnostic: 'empty_openai_response' };
+    return { analysis: normalizeAnalysis(JSON.parse(content), hook, context), mode: 'ai' as const, diagnostic: null };
   } catch (error) {
-    return { analysis: fallbackAnalysis(hook), mode: 'rules' as const, diagnostic: error instanceof Error ? error.message.slice(0, 120) : 'openai_exception' };
+    return { analysis: fallbackAnalysis(hook, context), mode: 'rules' as const, diagnostic: error instanceof Error ? error.message.slice(0, 120) : 'openai_exception' };
   }
 }
 
