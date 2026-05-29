@@ -5,11 +5,37 @@ import { useState } from "react";
 export default function EmailCapture() {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!email.includes("@")) return;
-    setSubmitted(true);
+    const cleanEmail = email.trim().toLowerCase();
+
+    if (!cleanEmail.includes("@")) {
+      setError("Enter a valid email address.");
+      return;
+    }
+
+    setLoading(true);
+    setError("");
+
+    try {
+      const response = await fetch("/api/leads", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: cleanEmail, source: "homepage_email_capture" }),
+      });
+
+      const data = await response.json();
+      if (!response.ok) throw new Error(data?.error || "Could not save email.");
+
+      setSubmitted(true);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not save email.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -34,8 +60,9 @@ export default function EmailCapture() {
                 placeholder="creator@email.com"
                 className="rounded-2xl border border-white/10 bg-[#050914] px-4 py-4 text-white outline-none placeholder:text-white/24 focus:border-cyan-300/45"
               />
-              <button type="submit" className="rounded-2xl bg-cyan-300 px-5 py-4 font-black text-black transition hover:bg-cyan-200">
-                Join free
+              {error && <p className="rounded-2xl border border-red-400/20 bg-red-400/10 p-3 text-sm text-red-200">{error}</p>}
+              <button disabled={loading} type="submit" className="rounded-2xl bg-cyan-300 px-5 py-4 font-black text-black transition hover:bg-cyan-200 disabled:cursor-not-allowed disabled:opacity-60">
+                {loading ? "Saving..." : "Join free"}
               </button>
               <p className="text-xs leading-5 text-white/35">No spam. Product updates, creator workflow examples and discounts only.</p>
             </form>
