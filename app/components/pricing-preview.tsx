@@ -1,5 +1,7 @@
 "use client";
 
+import { useUser } from "@clerk/nextjs";
+
 const paddleToken = "live_af5c9cec32aec5fc5c8f8c35773";
 const starterPriceId = "pri_01ksqr6vp07e48ktwm6x5jzw1y";
 const proPriceId = "pri_01ksnnbh8fc2452se12nr37tmz";
@@ -9,12 +11,15 @@ let paddleLoadingPromise: Promise<void> | null = null;
 
 type PaddleWindow = Window & {
   Paddle?: {
-    Environment?: {
-      set: (environment: "sandbox" | "production") => void;
-    };
+    Environment?: { set: (environment: "sandbox" | "production") => void };
     Initialize: (options: { token: string }) => void;
     Checkout: {
-      open: (options: { items: Array<{ priceId: string; quantity: number }> }) => void;
+      open: (options: {
+        items: Array<{ priceId: string; quantity: number }>;
+        customer?: { email?: string };
+        customData?: Record<string, string>;
+        settings?: { successUrl?: string };
+      }) => void;
     };
   };
 };
@@ -106,10 +111,29 @@ const plans = [
 ];
 
 export default function PricingPreview() {
+  const { isLoaded, isSignedIn, user } = useUser();
+
   async function openCheckout(priceId: string) {
+    if (!isLoaded) return;
+
+    if (!isSignedIn || !user) {
+      window.location.href = `/sign-up?redirect_url=${encodeURIComponent('/pricing')}`;
+      return;
+    }
+
     try {
       await loadPaddle();
-      getPaddleWindow().Paddle?.Checkout.open({ items: [{ priceId, quantity: 1 }] });
+      getPaddleWindow().Paddle?.Checkout.open({
+        items: [{ priceId, quantity: 1 }],
+        customer: { email: user.primaryEmailAddress?.emailAddress || undefined },
+        customData: {
+          clerk_user_id: user.id,
+          email: user.primaryEmailAddress?.emailAddress || "",
+        },
+        settings: {
+          successUrl: `${window.location.origin}/dashboard?checkout=success`,
+        },
+      });
     } catch {
       window.location.href = "mailto:support@hooksignals.com?subject=HookSignals%20Checkout";
     }
@@ -122,10 +146,10 @@ export default function PricingPreview() {
           <div className="max-w-3xl">
             <p className="text-sm font-bold uppercase tracking-[0.14em] text-cyan-300">Creator pricing</p>
             <h2 className="mt-4 text-4xl font-black tracking-[-0.045em] md:text-5xl">Start small. Upgrade when the workflow saves real publishing time.</h2>
-            <p className="mt-5 text-lg leading-8 text-white/55">Free analysis gives the diagnosis. Paid plans add credits, deeper analysis, saved history and packaging workflows.</p>
+            <p className="mt-5 text-lg leading-8 text-white/55">Create an account first, then checkout. Credits are attached to your HookSignals dashboard after payment.</p>
           </div>
           <div className="max-w-sm rounded-2xl border border-cyan-300/15 bg-cyan-300/[0.055] px-5 py-4 text-sm leading-6 text-white/62">
-            Secure checkout by Paddle. Credits are applied to your HookSignals account after successful payment.
+            Secure checkout by Paddle. After payment, return to your dashboard to see plan, credits and saved workflow history.
           </div>
         </div>
 
@@ -164,16 +188,16 @@ export default function PricingPreview() {
                 onClick={() => openCheckout(plan.priceId)}
                 className={`mt-8 inline-flex w-full justify-center rounded-2xl px-6 py-3 font-black transition ${plan.premium ? "bg-white text-black hover:bg-white/90" : "border border-white/10 bg-white/[0.045] text-white hover:bg-white/10"}`}
               >
-                {plan.cta}
+                {isSignedIn ? plan.cta : "Create account to buy"}
               </button>
             </div>
           ))}
         </div>
 
         <div className="mt-7 grid gap-3 text-sm text-white/45 md:grid-cols-3">
-          <p>✓ Paddle production checkout</p>
+          <p>✓ Account required before checkout</p>
           <p>✓ 250 / 2,000 / 10,000 credit tiers</p>
-          <p>✓ Paid plans unlock deeper workflow value</p>
+          <p>✓ Credits connect to your dashboard</p>
         </div>
       </div>
     </section>
