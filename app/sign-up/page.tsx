@@ -6,11 +6,14 @@ export const metadata = {
 function getAuthBaseUrl() {
   const key = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || '';
   const host = key.split('$')[1];
-  return host ? `https://${host}` : '/';
+  return host ? `https://${host}` : '';
 }
 
 export default function SignUpPage() {
-  const authUrl = `${getAuthBaseUrl()}/sign-up`;
+  const authBase = getAuthBaseUrl();
+  const authUrl = authBase
+    ? `${authBase}/sign-up?redirect_url=${encodeURIComponent('https://hooksignals.com/dashboard')}`
+    : '/dashboard';
 
   return (
     <main className="min-h-screen bg-[#030507] px-5 py-16 text-white md:px-8">
