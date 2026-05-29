@@ -42,8 +42,8 @@ const productTools = [
 
 const proofStats = [
   ["9", "Focused tools for the pre-publish workflow"],
-  ["3 steps", "Diagnose the hook, tighten the package, publish cleaner"],
-  ["Free", "Start with practical creator checks before upgrading"],
+  ["5 credits", "One premium hook analysis"],
+  ["Pro", "Best plan for weekly creators"],
   ["SEO", "Built as a search-first creator acquisition engine"],
 ];
 
@@ -74,9 +74,30 @@ function HeroMockup() {
           <div className="mt-8 h-2 overflow-hidden rounded-full bg-white/10">
             <div className="h-full w-[78%] rounded-full bg-gradient-to-r from-cyan-300 via-sky-400 to-violet-400" />
           </div>
+          <div className="mt-6 grid gap-3 sm:grid-cols-3">
+            {[["Score", "78/100"], ["Risk", "Medium"], ["Next", "Rewrite"]].map(([k, v]) => <div key={k} className="rounded-2xl border border-white/10 bg-black/24 p-4"><p className="text-xs uppercase tracking-[0.14em] text-white/35">{k}</p><p className="mt-2 font-black text-cyan-200">{v}</p></div>)}
+          </div>
         </div>
       </div>
     </div>
+  );
+}
+
+function PurchaseBand() {
+  return (
+    <section className="mt-10 rounded-[34px] border border-cyan-300/20 bg-[linear-gradient(135deg,rgba(34,211,238,.10),rgba(124,58,237,.08))] p-6 shadow-[0_28px_100px_rgba(34,211,238,.10)] md:p-8">
+      <div className="grid gap-6 lg:grid-cols-[1fr_0.7fr] lg:items-center">
+        <div>
+          <p className="text-sm font-black uppercase tracking-[0.14em] text-cyan-300">Creator Pro workflow</p>
+          <h2 className="mt-3 text-3xl font-black tracking-[-0.04em] md:text-5xl">Turn one idea into a full publish-ready package.</h2>
+          <p className="mt-4 max-w-3xl leading-8 text-white/58">Premium analysis unlocks deeper hook variants, title pairings, thumbnail angles and saved workflow history before you publish.</p>
+        </div>
+        <div className="grid gap-3">
+          <a href="/checkout/pro" className="rounded-2xl bg-white px-6 py-4 text-center text-sm font-black text-black transition hover:scale-[1.01]">Start Creator Pro</a>
+          <a href="/hook-analyzer" className="rounded-2xl border border-white/10 bg-white/[0.04] px-6 py-4 text-center text-sm font-black text-white transition hover:bg-white/10">Analyze a hook first</a>
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -105,7 +126,10 @@ export default function Home() {
                 <a className="transition hover:text-white" href="/blog">Resources</a>
                 <a className="transition hover:text-white" href="/seo">SEO Hub</a>
               </div>
-              <a href="/hook-analyzer" className="rounded-2xl bg-gradient-to-r from-cyan-300 via-sky-400 to-violet-400 px-4 py-2.5 text-sm font-black text-black shadow-[0_16px_34px_rgba(34,211,238,.18)] transition hover:scale-[1.01] md:px-5">Start free</a>
+              <div className="flex items-center gap-2">
+                <a href="/hook-analyzer" className="hidden rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm font-black text-white transition hover:bg-white/10 sm:inline-flex">Analyze free</a>
+                <a href="/checkout/pro" className="rounded-2xl bg-gradient-to-r from-cyan-300 via-sky-400 to-violet-400 px-4 py-2.5 text-sm font-black text-black shadow-[0_16px_34px_rgba(34,211,238,.18)] transition hover:scale-[1.01] md:px-5">Start Pro</a>
+              </div>
             </nav>
 
             <section className="grid gap-10 pb-16 pt-14 lg:grid-cols-[0.92fr_1.08fr] lg:items-center lg:pb-24 lg:pt-24 hs-mobile-stack">
@@ -122,7 +146,10 @@ export default function Home() {
                 </p>
                 <div className="mt-10 flex flex-col gap-4 sm:flex-row hs-slide-up hs-delay-3">
                   <a href="/hook-analyzer" className="group inline-flex items-center justify-center gap-3 rounded-2xl bg-gradient-to-r from-cyan-300 via-sky-400 to-violet-400 px-8 py-4 text-base font-black text-black shadow-[0_20px_48px_rgba(34,211,238,.18)] transition hover:scale-[1.01]">Analyze a hook <span className="transition group-hover:translate-x-1">→</span></a>
-                  <a href="/tools" className="inline-flex items-center justify-center gap-3 rounded-2xl border border-white/15 bg-white/[0.035] px-8 py-4 text-base font-bold text-white transition hover:bg-white/10">See the workflow</a>
+                  <a href="/checkout/pro" className="inline-flex items-center justify-center gap-3 rounded-2xl border border-cyan-300/30 bg-cyan-300/[0.08] px-8 py-4 text-base font-black text-cyan-100 transition hover:bg-cyan-300/[0.14]">Start Creator Pro</a>
+                </div>
+                <div className="mt-4 flex flex-wrap gap-3 text-sm text-white/42">
+                  <span>✓ 7-day trial if enabled</span><span>✓ 5 credits per analysis</span><span>✓ Secure checkout by Paddle</span>
                 </div>
                 <div className="mt-10 grid gap-3 sm:grid-cols-2 xl:grid-cols-4 hs-slide-up hs-delay-4">
                   {productTools.map(([name, desc, href, icon]) => (
@@ -146,6 +173,7 @@ export default function Home() {
               ))}
             </div>
 
+            <PurchaseBand />
             <LiveCreatorMetrics />
             <EmailCapture />
             <ExampleAnalyses />
@@ -165,7 +193,7 @@ export default function Home() {
             <section className="mt-16 rounded-[38px] border border-cyan-300/20 bg-[radial-gradient(circle_at_20%_20%,rgba(34,211,238,.16),transparent_32%),linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.02))] p-8 text-center shadow-[0_40px_120px_rgba(34,211,238,.1)] md:p-14">
               <h2 className="text-4xl font-black tracking-[-0.05em] md:text-6xl">Build better creator workflows before publishing.</h2>
               <p className="mx-auto mt-5 max-w-2xl leading-8 text-white/58">Start with a hook, improve the script, test the thumbnail and publish with stronger retention signals.</p>
-              <a href="/hook-analyzer" className="mt-8 inline-flex rounded-2xl bg-white px-8 py-4 font-black text-black transition hover:scale-[1.02]">Start analyzing →</a>
+              <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row"><a href="/hook-analyzer" className="inline-flex rounded-2xl bg-white px-8 py-4 font-black text-black transition hover:scale-[1.02]">Start analyzing →</a><a href="/checkout/pro" className="inline-flex rounded-2xl border border-cyan-300/30 bg-cyan-300/[0.08] px-8 py-4 font-black text-cyan-100 transition hover:bg-cyan-300/[0.14]">Start Pro →</a></div>
             </section>
           </div>
         </section>
