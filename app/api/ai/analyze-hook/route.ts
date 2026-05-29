@@ -9,6 +9,22 @@ const OPENAI_URL = 'https://api.openai.com/v1/chat/completions';
 const MODEL = process.env.OPENAI_MODEL || 'gpt-4o-mini';
 const CREDIT_COST = 5;
 
+type AnalysisPayload = {
+  hookScore: number;
+  clarityScore: number;
+  curiosityScore: number;
+  retentionRisk: number;
+  pattern: string;
+  weakness: string;
+  improvedHook: string;
+  variants: string[];
+  retentionNotes: string[];
+  scoreRationale: string[];
+  audienceTrigger: string;
+  titlePairings: string[];
+  thumbnailAngles: string[];
+};
+
 function getSupabaseAdmin() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -21,17 +37,76 @@ function getSupabaseAdmin() {
   });
 }
 
-function fallbackAnalysis(hook: string) {
-  const trimmed = hook.trim().slice(0, 500);
+function cleanText(value: string, max = 140) {
+  return value.trim().replace(/\s+/g, ' ').slice(0, max);
+}
+
+function clampScore(value: unknown, fallback: number) {
+  const n = typeof value === 'number' ? value : Number(value);
+  if (!Number.isFinite(n)) return fallback;
+  return Math.max(0, Math.min(100, Math.round(n)));
+}
+
+function cleanArray(value: unknown, fallback: string[], limit = 5) {
+  if (!Array.isArray(value)) return fallback;
+  const clean = value.map((item) => cleanText(String(item), 220)).filter(Boolean).slice(0, limit);
+  return clean.length ? clean : fallback;
+}
+
+function isLowQualityInput(hook: string) {
+  const clean = cleanText(hook, 500);
+  const words = clean.split(/\s+/).filter(Boolean);
+  const alphaChars = (clean.match(/[a-zA-Z]/g) || []).length;
+  const uniqueWords = new Set(words.map((w) => w.toLowerCase().replace(/[^a-z0-9]/g, ''))).size;
+  const hasConcreteSignal = /\d|youtube|shorts|tiktok|reels|video|views|client|money|fitness|ai|business|creator|title|thumbnail|mistake|before|after|why|how|result|test|days|month|secret|stop|avoid/i.test(clean);
+
+  return clean.length < 12 || words.length < 4 || alphaChars < 10 || uniqueWords < 3 || (!hasConcreteSignal && words.length < 6);
+}
+
+function invalidAnalysis(hook: string): AnalysisPayload {
+  const clean = cleanText(hook, 120) || 'This hook';
+  return {
+    hookScore: 4,
+    clarityScore: 5,
+    curiosityScore: 4,
+    retentionRisk: 92,
+    pattern: 'Input not analyzable',
+    weakness: 'The hook does not contain enough concrete meaning to evaluate. Add a clear subject, outcome, tension or viewer benefit.',
+    improvedHook: `${clean} — but add the specific result, mistake, or promise viewers should care about`,
+    variants: [
+      'I tested one simple change and the result surprised me',
+      'The mistake most creators make before they publish',
+      'Before you post this, fix the first three seconds',
+    ],
+    retentionNotes: [
+      'Add a concrete subject, not just mood words.',
+      'Name the payoff viewers will get by staying.',
+      'Use tension: what changed, failed, or surprised you?',
+    ],
+    scoreRationale: [
+      'The current input is too vague to picture quickly.',
+      'There is no clear viewer benefit or outcome.',
+      'A stronger hook needs a subject plus tension.',
+    ],
+    audienceTrigger: 'No clear audience trigger yet.',
+    titlePairings: ['The first-second mistake to fix', 'What changed after the test', 'Why viewers leave early'],
+    thumbnailAngles: ['One bold outcome word', 'Before and after contrast', 'Mistake label over the key moment'],
+  };
+}
+
+function fallbackAnalysis(hook: string): AnalysisPayload {
+  if (isLowQualityInput(hook)) return invalidAnalysis(hook);
+
+  const trimmed = cleanText(hook, 500);
   const wordCount = trimmed.split(/\s+/).filter(Boolean).length;
   const hasNumber = /\d/.test(trimmed);
   const hasQuestion = trimmed.includes('?');
-  const hasTension = /but|why|secret|mistake|avoid|stop|failed|lost|truth|before|after/i.test(trimmed);
-  const hasSpecificTopic = /youtube|shorts|tiktok|video|views|money|client|creator|days|result|hook|title|thumbnail/i.test(trimmed);
+  const hasTension = /but|why|secret|mistake|avoid|stop|failed|lost|truth|before|after|changed|surprised|nobody/i.test(trimmed);
+  const hasSpecificTopic = /youtube|shorts|tiktok|reels|video|views|money|client|creator|days|result|hook|title|thumbnail|fitness|ai|business/i.test(trimmed);
 
-  const clarityScore = Math.min(95, Math.max(30, 58 + (wordCount >= 6 && wordCount <= 16 ? 14 : -8) + (hasSpecificTopic ? 10 : 0)));
-  const curiosityScore = Math.min(95, Math.max(25, 50 + (hasQuestion ? 8 : 0) + (hasTension ? 18 : 0) + (hasNumber ? 9 : 0)));
-  const retentionRisk = Math.min(90, Math.max(10, 62 + (wordCount > 18 ? 12 : 0) - (hasTension ? 12 : 0) - (hasNumber ? 8 : 0) - (hasSpecificTopic ? 8 : 0)));
+  const clarityScore = Math.min(95, Math.max(20, 52 + (wordCount >= 6 && wordCount <= 16 ? 18 : -10) + (hasSpecificTopic ? 12 : 0) + (hasNumber ? 6 : 0)));
+  const curiosityScore = Math.min(95, Math.max(20, 44 + (hasQuestion ? 8 : 0) + (hasTension ? 20 : 0) + (hasNumber ? 10 : 0)));
+  const retentionRisk = Math.min(95, Math.max(8, 68 + (wordCount > 18 ? 10 : 0) - (hasTension ? 16 : 0) - (hasNumber ? 8 : 0) - (hasSpecificTopic ? 8 : 0)));
   const hookScore = Math.round((clarityScore + curiosityScore + (100 - retentionRisk)) / 3);
 
   return {
@@ -42,12 +117,12 @@ function fallbackAnalysis(hook: string) {
     pattern: hasNumber ? 'Specific promise with numeric framing' : hasTension ? 'Curiosity gap with tension' : 'General hook angle',
     weakness: hasSpecificTopic
       ? 'The angle is understandable, but the payoff needs a sharper consequence or reveal.'
-      : 'The hook is too vague. It needs a clearer object, audience pain point, or concrete result.',
+      : 'The hook is still broad. It needs a clearer object, audience pain point, or concrete result.',
     improvedHook: `${trimmed.replace(/[?.!]+$/g, '')} — but the result exposed one detail viewers should see`,
     variants: [
       `The mistake behind ${trimmed.toLowerCase().replace(/[?.!]+$/g, '')}`,
       'One detail changed the result',
-      'Before you post this idea, fix the first 3 seconds',
+      'Before you post this idea, fix the first three seconds',
     ],
     retentionNotes: [
       'Name the concrete payoff in the first second.',
@@ -65,26 +140,28 @@ function fallbackAnalysis(hook: string) {
   };
 }
 
-function normalizeAnalysis(raw: any, hook: string) {
+function normalizeAnalysis(raw: any, hook: string): AnalysisPayload {
   const fallback = fallbackAnalysis(hook);
   return {
-    hookScore: Number.isFinite(raw?.hookScore) ? Math.max(0, Math.min(100, Math.round(raw.hookScore))) : fallback.hookScore,
-    clarityScore: Number.isFinite(raw?.clarityScore) ? Math.max(0, Math.min(100, Math.round(raw.clarityScore))) : fallback.clarityScore,
-    curiosityScore: Number.isFinite(raw?.curiosityScore) ? Math.max(0, Math.min(100, Math.round(raw.curiosityScore))) : fallback.curiosityScore,
-    retentionRisk: Number.isFinite(raw?.retentionRisk) ? Math.max(0, Math.min(100, Math.round(raw.retentionRisk))) : fallback.retentionRisk,
-    pattern: typeof raw?.pattern === 'string' ? raw.pattern.slice(0, 180) : fallback.pattern,
-    weakness: typeof raw?.weakness === 'string' ? raw.weakness.slice(0, 280) : fallback.weakness,
-    improvedHook: typeof raw?.improvedHook === 'string' ? raw.improvedHook.slice(0, 220) : fallback.improvedHook,
-    variants: Array.isArray(raw?.variants) ? raw.variants.map(String).filter(Boolean).slice(0, 5) : fallback.variants,
-    retentionNotes: Array.isArray(raw?.retentionNotes) ? raw.retentionNotes.map(String).filter(Boolean).slice(0, 5) : fallback.retentionNotes,
-    scoreRationale: Array.isArray(raw?.scoreRationale) ? raw.scoreRationale.map(String).filter(Boolean).slice(0, 5) : fallback.scoreRationale,
-    audienceTrigger: typeof raw?.audienceTrigger === 'string' ? raw.audienceTrigger.slice(0, 240) : fallback.audienceTrigger,
-    titlePairings: Array.isArray(raw?.titlePairings) ? raw.titlePairings.map(String).filter(Boolean).slice(0, 5) : fallback.titlePairings,
-    thumbnailAngles: Array.isArray(raw?.thumbnailAngles) ? raw.thumbnailAngles.map(String).filter(Boolean).slice(0, 5) : fallback.thumbnailAngles,
+    hookScore: clampScore(raw?.hookScore, fallback.hookScore),
+    clarityScore: clampScore(raw?.clarityScore, fallback.clarityScore),
+    curiosityScore: clampScore(raw?.curiosityScore, fallback.curiosityScore),
+    retentionRisk: clampScore(raw?.retentionRisk, fallback.retentionRisk),
+    pattern: typeof raw?.pattern === 'string' ? cleanText(raw.pattern, 180) : fallback.pattern,
+    weakness: typeof raw?.weakness === 'string' ? cleanText(raw.weakness, 280) : fallback.weakness,
+    improvedHook: typeof raw?.improvedHook === 'string' ? cleanText(raw.improvedHook, 220) : fallback.improvedHook,
+    variants: cleanArray(raw?.variants, fallback.variants, 5),
+    retentionNotes: cleanArray(raw?.retentionNotes, fallback.retentionNotes, 5),
+    scoreRationale: cleanArray(raw?.scoreRationale, fallback.scoreRationale, 5),
+    audienceTrigger: typeof raw?.audienceTrigger === 'string' ? cleanText(raw.audienceTrigger, 240) : fallback.audienceTrigger,
+    titlePairings: cleanArray(raw?.titlePairings, fallback.titlePairings, 5),
+    thumbnailAngles: cleanArray(raw?.thumbnailAngles, fallback.thumbnailAngles, 5),
   };
 }
 
 async function analyzeWithOpenAI(hook: string, platform: string, niche: string, audience: string) {
+  if (isLowQualityInput(hook)) return { analysis: invalidAnalysis(hook), mode: 'rules' as const, diagnostic: 'low_quality_input' };
+
   const apiKey = process.env.OPENAI_API_KEY || process.env.OPENAI_API_TOKEN;
   if (!apiKey) return { analysis: fallbackAnalysis(hook), mode: 'rules' as const, diagnostic: 'missing_openai_key' };
 
@@ -97,10 +174,18 @@ async function analyzeWithOpenAI(hook: string, platform: string, niche: string, 
       },
       body: JSON.stringify({
         model: MODEL,
+        temperature: 0.2,
         response_format: { type: 'json_object' },
         messages: [
-          { role: 'system', content: 'You are a strict short-form video strategist. Return valid JSON only. Score harshly and give practical improvements.' },
-          { role: 'user', content: `Hook: ${hook}\nPlatform: ${platform || 'not provided'}\nNiche: ${niche || 'not provided'}\nAudience: ${audience || 'not provided'}\nReturn JSON with hookScore, clarityScore, curiosityScore, retentionRisk, pattern, weakness, improvedHook, variants, retentionNotes, scoreRationale, audienceTrigger, titlePairings, thumbnailAngles.` },
+          {
+            role: 'system',
+            content:
+              'You are HookSignals, a strict short-form video hook strategist. Return only valid JSON. Be harsh. Do not invent a niche that was not provided. If the hook is vague or weak, say so. Scores below 20 are allowed for bad hooks. Never flatter weak input.',
+          },
+          {
+            role: 'user',
+            content: `Analyze this creator hook.\nHook: "${hook}"\nPlatform: "${platform || 'not provided'}"\nNiche: "${niche || 'not provided'}"\nAudience: "${audience || 'not provided'}"\n\nReturn JSON only with these exact keys:\nhookScore, clarityScore, curiosityScore, retentionRisk, pattern, weakness, improvedHook, variants, retentionNotes, scoreRationale, audienceTrigger, titlePairings, thumbnailAngles.\n\nRules:\n- hookScore, clarityScore, curiosityScore and retentionRisk must be 0-100 numbers.\n- If input is nonsense, filler, or too vague, hookScore must be under 15.\n- Do not infer family, finance, fitness or AI unless the hook or context says so.\n- improvedHook must be usable as a first line.\n- variants must contain 3-5 sharper first-line hooks.\n- retentionNotes and scoreRationale must be practical and specific.`,
+          },
         ],
       }),
     });
@@ -128,9 +213,7 @@ function errorDetail(error: unknown) {
 export async function POST(request: Request) {
   try {
     const user = await currentUser();
-    if (!user) {
-      return NextResponse.json({ success: false, error: 'unauthorized' }, { status: 401 });
-    }
+    if (!user) return NextResponse.json({ success: false, error: 'unauthorized' }, { status: 401 });
 
     const body = await request.json();
     const hook = String(body?.hook || '').trim().slice(0, 500);
@@ -138,9 +221,7 @@ export async function POST(request: Request) {
     const niche = String(body?.niche || '').trim().slice(0, 80);
     const audience = String(body?.audience || '').trim().slice(0, 120);
 
-    if (hook.length < 8) {
-      return NextResponse.json({ success: false, error: 'missing_hook' }, { status: 400 });
-    }
+    if (hook.length < 8) return NextResponse.json({ success: false, error: 'missing_hook' }, { status: 400 });
 
     const supabaseAdmin = getSupabaseAdmin();
 
@@ -151,18 +232,11 @@ export async function POST(request: Request) {
       .limit(1)
       .maybeSingle();
 
-    if (creditsError) {
-      return NextResponse.json({ success: false, error: 'credits_read_failed', detail: creditsError.message }, { status: 500 });
-    }
-
-    if (!credits || Number(credits.credits_remaining || 0) < CREDIT_COST) {
-      return NextResponse.json({ success: false, error: 'insufficient_credits' }, { status: 402 });
-    }
+    if (creditsError) return NextResponse.json({ success: false, error: 'credits_read_failed', detail: creditsError.message }, { status: 500 });
+    if (!credits || Number(credits.credits_remaining || 0) < CREDIT_COST) return NextResponse.json({ success: false, error: 'insufficient_credits' }, { status: 402 });
 
     const plan = String(credits.plan || 'starter').toLowerCase();
-    if (plan === 'free') {
-      return NextResponse.json({ success: false, error: 'upgrade_required' }, { status: 402 });
-    }
+    if (plan === 'free') return NextResponse.json({ success: false, error: 'upgrade_required' }, { status: 402 });
 
     const { analysis, mode, diagnostic } = await analyzeWithOpenAI(hook, platform, niche, audience);
     const nextUsed = Number(credits.credits_used || 0) + CREDIT_COST;
@@ -173,9 +247,7 @@ export async function POST(request: Request) {
       .update({ credits_used: nextUsed, credits_remaining: nextRemaining, updated_at: new Date().toISOString() })
       .eq('clerk_user_id', user.id);
 
-    if (updateError) {
-      return NextResponse.json({ success: false, error: 'credits_update_failed', detail: updateError.message }, { status: 500 });
-    }
+    if (updateError) return NextResponse.json({ success: false, error: 'credits_update_failed', detail: updateError.message }, { status: 500 });
 
     const { data: generation, error: generationError } = await supabaseAdmin
       .from('generations')
