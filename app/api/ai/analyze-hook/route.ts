@@ -5,6 +5,8 @@ import { createClient } from '@supabase/supabase-js';
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
+const OPENAI_URL = 'https://api.openai.com/v1/chat/completions';
+const MODEL = process.env.OPENAI_MODEL || 'gpt-4o-mini';
 const CREDIT_COST = 5;
 
 function getSupabaseAdmin() {
@@ -63,6 +65,61 @@ function fallbackAnalysis(hook: string) {
   };
 }
 
+function normalizeAnalysis(raw: any, hook: string) {
+  const fallback = fallbackAnalysis(hook);
+  return {
+    hookScore: Number.isFinite(raw?.hookScore) ? Math.max(0, Math.min(100, Math.round(raw.hookScore))) : fallback.hookScore,
+    clarityScore: Number.isFinite(raw?.clarityScore) ? Math.max(0, Math.min(100, Math.round(raw.clarityScore))) : fallback.clarityScore,
+    curiosityScore: Number.isFinite(raw?.curiosityScore) ? Math.max(0, Math.min(100, Math.round(raw.curiosityScore))) : fallback.curiosityScore,
+    retentionRisk: Number.isFinite(raw?.retentionRisk) ? Math.max(0, Math.min(100, Math.round(raw.retentionRisk))) : fallback.retentionRisk,
+    pattern: typeof raw?.pattern === 'string' ? raw.pattern.slice(0, 180) : fallback.pattern,
+    weakness: typeof raw?.weakness === 'string' ? raw.weakness.slice(0, 280) : fallback.weakness,
+    improvedHook: typeof raw?.improvedHook === 'string' ? raw.improvedHook.slice(0, 220) : fallback.improvedHook,
+    variants: Array.isArray(raw?.variants) ? raw.variants.map(String).filter(Boolean).slice(0, 5) : fallback.variants,
+    retentionNotes: Array.isArray(raw?.retentionNotes) ? raw.retentionNotes.map(String).filter(Boolean).slice(0, 5) : fallback.retentionNotes,
+    scoreRationale: Array.isArray(raw?.scoreRationale) ? raw.scoreRationale.map(String).filter(Boolean).slice(0, 5) : fallback.scoreRationale,
+    audienceTrigger: typeof raw?.audienceTrigger === 'string' ? raw.audienceTrigger.slice(0, 240) : fallback.audienceTrigger,
+    titlePairings: Array.isArray(raw?.titlePairings) ? raw.titlePairings.map(String).filter(Boolean).slice(0, 5) : fallback.titlePairings,
+    thumbnailAngles: Array.isArray(raw?.thumbnailAngles) ? raw.thumbnailAngles.map(String).filter(Boolean).slice(0, 5) : fallback.thumbnailAngles,
+  };
+}
+
+async function analyzeWithOpenAI(hook: string, platform: string, niche: string, audience: string) {
+  const apiKey = process.env.OPENAI_API_KEY || process.env.OPENAI_API_TOKEN;
+  if (!apiKey) return { analysis: fallbackAnalysis(hook), mode: 'rules' as const, diagnostic: 'missing_openai_key' };
+
+  try {
+    const response = await fetch(OPENAI_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model: MODEL,
+        response_format: { type: 'json_object' },
+        messages: [
+          { role: 'system', content: 'You are a strict short-form video strategist. Return valid JSON only. Score harshly and give practical improvements.' },
+          { role: 'user', content: `Hook: ${hook}\nPlatform: ${platform || 'not provided'}\nNiche: ${niche || 'not provided'}\nAudience: ${audience || 'not provided'}\nReturn JSON with hookScore, clarityScore, curiosityScore, retentionRisk, pattern, weakness, improvedHook, variants, retentionNotes, scoreRationale, audienceTrigger, titlePairings, thumbnailAngles.` },
+        ],
+      }),
+    });
+
+    if (!response.ok) {
+      const text = await response.text().catch(() => '');
+      return { analysis: fallbackAnalysis(hook), mode: 'rules' as const, diagnostic: `openai_${response.status}_${text.slice(0, 80)}` };
+    }
+
+    const data = await response.json();
+    const content = data?.choices?.[0]?.message?.content;
+    if (!content) return { analysis: fallbackAnalysis(hook), mode: 'rules' as const, diagnostic: 'empty_openai_response' };
+
+    return { analysis: normalizeAnalysis(JSON.parse(content), hook), mode: 'ai' as const, diagnostic: null };
+  } catch (error) {
+    return { analysis: fallbackAnalysis(hook), mode: 'rules' as const, diagnostic: error instanceof Error ? error.message.slice(0, 120) : 'openai_exception' };
+  }
+}
+
 function errorDetail(error: unknown) {
   if (error instanceof Error) return error.message;
   return String(error || 'unknown_error');
@@ -77,6 +134,10 @@ export async function POST(request: Request) {
 
     const body = await request.json();
     const hook = String(body?.hook || '').trim().slice(0, 500);
+    const platform = String(body?.platform || '').trim().slice(0, 80);
+    const niche = String(body?.niche || '').trim().slice(0, 80);
+    const audience = String(body?.audience || '').trim().slice(0, 120);
+
     if (hook.length < 8) {
       return NextResponse.json({ success: false, error: 'missing_hook' }, { status: 400 });
     }
@@ -103,7 +164,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, error: 'upgrade_required' }, { status: 402 });
     }
 
-    const analysis = fallbackAnalysis(hook);
+    const { analysis, mode, diagnostic } = await analyzeWithOpenAI(hook, platform, niche, audience);
     const nextUsed = Number(credits.credits_used || 0) + CREDIT_COST;
     const nextRemaining = Math.max(0, Number(credits.credits_remaining || 0) - CREDIT_COST);
 
@@ -131,8 +192,8 @@ export async function POST(request: Request) {
     return NextResponse.json({
       success: true,
       analysis,
-      mode: 'rules',
-      diagnostic: 'premium_credit_path',
+      mode,
+      diagnostic,
       creditsSpent: CREDIT_COST,
       creditsRemaining: nextRemaining,
       shareId: generation?.id || null,
