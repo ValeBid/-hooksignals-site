@@ -27,6 +27,7 @@ function ActivityList({ items, empty }: { items: any[]; empty: string }) {
             <div>
               <p className="text-xs font-black uppercase tracking-[0.14em] text-cyan-300">{item.tool_name || 'workspace item'}</p>
               <p className="mt-2 line-clamp-2 text-sm leading-6 text-white/72">{item.input || item.output || 'Saved creator workflow'}</p>
+              {item.created_at && <p className="mt-2 text-xs text-white/32">{new Date(item.created_at).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>}
             </div>
             <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-xs text-white/45">
               {item.credits_spent || 0} credits
@@ -63,6 +64,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
   const creditsRemaining = data.credits?.credits_remaining ?? 0;
   const creditsUsed = Math.max(0, creditsTotal - creditsRemaining);
   const creditPercent = creditsTotal ? Math.min(100, Math.round((creditsRemaining / creditsTotal) * 100)) : 0;
+  const analysesLeft = Math.floor(creditsRemaining / 5);
   const checkoutSuccess = searchParams?.checkout === 'success';
   const isPaid = plan !== 'free' && creditsTotal > 5;
   const lastActivity = data.workspace.lastGenerationAt ? new Date(data.workspace.lastGenerationAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : 'No activity yet';
@@ -99,7 +101,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
               <div className="mt-5 h-2 overflow-hidden rounded-full bg-black/30">
                 <div className="h-full rounded-full bg-gradient-to-r from-cyan-300 via-sky-400 to-violet-400" style={{ width: `${creditPercent}%` }} />
               </div>
-              <p className="mt-3 text-sm text-white/55">{creditsRemaining} of {creditsTotal} credits remaining.</p>
+              <p className="mt-3 text-sm text-white/55">{creditsRemaining} of {creditsTotal} credits remaining. About {analysesLeft} hook analyses left.</p>
             </div>
 
             <div className="mt-5 grid gap-3 sm:grid-cols-2">
@@ -115,9 +117,9 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
               <p className="mt-3 leading-7 text-white/48">{creditsUsed} used / {creditsTotal} total</p>
             </div>
             <div className="rounded-[28px] border border-white/10 bg-black/24 p-6">
-              <p className="text-sm font-bold uppercase tracking-[0.14em] text-white/38">Analyses</p>
-              <p className="mt-4 text-4xl font-black">{data.workspace.totalGenerations}</p>
-              <p className="mt-3 leading-7 text-white/48">Saved workflow outputs</p>
+              <p className="text-sm font-bold uppercase tracking-[0.14em] text-white/38">Analyses left</p>
+              <p className="mt-4 text-4xl font-black">{analysesLeft}</p>
+              <p className="mt-3 leading-7 text-white/48">Based on 5 credits each</p>
             </div>
             <div className="rounded-[28px] border border-white/10 bg-black/24 p-6">
               <p className="text-sm font-bold uppercase tracking-[0.14em] text-white/38">Last activity</p>
@@ -129,6 +131,24 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
               <p className="mt-4 text-4xl font-black">{data.workspace.creditsSpent}</p>
               <p className="mt-3 leading-7 text-white/48">Tracked usage</p>
             </div>
+          </div>
+        </section>
+
+        <section className="mt-6 grid gap-4 md:grid-cols-3">
+          <div className="rounded-[28px] border border-cyan-300/20 bg-cyan-300/[0.055] p-5">
+            <p className="text-xs font-black uppercase tracking-[0.14em] text-cyan-300">Saved history</p>
+            <h2 className="mt-3 text-2xl font-black">Every premium run is stored.</h2>
+            <p className="mt-2 text-sm leading-6 text-white/52">Review hooks, titles, scripts and packaging checks from one workspace.</p>
+          </div>
+          <div className="rounded-[28px] border border-violet-300/20 bg-violet-300/[0.05] p-5">
+            <p className="text-xs font-black uppercase tracking-[0.14em] text-violet-200">Credit clarity</p>
+            <h2 className="mt-3 text-2xl font-black">No hidden usage.</h2>
+            <p className="mt-2 text-sm leading-6 text-white/52">The dashboard shows remaining credits, credits spent and estimated analyses left.</p>
+          </div>
+          <div className="rounded-[28px] border border-white/10 bg-white/[0.035] p-5">
+            <p className="text-xs font-black uppercase tracking-[0.14em] text-white/38">Workflow path</p>
+            <h2 className="mt-3 text-2xl font-black">Hook → title → thumbnail.</h2>
+            <p className="mt-2 text-sm leading-6 text-white/52">Move from a single first line to a complete publish-ready package.</p>
           </div>
         </section>
 
@@ -207,18 +227,14 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
           <div className="rounded-[34px] border border-white/10 bg-white/[0.03] p-6 md:p-8">
             <p className="text-sm font-black uppercase tracking-[0.14em] text-cyan-300">Billing</p>
             <h2 className="mt-3 text-3xl font-black tracking-[-0.04em]">Plan and credits</h2>
-            <p className="mt-4 leading-8 text-white/55">Plan and credit data sync through Paddle checkout and webhook events.</p>
+            <p className="mt-4 leading-8 text-white/55">Plan and credit data sync through Paddle checkout and webhook events. Your current usable balance is shown above.</p>
             <div className="mt-6 grid gap-3">
-              <div className="rounded-2xl border border-white/10 bg-black/24 p-4">
-                <p className="text-xs uppercase tracking-[0.14em] text-white/35">Plan</p>
-                <p className="mt-2 text-2xl font-black capitalize">{plan}</p>
-              </div>
-              <div className="rounded-2xl border border-white/10 bg-black/24 p-4">
-                <p className="text-xs uppercase tracking-[0.14em] text-white/35">Status</p>
-                <p className="mt-2 text-2xl font-black capitalize">{status}</p>
-              </div>
-              <a href="/pricing" className="rounded-2xl bg-white px-5 py-4 text-center text-sm font-black text-black">Upgrade or change plan</a>
-              <p className="text-xs leading-5 text-white/35">Billing portal connection is the next production step after Paddle customer sync is fully verified.</p>
+              <a href="/pricing" className="rounded-2xl bg-white px-5 py-4 text-center text-sm font-black text-black">Upgrade or manage plan</a>
+              <a href="/hook-analyzer" className="rounded-2xl border border-white/10 bg-white/[0.04] px-5 py-4 text-center text-sm font-black text-white">Use credits now</a>
+            </div>
+            <div className="mt-6 rounded-[24px] border border-white/10 bg-black/24 p-5">
+              <p className="text-sm font-black text-white">Credit estimate</p>
+              <p className="mt-2 text-sm leading-6 text-white/50">{creditsRemaining} credits = about {analysesLeft} hook analyses at 5 credits each.</p>
             </div>
           </div>
         </section>
