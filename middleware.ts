@@ -9,5 +9,6 @@ export const config = {
     '/dashboard(.*)',
     '/workspace(.*)',
     '/api/credits(.*)',
+    '/api/ai/:path*',
   ],
 };
