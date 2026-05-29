@@ -14,6 +14,8 @@ import StructuredData from "./components/structured-data";
 import ProductProof from "./components/product-proof";
 import OutputProof from "./components/output-proof";
 import CreatorCaseStudy from "./components/creator-case-study";
+import EmailCapture from "./components/email-capture";
+import ExampleAnalyses from "./components/example-analyses";
 import "./components/premium-motion.css";
 import "./components/mobile-cinematic.css";
 
@@ -145,6 +147,8 @@ export default function Home() {
             </div>
 
             <LiveCreatorMetrics />
+            <EmailCapture />
+            <ExampleAnalyses />
             <ProductProof />
             <OutputProof />
             <CreatorCaseStudy />
