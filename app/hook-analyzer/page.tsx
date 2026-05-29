@@ -50,21 +50,24 @@ const contextTips = [
   { title: "Audience trigger", text: "Add the viewer type so the analysis targets the right motivation." },
 ];
 
+const benchmarks = [
+  { score: "92", label: "Elite", hook: "I tested 37 YouTube hooks and one doubled retention in 48 hours", note: "Specific test, measurable payoff, clear curiosity gap." },
+  { score: "78", label: "Strong", hook: "I uploaded 100 shorts in 30 days and only one changed everything", note: "Strong scale and curiosity, payoff can be sharper." },
+  { score: "12", label: "Weak", hook: "This changed everything", note: "Too vague without subject, audience or result." },
+];
+
+const faqs = [
+  { q: "What is a good hook score?", a: "A strong hook usually lands above 70. Elite hooks tend to combine a specific audience, clear tension, measurable payoff and a reason to keep watching." },
+  { q: "How does HookSignals score hooks?", a: "The analyzer weighs clarity, curiosity gap, retention risk, platform pacing, niche context and audience trigger. The result is a directional publishing signal, not a guaranteed reach prediction." },
+  { q: "Does niche affect hook performance?", a: "Yes. A hook that works for creator growth may fail in fitness or finance. Adding a niche makes the weakness, title pairing and thumbnail angle more specific." },
+  { q: "Why do viewers leave in the first seconds?", a: "Most early exits happen when the opening line is vague, slow, generic, or disconnected from the title and thumbnail promise." },
+  { q: "How many credits does hook analysis use?", a: "A premium hook analysis uses 5 credits and saves the result to your workspace." },
+];
+
 function getInsightNotice(mode: "ai" | "rules" | null, diagnostic: string | null, creditsRemaining: number | null) {
-  if (mode === "rules" && diagnostic === "low_quality_input") {
-    return "Quick check: this input is too vague to analyze deeply. Add a clear subject, result or tension for a stronger read.";
-  }
-
-  if (mode === "rules") {
-    return "Quick check completed. Add a clearer promise or result to unlock a sharper analysis.";
-  }
-
-  if (mode === "ai") {
-    return creditsRemaining === null
-      ? "Analysis saved. Your hook was checked for clarity, curiosity and retention pull."
-      : `Analysis saved. ${creditsRemaining} credits remaining.`;
-  }
-
+  if (mode === "rules" && diagnostic === "low_quality_input") return "Quick check: this input is too vague to analyze deeply. Add a clear subject, result or tension for a stronger read.";
+  if (mode === "rules") return "Quick check completed. Add a clearer promise or result to unlock a sharper analysis.";
+  if (mode === "ai") return creditsRemaining === null ? "Analysis saved. Your hook was checked for clarity, curiosity and retention pull." : `Analysis saved. ${creditsRemaining} credits remaining.`;
   return "1 analysis uses 5 credits. Your hook stays private and results are saved to your workspace.";
 }
 
@@ -72,35 +75,38 @@ function TrustStrip() {
   return (
     <section className="mb-5 rounded-[28px] border border-white/10 bg-[linear-gradient(135deg,rgba(14,165,233,.10),rgba(124,58,237,.08),rgba(251,191,36,.06))] p-4 shadow-[0_24px_80px_rgba(0,0,0,.34)] backdrop-blur-xl md:p-5">
       <div className="grid gap-3 md:grid-cols-3">
-        <div className="group rounded-[22px] border border-emerald-300/15 bg-black/22 p-4 transition hover:border-emerald-300/30 hover:bg-emerald-300/[0.045]">
-          <div className="flex items-center gap-3">
-            <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-emerald-300/20 bg-emerald-300/10 text-emerald-300">▱</span>
-            <div>
-              <p className="text-sm font-black text-white">Private & secure</p>
-              <p className="mt-1 text-xs leading-5 text-white/48">Your hook and results stay in your workspace.</p>
-            </div>
-          </div>
+        <div className="rounded-[22px] border border-emerald-300/15 bg-black/22 p-4 transition hover:border-emerald-300/30 hover:bg-emerald-300/[0.045]">
+          <div className="flex items-center gap-3"><span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-emerald-300/20 bg-emerald-300/10 text-emerald-300">▱</span><div><p className="text-sm font-black text-white">Private & secure</p><p className="mt-1 text-xs leading-5 text-white/48">Your hook and results stay in your workspace.</p></div></div>
         </div>
-        <div className="group rounded-[22px] border border-amber-300/15 bg-black/22 p-4 transition hover:border-amber-300/30 hover:bg-amber-300/[0.045]">
-          <div className="flex items-center gap-3">
-            <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-amber-300/20 bg-amber-300/10 text-amber-200">⚡</span>
-            <div>
-              <p className="text-sm font-black text-white">5 credits per analysis</p>
-              <p className="mt-1 text-xs leading-5 text-white/48">Clear usage, no hidden runs or noisy limits.</p>
-            </div>
-          </div>
+        <div className="rounded-[22px] border border-amber-300/15 bg-black/22 p-4 transition hover:border-amber-300/30 hover:bg-amber-300/[0.045]">
+          <div className="flex items-center gap-3"><span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-amber-300/20 bg-amber-300/10 text-amber-200">⚡</span><div><p className="text-sm font-black text-white">5 credits per analysis</p><p className="mt-1 text-xs leading-5 text-white/48">Clear usage, no hidden runs or noisy limits.</p></div></div>
         </div>
-        <div className="group rounded-[22px] border border-violet-300/15 bg-black/22 p-4 transition hover:border-violet-300/30 hover:bg-violet-300/[0.045]">
-          <div className="flex items-center gap-3">
-            <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-violet-300/20 bg-violet-300/10 text-violet-200">◴</span>
-            <div>
-              <p className="text-sm font-black text-white">Results in seconds</p>
-              <p className="mt-1 text-xs leading-5 text-white/48">Score, weakness and next-step ideas instantly.</p>
-            </div>
-          </div>
+        <div className="rounded-[22px] border border-violet-300/15 bg-black/22 p-4 transition hover:border-violet-300/30 hover:bg-violet-300/[0.045]">
+          <div className="flex items-center gap-3"><span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-violet-300/20 bg-violet-300/10 text-violet-200">◴</span><div><p className="text-sm font-black text-white">Results in seconds</p><p className="mt-1 text-xs leading-5 text-white/48">Score, weakness and next-step ideas instantly.</p></div></div>
         </div>
       </div>
     </section>
+  );
+}
+
+function LeftInsightRail({ hasResult }: { hasResult: boolean }) {
+  return (
+    <aside className="grid gap-4">
+      <div className="rounded-[28px] border border-cyan-300/20 bg-cyan-300/[0.055] p-5">
+        <p className="text-xs font-black uppercase tracking-[0.14em] text-cyan-300">Publishing workflow</p>
+        <h3 className="mt-3 text-2xl font-black">Hook → title → thumbnail → script.</h3>
+        <p className="mt-3 text-sm leading-6 text-white/55">A strong first line only works when the title and thumbnail repeat the same promise.</p>
+        <div className="mt-5 grid gap-2">
+          {["Analyze the first line", "Pair the title promise", "Match the thumbnail angle", "Open the script with proof"].map((item, i) => <p key={item} className="rounded-2xl border border-white/10 bg-black/20 p-3 text-sm text-white/62"><span className="mr-2 text-cyan-300">0{i + 1}</span>{item}</p>)}
+        </div>
+      </div>
+      <div className="rounded-[28px] border border-white/10 bg-white/[0.035] p-5">
+        <p className="text-xs font-black uppercase tracking-[0.14em] text-white/38">Trust signal</p>
+        <h3 className="mt-3 text-xl font-black">Built for pre-publish decisions.</h3>
+        <p className="mt-3 text-sm leading-6 text-white/52">Use the score to decide whether a hook is ready, needs a sharper payoff, or should be rewritten before posting.</p>
+      </div>
+      {hasResult && <div className="rounded-[28px] border border-violet-300/20 bg-violet-300/[0.055] p-5"><p className="text-xs font-black uppercase tracking-[0.14em] text-violet-200">Next step</p><h3 className="mt-3 text-xl font-black">Package the winning angle.</h3><p className="mt-3 text-sm leading-6 text-white/52">After the score, continue into title pairings and thumbnail angles so the entire idea sells the same promise.</p></div>}
+    </aside>
   );
 }
 
@@ -121,193 +127,59 @@ export default function HookAnalyzerPage() {
 
   async function handleAnalyze() {
     const trimmedHook = hook.trim();
-
-    if (trimmedHook.length < 8) {
-      setError("Enter a hook with at least 8 characters.");
-      setResult(null);
-      return;
-    }
-
-    setLoading(true);
-    setError("");
-    setResult(null);
-    setMode(null);
-    setDiagnostic(null);
-    setCreditsRemaining(null);
-
+    if (trimmedHook.length < 8) { setError("Enter a hook with at least 8 characters."); setResult(null); return; }
+    setLoading(true); setError(""); setResult(null); setMode(null); setDiagnostic(null); setCreditsRemaining(null);
     try {
-      const response = await fetch("/api/ai/analyze-hook", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ hook: trimmedHook, platform, niche, audience }),
-      });
-
+      const response = await fetch("/api/ai/analyze-hook", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ hook: trimmedHook, platform, niche, audience }) });
       const data = (await response.json()) as AnalyzerResponse;
-
-      if (!response.ok || !data.analysis) {
-        const rawError = data.error || "analysis_failed";
-        const baseMessage = ERROR_MESSAGES[rawError] || rawError;
-        throw new Error(data.detail ? `${baseMessage}` : baseMessage);
-      }
-
-      setResult(data.analysis);
-      setMode(data.mode || "ai");
-      setDiagnostic(data.generationError ? "saved_with_warning" : data.diagnostic || null);
-      setCreditsRemaining(typeof data.creditsRemaining === "number" ? data.creditsRemaining : null);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Hook analysis failed. Try again.");
-    } finally {
-      setLoading(false);
-    }
+      if (!response.ok || !data.analysis) { const rawError = data.error || "analysis_failed"; const baseMessage = ERROR_MESSAGES[rawError] || rawError; throw new Error(data.detail ? `${baseMessage}` : baseMessage); }
+      setResult(data.analysis); setMode(data.mode || "ai"); setDiagnostic(data.generationError ? "saved_with_warning" : data.diagnostic || null); setCreditsRemaining(typeof data.creditsRemaining === "number" ? data.creditsRemaining : null);
+    } catch (err) { setError(err instanceof Error ? err.message : "Hook analysis failed. Try again."); } finally { setLoading(false); }
   }
 
   return (
-    <PremiumToolShell
-      badge="Creator signal engine"
-      title="Hook Analyzer"
-      description="Get an instant read on your hook's clarity, curiosity and retention pull before you publish."
-      primaryHref="/hook-improver"
-      primaryLabel="Improve Hook"
-      secondaryHref="/tools"
-      secondaryLabel="All Tools"
-    >
+    <PremiumToolShell badge="Creator signal engine" title="Hook Analyzer" description="Get an instant read on your hook's clarity, curiosity and retention pull before you publish." primaryHref="/hook-improver" primaryLabel="Improve Hook" secondaryHref="/tools" secondaryLabel="All Tools">
       <TrustStrip />
-
-      <div className="grid gap-5 lg:grid-cols-[0.9fr_1.1fr]">
-        <div className="rounded-[28px] border border-white/10 bg-black/30 p-5 shadow-[0_24px_80px_rgba(0,0,0,.35)] md:p-7">
-          <div className="mb-5 grid gap-3 sm:grid-cols-3">
-            {["Clarity", "Curiosity", "Retention"].map((item) => (
-              <div key={item} className="rounded-2xl border border-cyan-300/15 bg-cyan-300/[0.05] p-4">
-                <p className="text-xs uppercase tracking-[0.16em] text-cyan-300">Signal</p>
-                <p className="mt-2 font-black text-white">{item}</p>
-              </div>
-            ))}
-          </div>
-
-          <label className="mb-3 block text-sm font-semibold text-white/62">Paste your hook</label>
-          <textarea
-            value={hook}
-            onChange={(e) => setHook(e.target.value)}
-            placeholder="Example: I uploaded 100 shorts in 30 days and only one changed everything."
-            className="min-h-[180px] w-full resize-none rounded-[22px] border border-white/10 bg-[#050914] p-5 text-base leading-7 text-white outline-none transition placeholder:text-white/24 focus:border-cyan-300/40"
-          />
-
-          <div className="mt-3 flex items-center justify-between text-xs text-white/35">
-            <span>{characterCount}/500 characters</span>
-            <span>{creditsRemaining === null ? "1 analysis = 5 credits" : `${creditsRemaining} credits left`}</span>
-          </div>
-
-          <div className="mt-5 grid gap-3 md:grid-cols-3">
-            <div>
-              <label className="mb-2 block text-xs font-bold uppercase tracking-[0.14em] text-white/35">Platform</label>
-              <select
-                value={platform}
-                onChange={(e) => setPlatform(e.target.value)}
-                className="w-full rounded-2xl border border-white/10 bg-[#050914] px-4 py-3 text-sm text-white outline-none focus:border-cyan-300/40"
-              >
-                <option>YouTube Shorts</option>
-                <option>TikTok</option>
-                <option>Instagram Reels</option>
-                <option>YouTube Long-form</option>
-              </select>
-              <p className="mt-2 text-[11px] leading-5 text-white/32">Changes pacing, hook length and packaging advice.</p>
+      <div className="grid gap-5 xl:grid-cols-[0.72fr_1.28fr]">
+        <div className="grid gap-5">
+          <div className="rounded-[28px] border border-white/10 bg-black/30 p-5 shadow-[0_24px_80px_rgba(0,0,0,.35)] md:p-7">
+            <div className="mb-5 grid gap-3 sm:grid-cols-3">{["Clarity", "Curiosity", "Retention"].map((item) => <div key={item} className="rounded-2xl border border-cyan-300/15 bg-cyan-300/[0.05] p-4"><p className="text-xs uppercase tracking-[0.16em] text-cyan-300">Signal</p><p className="mt-2 font-black text-white">{item}</p></div>)}</div>
+            <label className="mb-3 block text-sm font-semibold text-white/62">Paste your hook</label>
+            <textarea value={hook} onChange={(e) => setHook(e.target.value)} placeholder="Example: I uploaded 100 shorts in 30 days and only one changed everything." className="min-h-[180px] w-full resize-none rounded-[22px] border border-white/10 bg-[#050914] p-5 text-base leading-7 text-white outline-none transition placeholder:text-white/24 focus:border-cyan-300/40" />
+            <div className="mt-3 flex items-center justify-between text-xs text-white/35"><span>{characterCount}/500 characters</span><span>{creditsRemaining === null ? "1 analysis = 5 credits" : `${creditsRemaining} credits left`}</span></div>
+            <div className="mt-5 grid gap-3 md:grid-cols-3">
+              <div><label className="mb-2 block text-xs font-bold uppercase tracking-[0.14em] text-white/35">Platform</label><select value={platform} onChange={(e) => setPlatform(e.target.value)} className="w-full rounded-2xl border border-white/10 bg-[#050914] px-4 py-3 text-sm text-white outline-none focus:border-cyan-300/40"><option>YouTube Shorts</option><option>TikTok</option><option>Instagram Reels</option><option>YouTube Long-form</option></select><p className="mt-2 text-[11px] leading-5 text-white/32">Changes pacing, hook length and packaging advice.</p></div>
+              <div><label className="mb-2 block text-xs font-bold uppercase tracking-[0.14em] text-white/35">Niche <span className="normal-case tracking-normal text-white/25">(optional)</span></label><input value={niche} onChange={(e) => setNiche(e.target.value)} placeholder="Creator growth, fitness, AI..." className="w-full rounded-2xl border border-white/10 bg-[#050914] px-4 py-3 text-sm text-white outline-none placeholder:text-white/24 focus:border-cyan-300/40" /><p className="mt-2 text-[11px] leading-5 text-white/32">Makes titles, weaknesses and thumbnail angles specific.</p></div>
+              <div><label className="mb-2 block text-xs font-bold uppercase tracking-[0.14em] text-white/35">Audience <span className="normal-case tracking-normal text-white/25">(optional)</span></label><input value={audience} onChange={(e) => setAudience(e.target.value)} placeholder="New creators, founders..." className="w-full rounded-2xl border border-white/10 bg-[#050914] px-4 py-3 text-sm text-white outline-none placeholder:text-white/24 focus:border-cyan-300/40" /><p className="mt-2 text-[11px] leading-5 text-white/32">Improves viewer trigger and retention diagnosis.</p></div>
             </div>
-            <div>
-              <label className="mb-2 block text-xs font-bold uppercase tracking-[0.14em] text-white/35">Niche <span className="normal-case tracking-normal text-white/25">(optional)</span></label>
-              <input
-                value={niche}
-                onChange={(e) => setNiche(e.target.value)}
-                placeholder="Creator growth, fitness, AI..."
-                className="w-full rounded-2xl border border-white/10 bg-[#050914] px-4 py-3 text-sm text-white outline-none placeholder:text-white/24 focus:border-cyan-300/40"
-              />
-              <p className="mt-2 text-[11px] leading-5 text-white/32">Makes titles, weaknesses and thumbnail angles specific.</p>
-            </div>
-            <div>
-              <label className="mb-2 block text-xs font-bold uppercase tracking-[0.14em] text-white/35">Audience <span className="normal-case tracking-normal text-white/25">(optional)</span></label>
-              <input
-                value={audience}
-                onChange={(e) => setAudience(e.target.value)}
-                placeholder="New creators, founders..."
-                className="w-full rounded-2xl border border-white/10 bg-[#050914] px-4 py-3 text-sm text-white outline-none placeholder:text-white/24 focus:border-cyan-300/40"
-              />
-              <p className="mt-2 text-[11px] leading-5 text-white/32">Improves viewer trigger and retention diagnosis.</p>
-            </div>
+            <div className="mt-4 grid gap-2 md:grid-cols-3">{contextTips.map((tip) => <div key={tip.title} className="rounded-2xl border border-white/10 bg-white/[0.025] p-3"><p className="text-xs font-black text-white/60">{tip.title}</p><p className="mt-1 text-[11px] leading-5 text-white/35">{tip.text}</p></div>)}</div>
+            {error && <p className="mt-4 rounded-2xl border border-red-400/20 bg-red-400/10 p-3 text-sm leading-6 text-red-200">{error}</p>}
+            <button onClick={handleAnalyze} disabled={loading} className="mt-5 w-full rounded-2xl bg-gradient-to-r from-cyan-300 via-sky-400 to-violet-400 px-7 py-4 font-black text-black shadow-[0_20px_44px_rgba(34,211,238,.22)] transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-60">{loading ? "Analyzing hook signal..." : "Analyze Hook"}</button>
+            <div className="mt-5 rounded-[22px] border border-amber-300/20 bg-[linear-gradient(135deg,rgba(251,191,36,.11),rgba(34,211,238,.04))] p-4 text-sm leading-6 text-amber-50/85 shadow-[0_18px_46px_rgba(0,0,0,.18)]"><div className="flex gap-3"><span className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-amber-200/20 bg-amber-300/12 text-xs text-amber-100">✦</span><div><p className="font-black text-white">{mode === "ai" ? "Analysis saved" : mode === "rules" ? "Quick check" : "Private, credit-based analysis"}</p><p className="mt-1 text-white/58">{insightNotice}</p></div></div></div>
           </div>
-
-          <div className="mt-4 grid gap-2 md:grid-cols-3">
-            {contextTips.map((tip) => (
-              <div key={tip.title} className="rounded-2xl border border-white/10 bg-white/[0.025] p-3">
-                <p className="text-xs font-black text-white/60">{tip.title}</p>
-                <p className="mt-1 text-[11px] leading-5 text-white/35">{tip.text}</p>
-              </div>
-            ))}
-          </div>
-
-          {error && <p className="mt-4 rounded-2xl border border-red-400/20 bg-red-400/10 p-3 text-sm leading-6 text-red-200">{error}</p>}
-
-          <button
-            onClick={handleAnalyze}
-            disabled={loading}
-            className="mt-5 w-full rounded-2xl bg-gradient-to-r from-cyan-300 via-sky-400 to-violet-400 px-7 py-4 font-black text-black shadow-[0_20px_44px_rgba(34,211,238,.22)] transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            {loading ? "Analyzing hook signal..." : "Analyze Hook"}
-          </button>
-
-          <div className="mt-5 rounded-[22px] border border-amber-300/20 bg-[linear-gradient(135deg,rgba(251,191,36,.11),rgba(34,211,238,.04))] p-4 text-sm leading-6 text-amber-50/85 shadow-[0_18px_46px_rgba(0,0,0,.18)]">
-            <div className="flex gap-3">
-              <span className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-amber-200/20 bg-amber-300/12 text-xs text-amber-100">✦</span>
-              <div>
-                <p className="font-black text-white">{mode === "ai" ? "Analysis saved" : mode === "rules" ? "Quick check" : "Private, credit-based analysis"}</p>
-                <p className="mt-1 text-white/58">{insightNotice}</p>
-              </div>
-            </div>
-          </div>
+          <LeftInsightRail hasResult={Boolean(result)} />
         </div>
-
         <div className="rounded-[28px] border border-white/10 bg-white/[0.04] p-5 shadow-[0_24px_80px_rgba(0,0,0,.3)] backdrop-blur-xl md:p-7">
-          {!loading && !result && (
-            <div className="min-h-[460px] rounded-[24px] border border-white/10 bg-black/20 p-6">
-              <p className="text-sm text-cyan-300">Result preview</p>
-              <h2 className="mt-4 max-w-md text-3xl font-black tracking-tight">Your hook score will appear here.</h2>
-              <p className="mt-4 max-w-lg leading-7 text-white/50">
-                HookSignals checks the opening promise, curiosity gap, audience fit and retention risk before publishing.
-              </p>
-            </div>
-          )}
-
-          {loading && (
-            <div className="min-h-[460px] rounded-[24px] border border-white/10 bg-black/20 p-6">
-              <p className="text-sm text-cyan-300">Analyzing signal...</p>
-              <div className="mt-7 space-y-4">
-                <div className="h-24 animate-pulse rounded-3xl bg-white/10" />
-                <div className="h-3 w-full animate-pulse rounded-full bg-white/10" />
-                <div className="h-3 w-5/6 animate-pulse rounded-full bg-white/10" />
-              </div>
-            </div>
-          )}
-
+          {!loading && !result && <div className="min-h-[460px] rounded-[24px] border border-white/10 bg-black/20 p-6"><p className="text-sm text-cyan-300">Result preview</p><h2 className="mt-4 max-w-md text-3xl font-black tracking-tight">Your hook score will appear here.</h2><p className="mt-4 max-w-lg leading-7 text-white/50">HookSignals checks the opening promise, curiosity gap, audience fit and retention risk before publishing.</p></div>}
+          {loading && <div className="min-h-[460px] rounded-[24px] border border-white/10 bg-black/20 p-6"><p className="text-sm text-cyan-300">Analyzing signal...</p><div className="mt-7 space-y-4"><div className="h-24 animate-pulse rounded-3xl bg-white/10" /><div className="h-3 w-full animate-pulse rounded-full bg-white/10" /><div className="h-3 w-5/6 animate-pulse rounded-full bg-white/10" /></div></div>}
           {result && <HookAnalysisResult result={result} mode={mode} />}
         </div>
       </div>
 
-      <section className="mt-6 grid gap-4 md:grid-cols-3">
-        <div className="rounded-[24px] border border-white/10 bg-white/[0.035] p-5">
-          <p className="text-xs font-bold uppercase tracking-[0.14em] text-cyan-300">Private</p>
-          <h3 className="mt-3 text-xl font-black">Secure analysis</h3>
-          <p className="mt-2 text-sm leading-6 text-white/50">Your hook and results stay attached to your workspace.</p>
-        </div>
-        <div className="rounded-[24px] border border-cyan-300/20 bg-cyan-300/[0.06] p-5">
-          <p className="text-xs font-bold uppercase tracking-[0.14em] text-cyan-300">Credit based</p>
-          <h3 className="mt-3 text-xl font-black">5 credits per run</h3>
-          <p className="mt-2 text-sm leading-6 text-white/55">Run focused checks without noisy dashboards or fake vanity metrics.</p>
-        </div>
-        <div className="rounded-[24px] border border-violet-300/20 bg-violet-300/[0.05] p-5">
-          <p className="text-xs font-bold uppercase tracking-[0.14em] text-violet-200">Fast</p>
-          <h3 className="mt-3 text-xl font-black">Actionable in seconds</h3>
-          <p className="mt-2 text-sm leading-6 text-white/55">Get a score, the weak point, and sharper hook options before publishing.</p>
-        </div>
+      <section className="mt-8 rounded-[34px] border border-white/10 bg-white/[0.03] p-6 md:p-8">
+        <p className="text-sm font-black uppercase tracking-[0.14em] text-cyan-300">Hook score benchmarks</p>
+        <h2 className="mt-3 text-3xl font-black tracking-[-0.04em]">See what strong, average and weak hooks look like.</h2>
+        <div className="mt-6 grid gap-4 lg:grid-cols-3">{benchmarks.map((b) => <div key={b.hook} className="rounded-[26px] border border-white/10 bg-black/24 p-5"><div className="flex items-end gap-2"><p className="text-5xl font-black text-cyan-300">{b.score}</p><p className="mb-2 text-white/38">/100</p></div><p className="mt-2 text-sm font-black uppercase tracking-[0.14em] text-white/42">{b.label}</p><p className="mt-4 text-sm leading-6 text-white/76">“{b.hook}”</p><p className="mt-4 text-sm leading-6 text-white/45">{b.note}</p></div>)}</div>
       </section>
 
+      <section className="mt-6 grid gap-6 lg:grid-cols-[1fr_0.8fr]">
+        <div className="rounded-[34px] border border-cyan-300/20 bg-[linear-gradient(135deg,rgba(34,211,238,.08),rgba(124,58,237,.08))] p-6 md:p-8"><p className="text-sm font-black uppercase tracking-[0.14em] text-cyan-300">HookSignals vs guessing</p><h2 className="mt-3 text-3xl font-black tracking-[-0.04em]">Stop publishing with a feeling. Use a pre-publish signal.</h2><div className="mt-6 grid gap-3 md:grid-cols-2">{["Retention analysis", "Audience triggers", "Title pairings", "Thumbnail angles", "Saved workspace history", "Credit-based usage"].map((item) => <p key={item} className="rounded-2xl border border-white/10 bg-black/24 p-4 text-sm text-white/66"><span className="mr-2 text-emerald-300">✓</span>{item}</p>)}</div></div>
+        <div className="rounded-[34px] border border-white/10 bg-white/[0.035] p-6 md:p-8"><p className="text-sm font-black uppercase tracking-[0.14em] text-violet-200">Internal workflow</p><h2 className="mt-3 text-3xl font-black tracking-[-0.04em]">Turn one hook into a complete asset.</h2><div className="mt-6 grid gap-3">{[["/hook-improver", "Hook Improver"], ["/youtube-title-generator", "Title Generator"], ["/thumbnail-text-checker", "Thumbnail Checker"], ["/shorts-script-generator", "Script Generator"]].map(([href, label]) => <a key={href} href={href} className="rounded-2xl border border-white/10 bg-black/24 p-4 text-sm font-black text-white transition hover:border-cyan-300/30 hover:bg-cyan-300/[0.055]">{label} →</a>)}</div></div>
+      </section>
+
+      <section className="mt-6 rounded-[34px] border border-white/10 bg-black/24 p-6 md:p-8">
+        <p className="text-sm font-black uppercase tracking-[0.14em] text-cyan-300">FAQ</p><h2 className="mt-3 text-3xl font-black tracking-[-0.04em]">Hook analyzer questions</h2><div className="mt-6 grid gap-4 md:grid-cols-2">{faqs.map((item) => <div key={item.q} className="rounded-[24px] border border-white/10 bg-white/[0.035] p-5"><h3 className="text-lg font-black text-white">{item.q}</h3><p className="mt-3 text-sm leading-6 text-white/52">{item.a}</p></div>)}</div>
+      </section>
       <RelatedTools />
     </PremiumToolShell>
   );
