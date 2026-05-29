@@ -120,10 +120,32 @@ export function getOrganizationSchema() {
   return {
     "@context": "https://schema.org",
     "@type": "Organization",
+    "@id": `${siteUrl}/#organization`,
     name: "HookSignals",
     url: siteUrl,
-    logo: `${siteUrl}/icon.png`,
+    logo: {
+      "@type": "ImageObject",
+      url: `${siteUrl}/icon.png`,
+    },
+    description:
+      "HookSignals is an AI creator workflow platform for analyzing hooks, titles, thumbnails, Shorts scripts and retention before publishing.",
     sameAs: [siteUrl],
+  };
+}
+
+export function getWebsiteSchema() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": `${siteUrl}/#website`,
+    name: "HookSignals",
+    url: siteUrl,
+    publisher: { "@id": `${siteUrl}/#organization` },
+    potentialAction: {
+      "@type": "SearchAction",
+      target: `${siteUrl}/tools?q={search_term_string}`,
+      "query-input": "required name=search_term_string",
+    },
   };
 }
 
@@ -131,15 +153,39 @@ export function getSoftwareSchema() {
   return {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
+    "@id": `${siteUrl}/#software`,
     name: "HookSignals",
+    url: siteUrl,
     applicationCategory: "BusinessApplication",
     operatingSystem: "Web",
     description:
       "AI creator workflow platform for hook analysis, YouTube Shorts SEO, TikTok hooks, script generation and thumbnail text optimization.",
+    publisher: { "@id": `${siteUrl}/#organization` },
+    offers: [
+      { "@type": "Offer", name: "Starter", priceCurrency: "USD", price: "19", url: `${siteUrl}/checkout/starter` },
+      { "@type": "Offer", name: "Creator Pro", priceCurrency: "USD", price: "49", url: `${siteUrl}/checkout/pro` },
+      { "@type": "Offer", name: "Elite", priceCurrency: "USD", price: "99", url: `${siteUrl}/checkout/elite` },
+    ],
+  };
+}
+
+export function getProductSchema() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "@id": `${siteUrl}/#product`,
+    name: "HookSignals",
+    brand: { "@id": `${siteUrl}/#organization` },
+    description:
+      "AI creator workflow software for analyzing hooks, improving titles, checking thumbnails and building stronger short-form publishing packages.",
+    category: "Creator software",
     offers: {
-      "@type": "Offer",
+      "@type": "AggregateOffer",
       priceCurrency: "USD",
-      price: "19",
+      lowPrice: "19",
+      highPrice: "99",
+      offerCount: "3",
+      url: `${siteUrl}/pricing`,
     },
   };
 }
