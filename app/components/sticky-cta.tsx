@@ -13,17 +13,17 @@ export default function StickyCTA() {
 
         <div className="flex shrink-0 items-center gap-3">
           <a
-            href="/pricing"
+            href="/hook-analyzer"
             className="hidden rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm font-bold text-white transition hover:bg-white/10 md:inline-flex"
           >
-            Pricing
+            Analyze Free
           </a>
 
           <a
-            href="/hook-analyzer"
+            href="/checkout/pro"
             className="rounded-2xl bg-gradient-to-r from-cyan-300 via-sky-400 to-violet-400 px-5 py-3 text-sm font-black text-black shadow-[0_18px_40px_rgba(34,211,238,.24)] transition hover:scale-[1.02]"
           >
-            Start Free
+            Start Pro
           </a>
         </div>
       </div>
