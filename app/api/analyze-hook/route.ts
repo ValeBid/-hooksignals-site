@@ -16,6 +16,10 @@ type HookAnalysis = {
   improvedHook: string;
   variants: string[];
   retentionNotes: string[];
+  scoreRationale: string[];
+  audienceTrigger: string;
+  titlePairings: string[];
+  thumbnailAngles: string[];
 };
 
 function getClientKey(request: Request) {
@@ -44,6 +48,12 @@ function clampScore(value: unknown, fallback: number) {
   return Math.max(0, Math.min(100, Math.round(value)));
 }
 
+function toArray(value: unknown, fallback: string[], limit: number) {
+  if (!Array.isArray(value)) return fallback;
+  const clean = value.map((item) => String(item).trim()).filter(Boolean).slice(0, limit);
+  return clean.length ? clean : fallback;
+}
+
 function titleCase(text: string) {
   return text.trim().replace(/\s+/g, " ").replace(/^./, (char) => char.toUpperCase());
 }
@@ -56,7 +66,7 @@ function fallbackAnalysis(hook: string): HookAnalysis {
   const hasNumber = /\d/.test(trimmed);
   const hasQuestion = trimmed.includes("?");
   const hasTension = /mistake|secret|stop|why|hidden|truth|avoid|but|instead|failed|lost|bad|lucky|unlucky|wrong|surprised|nobody|before|after/i.test(trimmed);
-  const hasSpecificObject = /\b(day|days|month|months|dollar|money|views|video|client|creator|youtube|tiktok|shorts|hook|title|thumbnail|result|test|experiment)\b/i.test(trimmed);
+  const hasSpecificObject = /\b(day|days|month|months|dollar|money|views|video|client|creator|youtube|tiktok|shorts|hook|title|thumbnail|result|test|experiment|cardio)\b/i.test(trimmed);
   const isVague = wordCount < 6 || /^(very|really|just|today|this|that|something|lucky|bad|good)/i.test(lower);
 
   let clarityScore = 54;
@@ -82,30 +92,22 @@ function fallbackAnalysis(hook: string): HookAnalysis {
   curiosityScore = clampScore(curiosityScore, 46);
   retentionRisk = clampScore(retentionRisk, 64);
   const hookScore = clampScore((clarityScore + curiosityScore + (100 - retentionRisk)) / 3, 42);
-
   const subject = trimmed.replace(/[?.!]+$/g, "");
-  const improvedHook = isVague
-    ? `I thought ${subject.toLowerCase()} was random — then one detail changed the whole story`
-    : hasNumber
-      ? `${subject} — but the result exposed one mistake I did not expect`
-      : `I tested ${subject.toLowerCase()}, and the result exposed one mistake most creators miss`;
 
   return {
     hookScore,
     clarityScore,
     curiosityScore,
     retentionRisk,
-    pattern: isVague
-      ? "Vague personal opener"
-      : hasNumber
-        ? "Specific promise with numeric framing"
-        : hasTension
-          ? "Curiosity gap with unresolved tension"
-          : "General creator promise",
+    pattern: isVague ? "Vague personal opener" : hasNumber ? "Specific promise with numeric framing" : hasTension ? "Curiosity gap with unresolved tension" : "General creator promise",
     weakness: isVague
       ? "The hook does not give viewers a clear reason to care. Add a specific event, consequence or contradiction."
       : "The idea is understandable, but it needs sharper stakes and a clearer reason to keep watching.",
-    improvedHook,
+    improvedHook: isVague
+      ? `I thought ${subject.toLowerCase()} was random — then one detail changed the whole story`
+      : hasNumber
+        ? `${subject} — but the result exposed one mistake I did not expect`
+        : `I tested ${subject.toLowerCase()}, and the result exposed one mistake most creators miss`,
     variants: [
       `I almost ignored ${subject.toLowerCase()} — then this happened`,
       `The part nobody explains about ${subject.toLowerCase()}`,
@@ -116,6 +118,14 @@ function fallbackAnalysis(hook: string): HookAnalysis {
       "Add tension: what went wrong, what changed, or what the viewer does not know yet.",
       "Replace vague emotion with a concrete object, result, number or consequence.",
     ],
+    scoreRationale: [
+      hasNumber ? "Numeric framing makes the promise easier to understand." : "The hook lacks a concrete number or scale.",
+      hasSpecificObject ? "The topic is concrete enough to picture." : "The hook needs a clearer object, result, or audience pain point.",
+      hasTension ? "There is some tension to carry attention." : "The hook needs a stronger contradiction, mistake, or reveal.",
+    ],
+    audienceTrigger: isVague ? "Personal curiosity without enough viewer benefit." : "Outcome curiosity and mistake avoidance.",
+    titlePairings: ["The mistake behind this result", "What changed after the first test", "I tested this so you do not have to"],
+    thumbnailAngles: ["Before / after contrast", "One bold result word", "Mistake label over the key moment"],
   };
 }
 
@@ -129,34 +139,27 @@ function normalizeAnalysis(raw: any, hook: string): HookAnalysis {
     pattern: typeof raw?.pattern === "string" ? raw.pattern.slice(0, 180) : fallback.pattern,
     weakness: typeof raw?.weakness === "string" ? raw.weakness.slice(0, 280) : fallback.weakness,
     improvedHook: typeof raw?.improvedHook === "string" ? raw.improvedHook.slice(0, 220) : fallback.improvedHook,
-    variants: Array.isArray(raw?.variants)
-      ? raw.variants.slice(0, 3).map((item: unknown) => String(item).slice(0, 220))
-      : fallback.variants,
-    retentionNotes: Array.isArray(raw?.retentionNotes)
-      ? raw.retentionNotes.slice(0, 3).map((item: unknown) => String(item).slice(0, 260))
-      : fallback.retentionNotes,
+    variants: toArray(raw?.variants, fallback.variants, 3),
+    retentionNotes: toArray(raw?.retentionNotes, fallback.retentionNotes, 3),
+    scoreRationale: toArray(raw?.scoreRationale, fallback.scoreRationale, 4),
+    audienceTrigger: typeof raw?.audienceTrigger === "string" ? raw.audienceTrigger.slice(0, 240) : fallback.audienceTrigger,
+    titlePairings: toArray(raw?.titlePairings, fallback.titlePairings, 4),
+    thumbnailAngles: toArray(raw?.thumbnailAngles, fallback.thumbnailAngles, 4),
   };
 }
 
 async function analyzeWithOpenAI(hook: string, apiKey: string) {
   const aiResponse = await fetch(OPENAI_URL, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${apiKey}`,
-    },
+    headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
     body: JSON.stringify({
       model: MODEL,
       response_format: { type: "json_object" },
       messages: [
-        {
-          role: "system",
-          content:
-            "You are the best short-form hook analyst in the world. You work like a ruthless YouTube Shorts, TikTok and Reels retention strategist. Your job is not to be nice. Score harshly. A vague hook must score low. A hook deserves a high score only if it creates immediate specificity, tension, curiosity, and a reason to keep watching in the first 1-3 seconds. Do not give generic advice. Return only valid JSON.",
-        },
+        { role: "system", content: "You are a strict short-form hook analyst for YouTube Shorts, TikTok and Reels. Score harshly. Be specific. Return only valid JSON." },
         {
           role: "user",
-          content: `Analyze this opening hook for short-form video: "${hook}"\n\nReturn JSON only with this exact shape:\n{\n  "hookScore": number,\n  "clarityScore": number,\n  "curiosityScore": number,\n  "retentionRisk": number,\n  "pattern": string,\n  "weakness": string,\n  "improvedHook": string,\n  "variants": string[],\n  "retentionNotes": string[]\n}\n\nScoring rules:\n- 0-40: weak, vague, low reason to keep watching.\n- 41-60: usable but not strong.\n- 61-78: strong draft.\n- 79-100: exceptional hook.\n\nIf the hook is vague, personal, or contextless, score it below 45. Explain exactly why it fails and rewrite it into something more specific, tense and clickable.`,
+          content: `Analyze this opening hook: "${hook}". Return JSON with hookScore, clarityScore, curiosityScore, retentionRisk, pattern, weakness, improvedHook, variants, retentionNotes, scoreRationale, audienceTrigger, titlePairings, thumbnailAngles. Vague hooks should score below 45.`,
         },
       ],
     }),
