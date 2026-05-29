@@ -44,6 +44,12 @@ const ERROR_MESSAGES: Record<string, string> = {
   analysis_failed: "Analysis failed. Try again in a moment.",
 };
 
+const contextTips = [
+  { title: "Platform pacing", text: "Shorts, TikTok, Reels and long-form hooks are scored with different pacing expectations." },
+  { title: "Niche context", text: "Add a niche to make the weakness, title and thumbnail suggestions more specific." },
+  { title: "Audience trigger", text: "Add the viewer type so the analysis targets the right motivation." },
+];
+
 function getInsightNotice(mode: "ai" | "rules" | null, diagnostic: string | null, creditsRemaining: number | null) {
   if (mode === "rules" && diagnostic === "low_quality_input") {
     return "Quick check: this input is too vague to analyze deeply. Add a clear subject, result or tension for a stronger read.";
@@ -60,6 +66,42 @@ function getInsightNotice(mode: "ai" | "rules" | null, diagnostic: string | null
   }
 
   return "1 analysis uses 5 credits. Your hook stays private and results are saved to your workspace.";
+}
+
+function TrustStrip() {
+  return (
+    <section className="mb-5 rounded-[28px] border border-white/10 bg-[linear-gradient(135deg,rgba(14,165,233,.10),rgba(124,58,237,.08),rgba(251,191,36,.06))] p-4 shadow-[0_24px_80px_rgba(0,0,0,.34)] backdrop-blur-xl md:p-5">
+      <div className="grid gap-3 md:grid-cols-3">
+        <div className="group rounded-[22px] border border-emerald-300/15 bg-black/22 p-4 transition hover:border-emerald-300/30 hover:bg-emerald-300/[0.045]">
+          <div className="flex items-center gap-3">
+            <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-emerald-300/20 bg-emerald-300/10 text-emerald-300">▱</span>
+            <div>
+              <p className="text-sm font-black text-white">Private & secure</p>
+              <p className="mt-1 text-xs leading-5 text-white/48">Your hook and results stay in your workspace.</p>
+            </div>
+          </div>
+        </div>
+        <div className="group rounded-[22px] border border-amber-300/15 bg-black/22 p-4 transition hover:border-amber-300/30 hover:bg-amber-300/[0.045]">
+          <div className="flex items-center gap-3">
+            <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-amber-300/20 bg-amber-300/10 text-amber-200">⚡</span>
+            <div>
+              <p className="text-sm font-black text-white">5 credits per analysis</p>
+              <p className="mt-1 text-xs leading-5 text-white/48">Clear usage, no hidden runs or noisy limits.</p>
+            </div>
+          </div>
+        </div>
+        <div className="group rounded-[22px] border border-violet-300/15 bg-black/22 p-4 transition hover:border-violet-300/30 hover:bg-violet-300/[0.045]">
+          <div className="flex items-center gap-3">
+            <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-violet-300/20 bg-violet-300/10 text-violet-200">◴</span>
+            <div>
+              <p className="text-sm font-black text-white">Results in seconds</p>
+              <p className="mt-1 text-xs leading-5 text-white/48">Score, weakness and next-step ideas instantly.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
 }
 
 export default function HookAnalyzerPage() {
@@ -129,6 +171,8 @@ export default function HookAnalyzerPage() {
       secondaryHref="/tools"
       secondaryLabel="All Tools"
     >
+      <TrustStrip />
+
       <div className="grid gap-5 lg:grid-cols-[0.9fr_1.1fr]">
         <div className="rounded-[28px] border border-white/10 bg-black/30 p-5 shadow-[0_24px_80px_rgba(0,0,0,.35)] md:p-7">
           <div className="mb-5 grid gap-3 sm:grid-cols-3">
@@ -166,25 +210,37 @@ export default function HookAnalyzerPage() {
                 <option>Instagram Reels</option>
                 <option>YouTube Long-form</option>
               </select>
+              <p className="mt-2 text-[11px] leading-5 text-white/32">Changes pacing, hook length and packaging advice.</p>
             </div>
             <div>
               <label className="mb-2 block text-xs font-bold uppercase tracking-[0.14em] text-white/35">Niche <span className="normal-case tracking-normal text-white/25">(optional)</span></label>
               <input
                 value={niche}
                 onChange={(e) => setNiche(e.target.value)}
-                placeholder="Fitness, AI, finance..."
+                placeholder="Creator growth, fitness, AI..."
                 className="w-full rounded-2xl border border-white/10 bg-[#050914] px-4 py-3 text-sm text-white outline-none placeholder:text-white/24 focus:border-cyan-300/40"
               />
+              <p className="mt-2 text-[11px] leading-5 text-white/32">Makes titles, weaknesses and thumbnail angles specific.</p>
             </div>
             <div>
               <label className="mb-2 block text-xs font-bold uppercase tracking-[0.14em] text-white/35">Audience <span className="normal-case tracking-normal text-white/25">(optional)</span></label>
               <input
                 value={audience}
                 onChange={(e) => setAudience(e.target.value)}
-                placeholder="New creators, busy founders..."
+                placeholder="New creators, founders..."
                 className="w-full rounded-2xl border border-white/10 bg-[#050914] px-4 py-3 text-sm text-white outline-none placeholder:text-white/24 focus:border-cyan-300/40"
               />
+              <p className="mt-2 text-[11px] leading-5 text-white/32">Improves viewer trigger and retention diagnosis.</p>
             </div>
+          </div>
+
+          <div className="mt-4 grid gap-2 md:grid-cols-3">
+            {contextTips.map((tip) => (
+              <div key={tip.title} className="rounded-2xl border border-white/10 bg-white/[0.025] p-3">
+                <p className="text-xs font-black text-white/60">{tip.title}</p>
+                <p className="mt-1 text-[11px] leading-5 text-white/35">{tip.text}</p>
+              </div>
+            ))}
           </div>
 
           {error && <p className="mt-4 rounded-2xl border border-red-400/20 bg-red-400/10 p-3 text-sm leading-6 text-red-200">{error}</p>}
@@ -251,32 +307,6 @@ export default function HookAnalyzerPage() {
           <p className="mt-2 text-sm leading-6 text-white/55">Get a score, the weak point, and sharper hook options before publishing.</p>
         </div>
       </section>
-
-      <div className="sticky bottom-4 z-40 mx-auto mt-8 max-w-5xl rounded-[24px] border border-white/10 bg-[#07101d]/90 px-5 py-4 shadow-[0_20px_80px_rgba(0,0,0,.45)] backdrop-blur-2xl">
-        <div className="grid gap-4 md:grid-cols-3">
-          <div className="flex items-center gap-3">
-            <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-emerald-300/20 bg-emerald-300/10 text-emerald-300">▱</span>
-            <div>
-              <p className="text-sm font-black text-white">Private & secure</p>
-              <p className="text-xs leading-5 text-white/48">Your hook and results are never shared.</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-amber-300/20 bg-amber-300/10 text-amber-200">⚡</span>
-            <div>
-              <p className="text-sm font-black text-white">Credit based</p>
-              <p className="text-xs leading-5 text-white/48">1 analysis uses 5 credits.</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-violet-300/20 bg-violet-300/10 text-violet-200">◴</span>
-            <div>
-              <p className="text-sm font-black text-white">Analyze in seconds</p>
-              <p className="text-xs leading-5 text-white/48">Get actionable insights instantly.</p>
-            </div>
-          </div>
-        </div>
-      </div>
 
       <RelatedTools />
     </PremiumToolShell>
