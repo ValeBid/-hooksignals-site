@@ -6,6 +6,12 @@ const WINDOW_MS = 60 * 60 * 1000;
 const MAX_REQUESTS_PER_WINDOW = 10;
 const requestLog = new Map<string, { count: number; resetAt: number }>();
 
+type HookContext = {
+  niche?: string;
+  platform?: string;
+  audience?: string;
+};
+
 type HookAnalysis = {
   hookScore: number;
   clarityScore: number;
@@ -54,11 +60,15 @@ function toArray(value: unknown, fallback: string[], limit: number) {
   return clean.length ? clean : fallback;
 }
 
+function cleanText(value: unknown, max = 80) {
+  return typeof value === "string" ? value.trim().replace(/\s+/g, " ").slice(0, max) : "";
+}
+
 function titleCase(text: string) {
   return text.trim().replace(/\s+/g, " ").replace(/^./, (char) => char.toUpperCase());
 }
 
-function fallbackAnalysis(hook: string): HookAnalysis {
+function fallbackAnalysis(hook: string, context: HookContext = {}): HookAnalysis {
   const trimmed = titleCase(hook).slice(0, 500);
   const lower = trimmed.toLowerCase();
   const words = trimmed.split(/\s+/).filter(Boolean);
@@ -67,24 +77,28 @@ function fallbackAnalysis(hook: string): HookAnalysis {
   const hasQuestion = trimmed.includes("?");
   const hasTension = /mistake|secret|stop|why|hidden|truth|avoid|but|instead|failed|lost|bad|lucky|unlucky|wrong|surprised|nobody|before|after/i.test(trimmed);
   const hasSpecificObject = /\b(day|days|month|months|dollar|money|views|video|client|creator|youtube|tiktok|shorts|hook|title|thumbnail|result|test|experiment|cardio)\b/i.test(trimmed);
+  const hasContext = Boolean(context.niche || context.platform || context.audience);
   const isVague = wordCount < 6 || /^(very|really|just|today|this|that|something|lucky|bad|good)/i.test(lower);
 
   let clarityScore = 54;
   if (wordCount >= 6 && wordCount <= 14) clarityScore += 18;
   if (wordCount > 18) clarityScore -= 12;
   if (hasSpecificObject) clarityScore += 10;
+  if (hasContext) clarityScore += 4;
   if (isVague) clarityScore -= 22;
 
   let curiosityScore = 46;
   if (hasQuestion) curiosityScore += 8;
   if (hasTension) curiosityScore += 16;
   if (hasNumber) curiosityScore += 10;
+  if (hasContext) curiosityScore += 4;
   if (isVague) curiosityScore -= 18;
 
   let retentionRisk = 64;
   if (hasTension) retentionRisk -= 12;
   if (hasNumber) retentionRisk -= 8;
   if (hasSpecificObject) retentionRisk -= 8;
+  if (hasContext) retentionRisk -= 4;
   if (isVague) retentionRisk += 20;
   if (wordCount > 18) retentionRisk += 12;
 
@@ -93,6 +107,8 @@ function fallbackAnalysis(hook: string): HookAnalysis {
   retentionRisk = clampScore(retentionRisk, 64);
   const hookScore = clampScore((clarityScore + curiosityScore + (100 - retentionRisk)) / 3, 42);
   const subject = trimmed.replace(/[?.!]+$/g, "");
+  const nichePart = context.niche ? ` for ${context.niche}` : "";
+  const audiencePart = context.audience ? ` that ${context.audience} would care about` : "";
 
   return {
     hookScore,
@@ -104,10 +120,10 @@ function fallbackAnalysis(hook: string): HookAnalysis {
       ? "The hook does not give viewers a clear reason to care. Add a specific event, consequence or contradiction."
       : "The idea is understandable, but it needs sharper stakes and a clearer reason to keep watching.",
     improvedHook: isVague
-      ? `I thought ${subject.toLowerCase()} was random — then one detail changed the whole story`
+      ? `I thought ${subject.toLowerCase()} was random — then one detail changed the whole story${nichePart}`
       : hasNumber
-        ? `${subject} — but the result exposed one mistake I did not expect`
-        : `I tested ${subject.toLowerCase()}, and the result exposed one mistake most creators miss`,
+        ? `${subject} — but the result exposed one mistake I did not expect${audiencePart}`
+        : `I tested ${subject.toLowerCase()}, and the result exposed one mistake most creators miss${nichePart}`,
     variants: [
       `I almost ignored ${subject.toLowerCase()} — then this happened`,
       `The part nobody explains about ${subject.toLowerCase()}`,
@@ -116,21 +132,21 @@ function fallbackAnalysis(hook: string): HookAnalysis {
     retentionNotes: [
       "Name the specific payoff in the first second so viewers understand why they should stay.",
       "Add tension: what went wrong, what changed, or what the viewer does not know yet.",
-      "Replace vague emotion with a concrete object, result, number or consequence.",
+      context.platform ? `Shape the first line for ${context.platform} speed and viewer intent.` : "Replace vague emotion with a concrete object, result, number or consequence.",
     ],
     scoreRationale: [
       hasNumber ? "Numeric framing makes the promise easier to understand." : "The hook lacks a concrete number or scale.",
       hasSpecificObject ? "The topic is concrete enough to picture." : "The hook needs a clearer object, result, or audience pain point.",
-      hasTension ? "There is some tension to carry attention." : "The hook needs a stronger contradiction, mistake, or reveal.",
+      hasContext ? "Niche/platform context improves the relevance of the analysis." : "Adding niche, platform and audience will make the recommendation sharper.",
     ],
-    audienceTrigger: isVague ? "Personal curiosity without enough viewer benefit." : "Outcome curiosity and mistake avoidance.",
-    titlePairings: ["The mistake behind this result", "What changed after the first test", "I tested this so you do not have to"],
+    audienceTrigger: context.audience ? `${context.audience} wants the outcome without making the same mistake.` : isVague ? "Personal curiosity without enough viewer benefit." : "Outcome curiosity and mistake avoidance.",
+    titlePairings: ["The mistake behind this result", "What changed after the first test", `I tested this${nichePart} so you do not have to`],
     thumbnailAngles: ["Before / after contrast", "One bold result word", "Mistake label over the key moment"],
   };
 }
 
-function normalizeAnalysis(raw: any, hook: string): HookAnalysis {
-  const fallback = fallbackAnalysis(hook);
+function normalizeAnalysis(raw: any, hook: string, context: HookContext): HookAnalysis {
+  const fallback = fallbackAnalysis(hook, context);
   return {
     hookScore: clampScore(raw?.hookScore ?? raw?.score, fallback.hookScore),
     clarityScore: clampScore(raw?.clarityScore ?? raw?.clarity, fallback.clarityScore),
@@ -148,7 +164,7 @@ function normalizeAnalysis(raw: any, hook: string): HookAnalysis {
   };
 }
 
-async function analyzeWithOpenAI(hook: string, apiKey: string) {
+async function analyzeWithOpenAI(hook: string, context: HookContext, apiKey: string) {
   const aiResponse = await fetch(OPENAI_URL, {
     method: "POST",
     headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
@@ -156,10 +172,10 @@ async function analyzeWithOpenAI(hook: string, apiKey: string) {
       model: MODEL,
       response_format: { type: "json_object" },
       messages: [
-        { role: "system", content: "You are a strict short-form hook analyst for YouTube Shorts, TikTok and Reels. Score harshly. Be specific. Return only valid JSON." },
+        { role: "system", content: "You are a strict short-form hook analyst for YouTube Shorts, TikTok and Reels. Score harshly. Use niche, platform and audience context when provided. Return only valid JSON." },
         {
           role: "user",
-          content: `Analyze this opening hook: "${hook}". Return JSON with hookScore, clarityScore, curiosityScore, retentionRisk, pattern, weakness, improvedHook, variants, retentionNotes, scoreRationale, audienceTrigger, titlePairings, thumbnailAngles. Vague hooks should score below 45.`,
+          content: `Hook: "${hook}"\nNiche: "${context.niche || 'not provided'}"\nPlatform: "${context.platform || 'not provided'}"\nAudience: "${context.audience || 'not provided'}"\nReturn JSON with hookScore, clarityScore, curiosityScore, retentionRisk, pattern, weakness, improvedHook, variants, retentionNotes, scoreRationale, audienceTrigger, titlePairings, thumbnailAngles. Vague hooks should score below 45.`,
         },
       ],
     }),
@@ -183,18 +199,23 @@ export async function POST(request: Request) {
     if (hook.length < 8) return NextResponse.json({ error: "Enter a hook with at least 8 characters." }, { status: 400 });
 
     const cleanedHook = hook.slice(0, 500);
+    const context = {
+      niche: cleanText(body?.niche),
+      platform: cleanText(body?.platform),
+      audience: cleanText(body?.audience),
+    };
     const apiKey = process.env.OPENAI_API_KEY || process.env.OPENAI_API_TOKEN;
 
     if (!apiKey) {
-      return NextResponse.json({ analysis: fallbackAnalysis(cleanedHook), mode: "rules", diagnostic: "missing_openai_key" });
+      return NextResponse.json({ analysis: fallbackAnalysis(cleanedHook, context), mode: "rules", diagnostic: "missing_openai_key" });
     }
 
-    const rawAnalysis = await analyzeWithOpenAI(cleanedHook, apiKey);
+    const rawAnalysis = await analyzeWithOpenAI(cleanedHook, context, apiKey);
     if (!rawAnalysis) {
-      return NextResponse.json({ analysis: fallbackAnalysis(cleanedHook), mode: "rules", diagnostic: "openai_call_failed" });
+      return NextResponse.json({ analysis: fallbackAnalysis(cleanedHook, context), mode: "rules", diagnostic: "openai_call_failed" });
     }
 
-    return NextResponse.json({ analysis: normalizeAnalysis(rawAnalysis, cleanedHook), mode: "ai" });
+    return NextResponse.json({ analysis: normalizeAnalysis(rawAnalysis, cleanedHook, context), mode: "ai" });
   } catch {
     return NextResponse.json({ analysis: fallbackAnalysis("Untitled hook"), mode: "rules", diagnostic: "analysis_exception" });
   }
