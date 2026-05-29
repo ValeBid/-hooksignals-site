@@ -29,6 +29,9 @@ type AnalyzerResponse = {
 
 export default function HookAnalyzerPage() {
   const [hook, setHook] = useState("");
+  const [platform, setPlatform] = useState("YouTube Shorts");
+  const [niche, setNiche] = useState("");
+  const [audience, setAudience] = useState("");
   const [result, setResult] = useState<null | HookAnalysis>(null);
   const [mode, setMode] = useState<"ai" | "rules" | null>(null);
   const [diagnostic, setDiagnostic] = useState<string | null>(null);
@@ -56,7 +59,7 @@ export default function HookAnalyzerPage() {
       const response = await fetch("/api/analyze-hook", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ hook: trimmedHook }),
+        body: JSON.stringify({ hook: trimmedHook, platform, niche, audience }),
       });
 
       const data = (await response.json()) as AnalyzerResponse | { error?: string };
@@ -101,12 +104,46 @@ export default function HookAnalyzerPage() {
             value={hook}
             onChange={(e) => setHook(e.target.value)}
             placeholder="Example: I uploaded 100 shorts in 30 days and only one changed everything."
-            className="min-h-[210px] w-full resize-none rounded-[22px] border border-white/10 bg-[#050914] p-5 text-base leading-7 text-white outline-none transition placeholder:text-white/24 focus:border-cyan-300/40"
+            className="min-h-[180px] w-full resize-none rounded-[22px] border border-white/10 bg-[#050914] p-5 text-base leading-7 text-white outline-none transition placeholder:text-white/24 focus:border-cyan-300/40"
           />
 
           <div className="mt-3 flex items-center justify-between text-xs text-white/35">
             <span>{characterCount}/500 characters</span>
             <span>{mode === "rules" ? "Rules preview" : "AI scoring preview"}</span>
+          </div>
+
+          <div className="mt-5 grid gap-3 md:grid-cols-3">
+            <div>
+              <label className="mb-2 block text-xs font-bold uppercase tracking-[0.14em] text-white/35">Platform</label>
+              <select
+                value={platform}
+                onChange={(e) => setPlatform(e.target.value)}
+                className="w-full rounded-2xl border border-white/10 bg-[#050914] px-4 py-3 text-sm text-white outline-none focus:border-cyan-300/40"
+              >
+                <option>YouTube Shorts</option>
+                <option>TikTok</option>
+                <option>Instagram Reels</option>
+                <option>YouTube Long-form</option>
+              </select>
+            </div>
+            <div>
+              <label className="mb-2 block text-xs font-bold uppercase tracking-[0.14em] text-white/35">Niche</label>
+              <input
+                value={niche}
+                onChange={(e) => setNiche(e.target.value)}
+                placeholder="Fitness, AI, finance..."
+                className="w-full rounded-2xl border border-white/10 bg-[#050914] px-4 py-3 text-sm text-white outline-none placeholder:text-white/24 focus:border-cyan-300/40"
+              />
+            </div>
+            <div>
+              <label className="mb-2 block text-xs font-bold uppercase tracking-[0.14em] text-white/35">Audience</label>
+              <input
+                value={audience}
+                onChange={(e) => setAudience(e.target.value)}
+                placeholder="New creators, busy founders..."
+                className="w-full rounded-2xl border border-white/10 bg-[#050914] px-4 py-3 text-sm text-white outline-none placeholder:text-white/24 focus:border-cyan-300/40"
+              />
+            </div>
           </div>
 
           {error && <p className="mt-4 rounded-2xl border border-red-400/20 bg-red-400/10 p-3 text-sm text-red-200">{error}</p>}
@@ -132,7 +169,7 @@ export default function HookAnalyzerPage() {
               <p className="text-sm text-cyan-300">Result preview</p>
               <h2 className="mt-4 max-w-md text-3xl font-black tracking-tight">Your hook score will appear here.</h2>
               <p className="mt-4 max-w-lg leading-7 text-white/50">
-                HookSignals checks opening promise, curiosity gap, retention risk, audience trigger and packaging fit before publishing.
+                HookSignals now checks the hook against platform, niche, audience trigger, retention risk and packaging fit.
               </p>
             </div>
           )}
