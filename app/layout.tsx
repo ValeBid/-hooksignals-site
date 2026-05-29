@@ -10,17 +10,6 @@ export const metadata = {
     template: "%s | HookSignals",
   },
   description: siteConfig.description,
-  keywords: [
-    "youtube hook generator",
-    "hook analyzer",
-    "youtube title generator",
-    "shorts script generator",
-    "viewer retention",
-    "youtube shorts tools",
-    "creator workflow",
-    "thumbnail text checker",
-    "tiktok hook generator",
-  ],
   icons: {
     icon: "/hs-logo.svg",
     shortcut: "/hs-logo.svg",
