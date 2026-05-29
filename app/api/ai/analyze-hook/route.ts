@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { currentUser } from '@clerk/nextjs/server';
-import { supabase } from '../../../lib/supabase';
+import { supabaseAdmin } from '../../../lib/supabase';
 
 const OPENAI_URL = 'https://api.openai.com/v1/chat/completions';
 const MODEL = process.env.OPENAI_MODEL || 'gpt-5-mini';
@@ -54,9 +54,18 @@ function fallbackAnalysis(hook: string) {
   };
 }
 
+function safeParseAnalysis(content: string, hook: string) {
+  try {
+    return JSON.parse(content);
+  } catch (error) {
+    console.error('[hook-analyzer] OpenAI returned invalid JSON', error);
+    return fallbackAnalysis(hook);
+  }
+}
+
 async function analyzeWithOpenAI(hook: string) {
   const apiKey = process.env.OPENAI_API_KEY || process.env.OPENAI_API_TOKEN;
-  if (!apiKey) return null;
+  if (!apiKey) return { analysis: fallbackAnalysis(hook), mode: 'rules' as const, diagnostic: 'missing_openai_key' };
 
   const response = await fetch(OPENAI_URL, {
     method: 'POST',
@@ -80,11 +89,17 @@ async function analyzeWithOpenAI(hook: string) {
     }),
   });
 
-  if (!response.ok) return null;
+  if (!response.ok) {
+    const body = await response.text().catch(() => '');
+    console.error('[hook-analyzer] OpenAI call failed', response.status, body.slice(0, 500));
+    return { analysis: fallbackAnalysis(hook), mode: 'rules' as const, diagnostic: 'openai_call_failed' };
+  }
+
   const data = await response.json();
   const content = data?.choices?.[0]?.message?.content;
-  if (!content) return null;
-  return JSON.parse(content);
+  if (!content) return { analysis: fallbackAnalysis(hook), mode: 'rules' as const, diagnostic: 'empty_openai_response' };
+
+  return { analysis: safeParseAnalysis(content, hook), mode: 'ai' as const, diagnostic: null };
 }
 
 export async function POST(request: Request) {
@@ -96,34 +111,43 @@ export async function POST(request: Request) {
     const hook = String(body?.hook || '').trim().slice(0, 500);
     if (hook.length < 8) return NextResponse.json({ success: false, error: 'missing_hook' }, { status: 400 });
 
-    const { data: credits } = await supabase
+    const { data: credits, error: creditsError } = await supabaseAdmin
       .from('credits')
       .select('*')
       .eq('clerk_user_id', user.id)
       .limit(1)
-      .single();
+      .maybeSingle();
+
+    if (creditsError) {
+      console.error('[hook-analyzer] credits read failed', creditsError);
+      return NextResponse.json({ success: false, error: 'credits_read_failed', detail: creditsError.message }, { status: 500 });
+    }
 
     if (!credits || Number(credits.credits_remaining || 0) < CREDIT_COST) {
       return NextResponse.json({ success: false, error: 'insufficient_credits' }, { status: 402 });
     }
 
-    const plan = credits.plan || 'free';
+    const plan = String(credits.plan || 'starter').toLowerCase();
     if (plan === 'free') {
       return NextResponse.json({ success: false, error: 'upgrade_required' }, { status: 402 });
     }
 
-    const rawAnalysis = await analyzeWithOpenAI(hook);
-    const analysis = rawAnalysis || fallbackAnalysis(hook);
+    const { analysis, mode, diagnostic } = await analyzeWithOpenAI(hook);
 
     const nextUsed = Number(credits.credits_used || 0) + CREDIT_COST;
     const nextRemaining = Math.max(0, Number(credits.credits_remaining || 0) - CREDIT_COST);
 
-    await supabase
+    const { error: updateError } = await supabaseAdmin
       .from('credits')
-      .update({ credits_used: nextUsed, credits_remaining: nextRemaining })
+      .update({ credits_used: nextUsed, credits_remaining: nextRemaining, updated_at: new Date().toISOString() })
       .eq('clerk_user_id', user.id);
 
-    const { data: generation } = await supabase
+    if (updateError) {
+      console.error('[hook-analyzer] credits update failed', updateError);
+      return NextResponse.json({ success: false, error: 'credits_update_failed', detail: updateError.message }, { status: 500 });
+    }
+
+    const { data: generation, error: generationError } = await supabaseAdmin
       .from('generations')
       .insert({
         clerk_user_id: user.id,
@@ -133,17 +157,23 @@ export async function POST(request: Request) {
         credits_spent: CREDIT_COST,
       })
       .select('id')
-      .single();
+      .maybeSingle();
+
+    if (generationError) {
+      console.error('[hook-analyzer] generation insert failed', generationError);
+    }
 
     return NextResponse.json({
       success: true,
       analysis,
-      mode: rawAnalysis ? 'ai' : 'rules',
+      mode,
+      diagnostic,
       creditsSpent: CREDIT_COST,
       creditsRemaining: nextRemaining,
       shareId: generation?.id || null,
     });
   } catch (error) {
+    console.error('[hook-analyzer] unhandled failure', error);
     return NextResponse.json({ success: false, error: 'analysis_failed' }, { status: 500 });
   }
 }
