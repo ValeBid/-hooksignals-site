@@ -14,17 +14,19 @@ export type SeoRoute = {
   intent: "tool" | "workflow" | "examples" | "education";
 };
 
-export const seoRoutes: SeoRoute[] = [
+const staticRoutes: SeoRoute[] = [
   { path: "/", title: "HookSignals | AI Creator Workflow Tools for YouTube and Shorts", description: "Analyze hooks, improve titles, generate Shorts scripts and check creator packaging before publishing.", priority: 1, changeFrequency: "daily", intent: "workflow" },
   { path: "/tools", title: "AI Creator Tools | HookSignals", description: "Explore HookSignals tools for hooks, titles, scripts, thumbnails and viewer retention.", priority: 0.92, changeFrequency: "weekly", intent: "workflow" },
-  { path: "/hook-analyzer", title: "Hook Analyzer | Score Your Video Hook | HookSignals", description: "Score your YouTube, TikTok or Shorts hook for clarity, curiosity and retention risk before publishing.", priority: 0.95, changeFrequency: "weekly", intent: "tool" },
+  { path: "/hook-analyzer", title: "AI Hook Analyzer for YouTube, TikTok and Reels | HookSignals", description: "Score your YouTube, TikTok or Shorts hook for clarity, curiosity, audience fit and retention risk before publishing.", priority: 0.95, changeFrequency: "weekly", intent: "tool" },
   { path: "/hook-improver", title: "Hook Improver | Rewrite Weak Hooks | HookSignals", description: "Rewrite weak video hooks into clearer, sharper and more retention-focused opening lines.", priority: 0.9, changeFrequency: "weekly", intent: "tool" },
   { path: "/youtube-hook-generator", title: "YouTube Hook Generator | Create Better Video Hooks | HookSignals", description: "Generate stronger YouTube hooks for Shorts, long-form videos and creator content.", priority: 0.88, changeFrequency: "weekly", intent: "tool" },
   { path: "/tiktok-hook-generator", title: "TikTok Hook Generator | Scroll-Stopping Hook Ideas | HookSignals", description: "Create TikTok hook ideas designed to stop the scroll and improve short-form retention.", priority: 0.84, changeFrequency: "weekly", intent: "tool" },
   { path: "/youtube-title-generator", title: "YouTube Title Generator | Create Better Video Titles | HookSignals", description: "Generate YouTube title ideas built around clarity, curiosity and click intent.", priority: 0.88, changeFrequency: "weekly", intent: "tool" },
   { path: "/shorts-script-generator", title: "Shorts Script Generator | AI Short-Form Script Tool | HookSignals", description: "Generate short-form script structures designed for hook strength, pacing and retention.", priority: 0.88, changeFrequency: "weekly", intent: "tool" },
   { path: "/thumbnail-text-checker", title: "Thumbnail Text Checker | Improve CTR Clarity | HookSignals", description: "Check whether your thumbnail text is readable, clear and built for stronger click intent.", priority: 0.84, changeFrequency: "weekly", intent: "tool" },
-  { path: "/pricing", title: "Pricing | HookSignals Creator Plans", description: "Choose a HookSignals plan for hook analysis, creator workflows, script drafts and thumbnail checks before publishing.", priority: 0.7, changeFrequency: "monthly", intent: "workflow" },
+  { path: "/pricing", title: "Pricing | HookSignals Creator Plans", description: "Choose a HookSignals plan for hook analysis, creator workflows, script drafts and thumbnail checks before publishing.", priority: 0.86, changeFrequency: "monthly", intent: "workflow" },
+  { path: "/blog", title: "Creator Growth Blog | HookSignals", description: "Read practical guides on hooks, retention, titles, thumbnails and creator workflow optimization.", priority: 0.72, changeFrequency: "weekly", intent: "education" },
+  { path: "/seo", title: "Creator SEO Hub | HookSignals", description: "Explore HookSignals creator SEO resources for hooks, titles, thumbnails, retention and video packaging.", priority: 0.72, changeFrequency: "weekly", intent: "education" },
   { path: "/hook-psychology", title: "Hook Psychology | Why Viewers Keep Watching | HookSignals", description: "Learn how curiosity, clarity and tension shape stronger short-form video openings.", priority: 0.82, changeFrequency: "weekly", intent: "education" },
   { path: "/clickable-title-formulas", title: "Clickable Title Formulas | HookSignals", description: "Use practical title formulas to improve clarity, curiosity and click intent.", priority: 0.8, changeFrequency: "weekly", intent: "education" },
   { path: "/viral-title-examples", title: "Viral Title Examples | HookSignals", description: "Study stronger title structures for YouTube, Shorts and creator content.", priority: 0.8, changeFrequency: "weekly", intent: "examples" },
@@ -38,6 +40,29 @@ export const seoRoutes: SeoRoute[] = [
   { path: "/youtube-ctr-tips", title: "YouTube CTR Tips | HookSignals", description: "Learn practical YouTube CTR principles for titles, thumbnails and first-impression packaging.", priority: 0.76, changeFrequency: "weekly", intent: "education" },
   { path: "/youtube-thumbnail-tips", title: "YouTube Thumbnail Tips | HookSignals", description: "Learn thumbnail clarity principles for stronger first impressions and packaging.", priority: 0.76, changeFrequency: "weekly", intent: "education" },
 ];
+
+const platformHookRoutes: SeoRoute[] = [
+  ["youtube-shorts", "YouTube Shorts Hook Analyzer | HookSignals", "Analyze YouTube Shorts hooks for clarity, curiosity, retention risk and first-three-second stopping power."],
+  ["tiktok", "TikTok Hook Analyzer | HookSignals", "Analyze TikTok hooks for scroll stopping power, curiosity gap, pacing and audience fit before posting."],
+  ["instagram-reels", "Instagram Reels Hook Analyzer | HookSignals", "Analyze Instagram Reels hooks for retention, clarity, visual promise and short-form attention."],
+  ["fitness", "Fitness Hook Analyzer | HookSignals", "Analyze fitness hooks for transformation promise, specificity, tension and viewer retention."],
+  ["ai", "AI Content Hook Analyzer | HookSignals", "Analyze AI content hooks for novelty, clarity, proof and stronger audience curiosity."],
+  ["saas", "SaaS Hook Analyzer | HookSignals", "Analyze SaaS hooks for pain, outcome clarity, proof and demo-first retention."],
+  ["ecommerce", "Ecommerce Hook Analyzer | HookSignals", "Analyze ecommerce hooks for product clarity, desire, objections and conversion-focused retention."],
+  ["coaching", "Coaching Hook Analyzer | HookSignals", "Analyze coaching hooks for audience pain, promise strength, authority and retention."],
+  ["personal-finance", "Personal Finance Hook Analyzer | HookSignals", "Analyze personal finance hooks for specificity, trust, payoff and early retention risk."],
+  ["real-estate", "Real Estate Hook Analyzer | HookSignals", "Analyze real estate hooks for local relevance, buyer intent, specificity and retention."],
+].map(([slug, title, description]) => ({ path: `/hooks/${slug}`, title, description, priority: 0.78, changeFrequency: "weekly", intent: "tool" }));
+
+const exampleRoutes: SeoRoute[] = [
+  ["fitness", "Fitness Hook Examples | HookSignals", "Browse fitness hook examples for transformation, discipline, fat loss, strength and short-form retention."],
+  ["ai", "AI Hook Examples | HookSignals", "Browse AI hook examples for tools, workflows, automation, productivity and creator content."],
+  ["finance", "Finance Hook Examples | HookSignals", "Browse finance hook examples for saving, investing, money mistakes and trust-focused content."],
+  ["saas", "SaaS Hook Examples | HookSignals", "Browse SaaS hook examples for product demos, pain points, use cases and founder-led content."],
+  ["ecommerce", "Ecommerce Hook Examples | HookSignals", "Browse ecommerce hook examples for product discovery, objections, offers and short-form ads."],
+].map(([slug, title, description]) => ({ path: `/hook-examples/${slug}`, title, description, priority: 0.72, changeFrequency: "weekly", intent: "examples" }));
+
+export const seoRoutes: SeoRoute[] = [...staticRoutes, ...platformHookRoutes, ...exampleRoutes];
 
 export function absoluteUrl(path: string) {
   return `${siteConfig.url}${path === "/" ? "" : path}`;
