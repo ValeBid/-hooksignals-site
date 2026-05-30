@@ -84,10 +84,10 @@ export default function RetentionCurveSection() {
           </div>
 
           <a
-            href="/hook-analyzer"
+            href="/youtube-video-analyzer"
             className="mt-8 inline-flex rounded-2xl bg-gradient-to-r from-cyan-300 via-sky-400 to-violet-400 px-7 py-3.5 text-sm font-black text-black shadow-[0_20px_48px_rgba(34,211,238,.18)] transition hover:scale-[1.01]"
           >
-            Predict my retention →
+            Analyze a YouTube video →
           </a>
         </motion.div>
 

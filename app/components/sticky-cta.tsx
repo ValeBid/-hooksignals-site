@@ -26,17 +26,17 @@ export default function StickyCTA() {
 
         <div className="flex shrink-0 items-center gap-3">
           <a
-            href="/hook-analyzer"
+            href="/youtube-video-analyzer"
             className="hidden rounded-2xl border border-white/10 bg-white/[0.05] px-4 py-3 text-sm font-bold text-white transition hover:bg-white/[0.09] md:inline-flex"
           >
-            Analyze Free
+            Analyze Video
           </a>
 
           <a
-            href="/checkout/pro"
+            href="/pricing"
             className="animate-pulse-ring relative rounded-2xl bg-gradient-to-r from-cyan-300 via-sky-400 to-violet-400 px-5 py-3 text-sm font-black text-black shadow-[0_18px_40px_rgba(34,211,238,.22)] transition hover:scale-[1.02]"
           >
-            Start Pro
+            View Pricing
           </a>
         </div>
       </div>

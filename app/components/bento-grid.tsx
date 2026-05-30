@@ -52,23 +52,28 @@ export default function BentoGrid() {
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
 
-        {/* Card 1 — Hook Analyzer (large, 2/3) */}
+        {/* Card 1 — YouTube Video Analyzer (large, 2/3) — flagship */}
         <motion.a
-          href="/hook-analyzer"
+          href="/youtube-video-analyzer"
           {...fadeCard(0)}
           whileHover={hoverProps}
-          className="group relative overflow-hidden rounded-[32px] border border-white/10 bg-white/[0.04] p-6 md:col-span-2 md:p-8 cursor-pointer"
+          className="group relative overflow-hidden rounded-[32px] border border-cyan-300/22 bg-[radial-gradient(circle_at_80%_10%,rgba(34,211,238,.10),transparent_40%),rgba(255,255,255,0.04)] p-6 md:col-span-2 md:p-8 cursor-pointer"
         >
-          <div className="absolute right-0 top-0 h-[220px] w-[220px] -translate-y-1/3 translate-x-1/3 rounded-full bg-cyan-400/10 blur-[80px]" />
+          <div className="absolute right-0 top-0 h-[220px] w-[220px] -translate-y-1/3 translate-x-1/3 rounded-full bg-cyan-400/14 blur-[80px]" />
           <div className="relative">
-            <span className="inline-flex rounded-full border border-cyan-300/18 bg-cyan-300/[0.08] px-3 py-1 text-xs font-black uppercase tracking-[0.14em] text-cyan-200">
-              Diagnose
-            </span>
+            <div className="flex items-center gap-2">
+              <span className="inline-flex rounded-full border border-cyan-300/22 bg-cyan-300/[0.10] px-3 py-1 text-xs font-black uppercase tracking-[0.14em] text-cyan-200">
+                Flagship
+              </span>
+              <span className="inline-flex rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-xs font-black uppercase tracking-[0.14em] text-white/40">
+                Live YouTube data
+              </span>
+            </div>
             <h3 className="mt-4 text-2xl font-black tracking-tight text-white md:text-3xl">
-              AI Hook Analyzer
+              YouTube Video Analyzer
             </h3>
             <p className="mt-3 max-w-md text-sm leading-7 text-white/52">
-              Score your opening line for clarity, curiosity, platform pacing and retention risk before you publish.
+              Paste any YouTube URL to fetch real views, likes, transcript and subscribers — then get an AI analysis of hook strength, packaging and retention risk.
             </p>
 
             <div className="mt-6 grid gap-3">
@@ -84,7 +89,7 @@ export default function BentoGrid() {
             </div>
 
             <p className="mt-6 text-sm font-black text-cyan-300 transition group-hover:translate-x-1">
-              Open Hook Analyzer →
+              Analyze YouTube Video →
             </p>
           </div>
         </motion.a>
