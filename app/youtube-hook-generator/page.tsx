@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import YoutubeHookGeneratorClient from "./YoutubeHookGeneratorClient";
 
 export const metadata: Metadata = {
-  title: "YouTube Hook Generator | Create Better Video Hooks | HookSignals",
+  title: "YouTube Hook Generator | Create Better Video Hooks",
   description:
     "Generate stronger YouTube hooks for Shorts, long-form videos and creator content with HookSignals.",
   alternates: { canonical: "https://hooksignals.com/youtube-hook-generator" },

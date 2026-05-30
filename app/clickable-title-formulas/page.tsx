@@ -1,5 +1,5 @@
 export const metadata = {
-  title: "Clickable Title Formulas | YouTube CTR Formulas | HookSignals",
+  title: "Clickable Title Formulas | YouTube CTR Formulas",
   description:
     "Learn clickable title formulas designed for curiosity, higher CTR and better YouTube performance.",
 };

@@ -585,7 +585,7 @@ export function generateMetadata({ params }: { params: { slug: string } }) {
   const page = pages[params.slug];
   if (!page) return {};
   return {
-    title: `${page.title} | HookSignals`,
+    title: page.title,
     description: page.description,
     alternates: { canonical: `https://hooksignals.com/hooks/${params.slug}` },
     openGraph: {

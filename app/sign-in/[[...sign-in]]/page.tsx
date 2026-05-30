@@ -1,7 +1,8 @@
 import { SignIn } from "@clerk/nextjs";
+import type { Metadata } from "next";
 
-export const metadata = {
-  title: "Sign in | HookSignals",
+export const metadata: Metadata = {
+  title: "Sign in",
   description: "Sign in to your HookSignals creator workspace.",
 };
 

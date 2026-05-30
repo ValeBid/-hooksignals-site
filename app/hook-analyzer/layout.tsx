@@ -1,7 +1,7 @@
 import ToolSEOContent from "../components/tool-seo-content";
 
 export const metadata = {
-  title: "AI Hook Analyzer for YouTube, TikTok and Reels | HookSignals",
+  title: "AI Hook Analyzer for YouTube, TikTok and Reels",
   description: "Score your opening line for clarity, curiosity, platform pacing, audience fit and retention risk. Get AI-powered hook analysis before you publish.",
   alternates: { canonical: "https://hooksignals.com/hook-analyzer" },
   openGraph: {

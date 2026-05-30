@@ -3,7 +3,7 @@ import UpgradePrompt from "../components/upgrade-prompt";
 import SiteFooter from "../components/site-footer";
 
 export const metadata = {
-  title: "Workspace | HookSignals",
+  title: "Workspace",
   description:
     "Explore the future creator workspace direction for HookSignals workflows and saved systems.",
 };

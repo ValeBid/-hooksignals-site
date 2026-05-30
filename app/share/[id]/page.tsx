@@ -10,7 +10,7 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
     .single();
 
   return {
-    title: data?.input ? `${data.input} | HookSignals` : 'Creator Analysis | HookSignals',
+    title: data?.input ? data.input : 'Creator Analysis',
     description: 'Public creator analysis generated with HookSignals.',
   };
 }

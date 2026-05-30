@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { currentUser } from '@clerk/nextjs/server';
-import { getSupabaseClient } from '../../lib/supabase';
+import { getSupabaseAdminClient } from '../../lib/supabase';
 
 // Bootstrap a new user's credits record on first sign-in.
 // Must be authenticated — the user's own Clerk ID is used as the key.
@@ -11,7 +11,7 @@ export async function POST() {
   }
 
   try {
-    const supabase = getSupabaseClient();
+    const supabase = getSupabaseAdminClient();
 
     await supabase.from('credits').upsert(
       {

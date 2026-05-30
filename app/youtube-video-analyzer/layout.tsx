@@ -1,5 +1,5 @@
 export const metadata = {
-  title: "YouTube Video Analyzer | Real Data Hook & Packaging Analysis | HookSignals",
+  title: "YouTube Video Analyzer | Real Data Hook & Packaging Analysis",
   description:
     "Paste any YouTube URL to fetch real video data and get an AI-powered analysis of the title hook, packaging strength, retention risk and improvement ideas.",
   alternates: { canonical: "https://hooksignals.com/youtube-video-analyzer" },

@@ -22,7 +22,7 @@ const patterns = [
 ];
 
 export const metadata = {
-  title: 'YouTube Hook Patterns for Better Retention | HookSignals',
+  title: 'YouTube Hook Patterns for Better Retention',
   description: 'A practical library of YouTube and Shorts hook patterns for improving clarity, curiosity and retention.',
 };
 
