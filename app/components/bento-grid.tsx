@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { AnimatedCounter } from "./motion";
 
 const EASE = "easeOut" as const;
 
@@ -129,7 +130,7 @@ export default function BentoGrid() {
 
           <div className="mt-6">
             <div className="flex items-end justify-between">
-              <span className="text-5xl font-black text-white">90</span>
+              <AnimatedCounter to={90} duration={1.4} className="text-5xl font-black text-white" />
               <span className="mb-2 text-white/38">/100</span>
             </div>
             <div className="mt-3 h-2 overflow-hidden rounded-full bg-white/10">

@@ -4,6 +4,7 @@ import StickyCTA from "./components/sticky-cta";
 import PredictorHero from "./components/predictor-hero";
 import RetentionCurveSection from "./components/retention-curve";
 import BentoGrid from "./components/bento-grid";
+import { FadeIn } from "./components/motion";
 import "./components/premium-motion.css";
 import "./components/mobile-cinematic.css";
 
@@ -24,6 +25,7 @@ export const metadata = {
 
 function FinalCTA() {
   return (
+    <FadeIn>
     <section className="mx-auto mt-20 max-w-[1320px] px-5 pb-24 md:px-8">
       <div className="overflow-hidden rounded-[40px] border border-cyan-300/20 bg-[radial-gradient(circle_at_20%_20%,rgba(34,211,238,.16),transparent_32%),radial-gradient(circle_at_80%_20%,rgba(168,85,247,.16),transparent_32%),linear-gradient(135deg,rgba(255,255,255,.07),rgba(255,255,255,.025))] p-8 text-center shadow-[0_30px_100px_rgba(34,211,238,.10)] md:p-14">
         <p className="text-sm font-black uppercase tracking-[0.18em] text-cyan-200">Start predicting</p>
@@ -50,6 +52,7 @@ function FinalCTA() {
         <p className="mt-6 text-sm text-white/35">No signup needed for a preview score. Full analysis uses 5 credits.</p>
       </div>
     </section>
+    </FadeIn>
   );
 }
 

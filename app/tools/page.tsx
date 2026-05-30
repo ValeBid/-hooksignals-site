@@ -1,4 +1,5 @@
 import PremiumToolShell from "../components/premium-tool-shell";
+import { StaggerContainer, StaggerItem, FadeIn } from "../components/motion";
 
 export const metadata = {
   title: "AI Creator Tools for Hooks, Titles, Scripts & Retention",
@@ -124,53 +125,56 @@ export default function ToolsPage() {
         ))}
       </section>
 
-      <div className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <StaggerContainer className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {tools.map((tool) => (
-          <a
-            key={tool.href}
-            href={tool.href}
-            className={`group rounded-[28px] border p-6 transition hover:-translate-y-0.5 ${
-              tool.primary
-                ? 'border-cyan-300/25 bg-cyan-300/[0.05] hover:border-cyan-300/40 hover:bg-cyan-300/[0.08]'
-                : 'border-white/10 bg-black/24 hover:border-cyan-300/28 hover:bg-cyan-300/[0.04]'
-            }`}
-          >
-            <div className="flex items-center justify-between gap-3">
-              <p className={`text-xs font-black uppercase tracking-[0.14em] ${tool.primary ? 'text-cyan-300' : 'text-white/35'}`}>
-                {tool.group}
+          <StaggerItem key={tool.href}>
+            <a
+              href={tool.href}
+              className={`group block h-full rounded-[28px] border p-6 transition hover:-translate-y-0.5 ${
+                tool.primary
+                  ? 'border-cyan-300/25 bg-cyan-300/[0.05] hover:border-cyan-300/40 hover:bg-cyan-300/[0.09]'
+                  : 'border-white/10 bg-black/24 hover:border-cyan-300/25 hover:bg-cyan-300/[0.04]'
+              }`}
+            >
+              <div className="flex items-center justify-between gap-3">
+                <p className={`text-xs font-black uppercase tracking-[0.14em] ${tool.primary ? 'text-cyan-300' : 'text-white/35'}`}>
+                  {tool.group}
+                </p>
+                {tool.primary && (
+                  <span className="rounded-full border border-cyan-300/22 bg-cyan-300/[0.09] px-2 py-0.5 text-[10px] font-black uppercase tracking-[0.1em] text-cyan-200">
+                    Featured
+                  </span>
+                )}
+              </div>
+              <h2 className="mt-4 text-xl font-black tracking-tight text-white">
+                {tool.name}
+              </h2>
+              <p className="mt-3 text-sm leading-6 text-white/55">{tool.desc}</p>
+              <p className="mt-4 rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-2.5 text-xs leading-5 text-white/40">
+                {tool.use}
               </p>
-              {tool.primary && (
-                <span className="rounded-full border border-cyan-300/22 bg-cyan-300/[0.09] px-2 py-0.5 text-[10px] font-black uppercase tracking-[0.1em] text-cyan-200">
-                  Featured
-                </span>
-              )}
-            </div>
-            <h2 className="mt-4 text-xl font-black tracking-tight text-white">
-              {tool.name}
-            </h2>
-            <p className="mt-3 text-sm leading-6 text-white/55">{tool.desc}</p>
-            <p className="mt-4 rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-2.5 text-xs leading-5 text-white/40">
-              {tool.use}
-            </p>
-            <p className={`mt-5 text-sm font-black transition group-hover:text-white ${tool.primary ? 'text-cyan-300' : 'text-cyan-300/70'}`}>
-              Open →
-            </p>
-          </a>
+              <p className={`mt-5 text-sm font-black transition group-hover:text-white ${tool.primary ? 'text-cyan-300' : 'text-cyan-300/70'}`}>
+                Open →
+              </p>
+            </a>
+          </StaggerItem>
         ))}
-      </div>
+      </StaggerContainer>
 
-      <section className="mt-8 rounded-[30px] border border-cyan-300/18 bg-cyan-300/[0.045] p-6 md:p-8">
-        <p className="text-sm font-bold uppercase tracking-[0.14em] text-cyan-300">
-          Recommended workflow
-        </p>
-        <h2 className="mt-4 text-3xl font-black tracking-tight">
-          Start with the hook. Then lock the title, script and thumbnail.
-        </h2>
-        <p className="mt-5 max-w-3xl leading-8 text-white/58">
-          A stronger hook improves retention, a clearer title improves clicks,
-          and a sharper thumbnail improves the first impression. Treat every tool as one part of the same publishing decision.
-        </p>
-      </section>
+      <FadeIn>
+        <section className="mt-8 rounded-[30px] border border-cyan-300/18 bg-cyan-300/[0.045] p-6 md:p-8">
+          <p className="text-sm font-bold uppercase tracking-[0.14em] text-cyan-300">
+            Recommended workflow
+          </p>
+          <h2 className="mt-4 text-3xl font-black tracking-tight">
+            Start with the hook. Then lock the title, script and thumbnail.
+          </h2>
+          <p className="mt-5 max-w-3xl leading-8 text-white/58">
+            A stronger hook improves retention, a clearer title improves clicks,
+            and a sharper thumbnail improves the first impression. Treat every tool as one part of the same publishing decision.
+          </p>
+        </section>
+      </FadeIn>
     </PremiumToolShell>
   );
 }
