@@ -1,124 +1,202 @@
+import PremiumToolShell from "../components/premium-tool-shell";
+import { FadeIn, StaggerContainer, StaggerItem } from "../components/motion";
+import RelatedTools from "../components/related-tools";
+
 export const metadata = {
   title: "Retention Hook Examples | Viewer Retention Hooks | HookSignals",
   description:
-    "Explore retention-focused hook examples designed to keep viewers watching longer.",
+    "Study retention-focused hook examples designed to keep viewers watching longer across YouTube Shorts, TikTok and Reels.",
+  alternates: { canonical: "https://hooksignals.com/retention-hook-examples" },
 };
 
-const examples = [
+type RetentionHook = {
+  hook: string;
+  technique: string;
+  techniqueType: string;
+  retentionMechanism: string;
+  score: number;
+};
+
+const retentionHooks: RetentionHook[] = [
+  // Open Loop
   {
-    category: "Open Loop Hooks",
-    hooks: [
-      "Watch until the end because this changes everything.",
-      "The last mistake is the one most creators never notice.",
-      "This gets worse the longer you ignore it.",
-    ],
+    hook: "The last mistake is the one most creators never notice.",
+    technique: "Open Loop",
+    techniqueType: "loop",
+    retentionMechanism: "Viewer needs to watch to find out which mistake — loop stays open until revealed.",
+    score: 74,
   },
   {
-    category: "Fast Problem Hooks",
-    hooks: [
-      "Your viewers are leaving in the first 3 seconds.",
-      "This intro mistake destroys retention instantly.",
-      "Most Shorts lose viewers before the point is clear.",
-    ],
+    hook: "There are four reasons Shorts die at 300 views. The fourth one is the worst.",
+    technique: "Open Loop + Hierarchy",
+    techniqueType: "loop",
+    retentionMechanism: "Establishes a list, then ranks within it — viewer stays for the strongest item.",
+    score: 82,
+  },
+  // Pattern interrupt
+  {
+    hook: "Your viewers are leaving in the first 3 seconds and you probably think it is not happening to you.",
+    technique: "Pattern Interrupt",
+    techniqueType: "interrupt",
+    retentionMechanism: "Directly addresses the viewer's assumption. Discomfort drives continuation.",
+    score: 79,
   },
   {
-    category: "Curiosity Retention Hooks",
-    hooks: [
-      "I tested viral hooks and found a surprising pattern.",
-      "Nobody talks about this retention trick anymore.",
-      "This one sentence changed my watch time.",
-    ],
+    hook: "The thumbnail click is not the hard part. The next three seconds is.",
+    technique: "Pattern Interrupt + Reframe",
+    techniqueType: "interrupt",
+    retentionMechanism: "Challenges what the creator thought was the goal. Viewer recalibrates and watches.",
+    score: 77,
+  },
+  // Proof-first
+  {
+    hook: "I tested the same intro with two hooks. One held 72% retention at 30 seconds. One held 31%.",
+    technique: "Proof-First",
+    techniqueType: "proof",
+    retentionMechanism: "Specific numbers create credibility. The unresolved 'which one' keeps viewer watching.",
+    score: 85,
+  },
+  {
+    hook: "This one sentence change improved my Shorts retention from 45% to 71% in two weeks.",
+    technique: "Proof + Timeline",
+    techniqueType: "proof",
+    retentionMechanism: "Metric before and after (45 → 71%) + timeframe (two weeks) = complete credibility loop.",
+    score: 87,
+  },
+  // Urgency
+  {
+    hook: "Most creators lose 60% of viewers before the point is clear.",
+    technique: "Urgency + Problem",
+    techniqueType: "urgency",
+    retentionMechanism: "Specific stat creates alarm. Viewer checks whether they're in the 60%.",
+    score: 76,
+  },
+  {
+    hook: "Stop publishing Shorts without running this three-second check first.",
+    technique: "Urgency + Direct",
+    techniqueType: "urgency",
+    retentionMechanism: "Imperative creates urgency. The undefined 'check' creates a loop that must be resolved.",
+    score: 72,
+  },
+  // Curiosity
+  {
+    hook: "I found a pattern in the Shorts that hit over 500k views. They all do this in the first second.",
+    technique: "Discovery + Cliffhanger",
+    techniqueType: "curiosity",
+    retentionMechanism: "Pattern discovery + scale (500k) + unresolved 'this' = maximum loop tension.",
+    score: 83,
+  },
+  {
+    hook: "Nobody asks what to do after the hook. That is the mistake.",
+    technique: "Hidden Insight",
+    techniqueType: "curiosity",
+    retentionMechanism: "Points to a blind spot. Viewer now needs to know what happens after the hook.",
+    score: 71,
   },
 ];
 
+const techniques = [
+  { type: "loop", name: "Open Loop", color: "border-violet-300/20 bg-violet-300/[0.05]", label: "text-violet-200", desc: "Opens a question or sequence the viewer must watch to close." },
+  { type: "interrupt", name: "Pattern Interrupt", color: "border-cyan-300/20 bg-cyan-300/[0.05]", label: "text-cyan-200", desc: "Breaks the scroll state by challenging an assumption." },
+  { type: "proof", name: "Proof-First", color: "border-emerald-300/20 bg-emerald-300/[0.05]", label: "text-emerald-200", desc: "Leads with a result or test before context or explanation." },
+  { type: "urgency", name: "Urgency", color: "border-amber-300/20 bg-amber-300/[0.05]", label: "text-amber-200", desc: "Creates a time-sensitive or consequence-driven reason to watch." },
+  { type: "curiosity", name: "Discovery", color: "border-sky-300/20 bg-sky-300/[0.05]", label: "text-sky-200", desc: "Reveals a finding or pattern and withholds the full answer." },
+];
+
+function TechBadge({ type }: { type: string }) {
+  const t = techniques.find((t) => t.type === type);
+  if (!t) return null;
+  return (
+    <span className={`rounded-full border px-3 py-0.5 text-xs font-black ${t.color} ${t.label}`}>
+      {t.name}
+    </span>
+  );
+}
+
+function ScoreBar({ value }: { value: number }) {
+  const color = value >= 80 ? "bg-cyan-300" : value >= 70 ? "bg-sky-400" : "bg-white/30";
+  return (
+    <div className="flex items-center gap-2">
+      <div className="h-1 w-16 overflow-hidden rounded-full bg-white/[0.07]">
+        <div className={`h-full rounded-full ${color}`} style={{ width: `${value}%` }} />
+      </div>
+      <span className="text-xs text-white/38">Example Score: {value}</span>
+    </div>
+  );
+}
+
 export default function RetentionHookExamplesPage() {
   return (
-    <main className="min-h-screen bg-[#070708] text-white">
-      <section className="mx-auto max-w-6xl px-6 py-8">
-        <nav className="mb-10 flex items-center justify-between">
-          <a href="/" className="text-sm text-white/50">
-            ← HookSignals
-          </a>
+    <PremiumToolShell
+      badge="Retention hook library"
+      title="Retention Hook Examples"
+      description="Hooks that improve watch-through rate use specific psychological techniques. These 10 examples show how open loops, proof, pattern interrupts and discovery work in practice."
+      primaryHref="/hook-analyzer"
+      primaryLabel="Analyze Your Hook"
+      secondaryHref="/hook-psychology"
+      secondaryLabel="Hook Psychology"
+    >
 
-          <a
-            href="/viewer-retention-tips"
-            className="rounded-full bg-emerald-400 px-4 py-2 text-sm font-semibold text-black"
-          >
-            Retention Tips
-          </a>
-        </nav>
+      {/* Techniques legend */}
+      <FadeIn>
+        <div className="grid gap-3 rounded-[24px] border border-white/10 bg-white/[0.025] p-5 sm:grid-cols-3 lg:grid-cols-5">
+          {techniques.map((t) => (
+            <div key={t.type} className={`rounded-[18px] border p-4 ${t.color}`}>
+              <p className={`text-xs font-black uppercase tracking-[0.12em] ${t.label}`}>{t.name}</p>
+              <p className="mt-1.5 text-xs leading-5 text-white/48">{t.desc}</p>
+            </div>
+          ))}
+        </div>
+      </FadeIn>
 
-        <section className="rounded-[36px] border border-white/10 bg-gradient-to-b from-white/[0.07] to-white/[0.025] p-7 md:p-12">
-          <p className="mb-4 text-sm font-semibold text-emerald-300">
-            Retention Hook Library
-          </p>
-
-          <h1 className="max-w-5xl text-5xl font-semibold tracking-tight md:text-7xl">
-            Retention Hook Examples
-          </h1>
-
-          <p className="mt-6 max-w-3xl text-lg leading-8 text-white/60">
-            Explore hook examples designed to increase watch time, improve
-            pacing and keep viewers engaged longer.
-          </p>
-
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <a
-              href="/hook-analyzer"
-              className="rounded-2xl bg-emerald-400 px-7 py-4 text-center font-semibold text-black"
-            >
-              Analyze Hooks
-            </a>
-
-            <a
-              href="/viewer-retention-tips"
-              className="rounded-2xl border border-white/10 bg-white/5 px-7 py-4 text-center font-semibold text-white"
-            >
-              View Retention Tips
-            </a>
-          </div>
-        </section>
-
-        <section className="mt-14 grid gap-6">
-          {examples.map((group) => (
-            <div
-              key={group.category}
-              className="rounded-[32px] border border-white/10 bg-white/[0.035] p-6 md:p-8"
-            >
-              <h2 className="text-3xl font-semibold">{group.category}</h2>
-
-              <div className="mt-6 grid gap-4">
-                {group.hooks.map((hook) => (
-                  <div
-                    key={hook}
-                    className="rounded-2xl border border-white/10 bg-black/30 p-5 text-white/70"
-                  >
-                    “{hook}”
-                  </div>
-                ))}
+      {/* Examples */}
+      <div className="mt-6">
+        <p className="mb-4 text-xs font-black uppercase tracking-[0.14em] text-white/35">
+          10 scored examples — all Example Score, not real user data
+        </p>
+        <StaggerContainer className="grid gap-3 md:grid-cols-2">
+          {retentionHooks.map((h) => (
+            <StaggerItem key={h.hook}>
+              <div className="rounded-[24px] border border-white/10 bg-black/24 p-5 transition hover:border-white/18">
+                <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+                  <TechBadge type={h.techniqueType} />
+                  <ScoreBar value={h.score} />
+                </div>
+                <p className="leading-7 text-white/80">&ldquo;{h.hook}&rdquo;</p>
+                <div className="mt-3 rounded-xl border border-white/[0.07] bg-white/[0.03] px-3 py-2">
+                  <p className="text-xs leading-5 text-white/40">
+                    <span className="font-black text-white/55">Retention mechanism: </span>
+                    {h.retentionMechanism}
+                  </p>
+                </div>
               </div>
+            </StaggerItem>
+          ))}
+        </StaggerContainer>
+      </div>
+
+      {/* Retention principle callout */}
+      <FadeIn>
+        <section className="mt-8 grid gap-4 md:grid-cols-3">
+          {[
+            ["Keep the loop open", "Do not resolve the curiosity in the hook. The answer comes in the video."],
+            ["Be specific", "Vague tension closes faster than specific tension. Numbers and timeframes help."],
+            ["Lead with outcome", "The viewer should know the payoff exists before context or setup."],
+          ].map(([title, desc]) => (
+            <div
+              key={title as string}
+              className="rounded-[22px] border border-cyan-300/15 bg-cyan-300/[0.04] p-5"
+            >
+              <p className="font-black text-white">{title}</p>
+              <p className="mt-2 text-sm leading-6 text-white/52">{desc}</p>
             </div>
           ))}
         </section>
+      </FadeIn>
 
-        <section className="mt-14 rounded-[32px] border border-emerald-300/20 bg-emerald-300/[0.06] p-7 md:p-10">
-          <h2 className="text-3xl font-semibold">
-            Retention starts with the opening.
-          </h2>
-
-          <p className="mt-4 max-w-3xl leading-8 text-white/60">
-            Use HookSignals to improve retention, pacing and first impression
-            quality before publishing your content.
-          </p>
-
-          <a
-            href="/hook-improver"
-            className="mt-7 inline-block rounded-2xl bg-emerald-400 px-7 py-4 font-semibold text-black"
-          >
-            Open Hook Improver
-          </a>
-        </section>
-      </section>
-    </main>
+      <div className="mt-8">
+        <RelatedTools />
+      </div>
+    </PremiumToolShell>
   );
 }
