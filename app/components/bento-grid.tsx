@@ -52,9 +52,9 @@ export default function BentoGrid() {
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
 
-        {/* Card 1 — YouTube Video Analyzer (large, 2/3) — flagship */}
+        {/* Card 1 — Hook Analyzer (large, 2/3) — flagship */}
         <motion.a
-          href="/youtube-video-analyzer"
+          href="/hook-analyzer"
           {...fadeCard(0)}
           whileHover={hoverProps}
           className="group relative overflow-hidden rounded-[32px] border border-cyan-300/22 bg-[radial-gradient(circle_at_80%_10%,rgba(34,211,238,.10),transparent_40%),rgba(255,255,255,0.04)] p-6 md:col-span-2 md:p-8 cursor-pointer"
@@ -66,14 +66,14 @@ export default function BentoGrid() {
                 Flagship
               </span>
               <span className="inline-flex rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-xs font-black uppercase tracking-[0.14em] text-white/40">
-                Live YouTube data
+                Free to start
               </span>
             </div>
             <h3 className="mt-4 text-2xl font-black tracking-tight text-white md:text-3xl">
-              YouTube Video Analyzer
+              Hook Analyzer
             </h3>
             <p className="mt-3 max-w-md text-sm leading-7 text-white/52">
-              Paste any YouTube URL to fetch real views, likes, transcript and subscribers — then get an AI analysis of hook strength, packaging and retention risk.
+              Paste your opening line and get an AI score for clarity, curiosity, platform pacing, audience fit and retention risk — before you publish.
             </p>
 
             <div className="mt-6 grid gap-3">
@@ -89,7 +89,7 @@ export default function BentoGrid() {
             </div>
 
             <p className="mt-6 text-sm font-black text-cyan-300 transition group-hover:translate-x-1">
-              Analyze YouTube Video →
+              Analyze your hook →
             </p>
           </div>
         </motion.a>
