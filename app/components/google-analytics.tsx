@@ -1,4 +1,6 @@
 import Script from "next/script";
+import { Suspense } from "react";
+import GoogleAnalyticsTracker from "./google-analytics-tracker";
 
 export default function GoogleAnalytics() {
   const measurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
@@ -21,6 +23,9 @@ export default function GoogleAnalytics() {
           });
         `}
       </Script>
+      <Suspense fallback={null}>
+        <GoogleAnalyticsTracker measurementId={measurementId} />
+      </Suspense>
     </>
   );
 }
