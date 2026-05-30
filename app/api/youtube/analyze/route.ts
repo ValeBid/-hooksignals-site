@@ -317,7 +317,7 @@ export async function POST(request: Request) {
         {
           error: "provider_not_configured",
           message:
-            "No YouTube provider is configured. Set APIFY_TOKEN to enable video data fetching.",
+            "YouTube video analysis is not available right now. Use the Hook Analyzer to score your opening line directly.",
         },
         { status: 503 }
       );
@@ -334,13 +334,13 @@ export async function POST(request: Request) {
     }
     if (msg.includes("apify_unauthorized")) {
       return NextResponse.json(
-        { error: "provider_unauthorized", message: "Provider authentication failed. Check your APIFY_TOKEN." },
+        { error: "provider_unauthorized", message: "YouTube video analysis is temporarily unavailable. Try again later." },
         { status: 503 }
       );
     }
     if (msg.includes("apify_actor_not_found")) {
       return NextResponse.json(
-        { error: "provider_actor_not_found", message: "Provider actor not found. Check APIFY_YOUTUBE_ACTOR_ID." },
+        { error: "provider_actor_not_found", message: "YouTube video analysis is temporarily unavailable. Try again later." },
         { status: 503 }
       );
     }

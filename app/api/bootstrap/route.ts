@@ -17,9 +17,9 @@ export async function POST() {
       {
         clerk_user_id: user.id,
         plan: 'free',
-        credits_total: 5,
+        credits_total: 15,
         credits_used: 0,
-        credits_remaining: 5,
+        credits_remaining: 15,
       },
       { onConflict: 'clerk_user_id' }
     );

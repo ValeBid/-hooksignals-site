@@ -28,12 +28,11 @@ export default function SiteFooter() {
         <div className="grid gap-8 border-b border-white/10 pb-8 lg:grid-cols-[1.15fr_0.7fr_0.7fr_0.9fr]">
           <div className="max-w-md">
             <div className="flex items-center gap-3">
-              <div className="relative flex h-10 w-10 items-center justify-center rounded-2xl border border-cyan-300/25 bg-gradient-to-br from-cyan-300/20 via-sky-400/10 to-violet-400/20 shadow-lg shadow-cyan-500/10">
-                <svg width="22" height="22" viewBox="0 0 64 64" fill="none" aria-hidden="true">
-                  <path d="M18 20v24M18 32h28M46 20v24" stroke="#22d3ee" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round"/>
-                  <circle cx="50" cy="15" r="4" fill="#22d3ee"/>
-                </svg>
-              </div>
+              <svg width="30" height="30" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+                <rect x="6" y="44" width="14" height="14" rx="4" fill="#22d3ee"/>
+                <rect x="25" y="28" width="14" height="30" rx="4" fill="#22d3ee"/>
+                <rect x="44" y="8" width="14" height="50" rx="4" fill="#22d3ee"/>
+              </svg>
               <div>
                 <p className="text-xl font-black tracking-tight">HookSignals</p>
                 <p className="text-xs text-white/40">Creator intelligence workflow</p>

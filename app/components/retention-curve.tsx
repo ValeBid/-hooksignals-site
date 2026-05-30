@@ -28,9 +28,9 @@ const retentionData = [
 ];
 
 const insights = [
-  { stat: "40–60%", text: "Viewer loss in the first 30 seconds with a weak hook" },
-  { stat: "+27pts",  text: "Average retention lift with a specific, tension-driven opening" },
-  { stat: "3 sec",   text: "The window HookSignals optimizes most aggressively" },
+  { stat: "40–60%", text: "Typical viewer loss in the first 30 seconds with a vague or slow opening line" },
+  { stat: "+27pts",  text: "Example retention improvement shown in this demo — actual results depend on content quality" },
+  { stat: "3 sec",   text: "The opening window HookSignals analyzes most closely for retention signals" },
 ];
 
 function CustomTooltip({ active, payload, label }: {

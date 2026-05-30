@@ -2,6 +2,7 @@
 
 import { motion, type Variants } from "framer-motion";
 import { useState } from "react";
+import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { trackEvent } from "../lib/analytics";
 
 const EASE = "easeOut" as const;
@@ -32,13 +33,11 @@ const fadeUp: Variants = {
 
 function LogoMark() {
   return (
-    <div className="relative flex h-11 w-11 items-center justify-center rounded-2xl border border-cyan-300/25 bg-gradient-to-br from-cyan-300/20 via-sky-400/10 to-violet-400/20 shadow-lg shadow-cyan-500/10">
-      <div className="absolute inset-1 rounded-xl border border-white/8" />
-      <svg width="26" height="26" viewBox="0 0 64 64" fill="none" aria-hidden="true">
-        <path d="M18 20v24M18 32h28M46 20v24" stroke="#22d3ee" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round"/>
-        <circle cx="50" cy="15" r="4" fill="#22d3ee"/>
-      </svg>
-    </div>
+    <svg width="32" height="32" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+      <rect x="6" y="44" width="14" height="14" rx="4" fill="#22d3ee"/>
+      <rect x="25" y="28" width="14" height="30" rx="4" fill="#22d3ee"/>
+      <rect x="44" y="8" width="14" height="50" rx="4" fill="#22d3ee"/>
+    </svg>
   );
 }
 
@@ -80,7 +79,7 @@ function PredictorCard() {
               </p>
             </div>
             <div className="shrink-0 rounded-2xl border border-cyan-300/20 bg-cyan-300/10 px-3 py-2 text-right">
-              <p className="text-[10px] text-white/48">Outlier</p>
+              <p className="text-[10px] text-white/48">Demo</p>
               <p className="text-xl font-black text-cyan-200">8.7×</p>
             </div>
           </div>
@@ -140,9 +139,17 @@ export default function PredictorHero() {
             <a href="/dashboard" className="transition hover:text-white text-white/58">Dashboard</a>
           </nav>
           <div className="flex items-center gap-2">
-            <a href="/sign-in" className="hidden rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm font-bold text-white/70 transition hover:bg-white/10 sm:inline-flex">
-              Sign in
-            </a>
+            <SignedOut>
+              <a href="/sign-in" className="hidden rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm font-bold text-white/70 transition hover:bg-white/10 sm:inline-flex">
+                Sign in
+              </a>
+            </SignedOut>
+            <SignedIn>
+              <a href="/dashboard" className="hidden rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm font-bold text-white/70 transition hover:bg-white/10 sm:inline-flex">
+                Dashboard
+              </a>
+              <UserButton afterSignOutUrl="/" />
+            </SignedIn>
             <a href="/youtube-video-analyzer" className="rounded-2xl bg-gradient-to-r from-cyan-300 via-sky-400 to-violet-400 px-4 py-2.5 text-sm font-black text-black shadow-[0_16px_34px_rgba(34,211,238,.18)] transition hover:scale-[1.01] md:px-5">
               Analyze Video
             </a>
@@ -183,7 +190,12 @@ export default function PredictorHero() {
                 </a>
               ))}
               <a href="/dashboard" className="rounded-2xl px-4 py-3 text-sm font-semibold text-white/70 transition hover:bg-white/[0.04] hover:text-white" onClick={() => setMobileOpen(false)}>Dashboard</a>
-              <a href="/sign-in" className="mt-1 rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-center text-sm font-bold text-white/70 transition hover:bg-white/[0.07]" onClick={() => setMobileOpen(false)}>Sign in</a>
+              <SignedOut>
+                <a href="/sign-in" className="mt-1 rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-center text-sm font-bold text-white/70 transition hover:bg-white/[0.07]" onClick={() => setMobileOpen(false)}>Sign in</a>
+              </SignedOut>
+              <SignedIn>
+                <a href="/dashboard" className="mt-1 rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-center text-sm font-bold text-white/70 transition hover:bg-white/[0.07]" onClick={() => setMobileOpen(false)}>My Dashboard</a>
+              </SignedIn>
             </div>
           </div>
         )}
@@ -272,7 +284,9 @@ export default function PredictorHero() {
           </motion.div>
         </motion.div>
 
-        <PredictorCard />
+        <div className="hidden lg:block">
+          <PredictorCard />
+        </div>
       </div>
     </section>
   );

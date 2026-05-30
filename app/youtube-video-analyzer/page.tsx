@@ -362,7 +362,7 @@ function AnalyzingState({ step }: { step: "fetching" | "analyzing" }) {
         </div>
         <div>
           <p className="font-black text-white">
-            {step === "fetching" ? "Fetching video data via Apify…" : "Analyzing hook and packaging with AI…"}
+            {step === "fetching" ? "Fetching video data…" : "Analyzing hook and packaging with AI…"}
           </p>
           <p className="mt-1 text-sm text-white/45">
             {step === "fetching"
@@ -398,16 +398,22 @@ function AnalyzingState({ step }: { step: "fetching" | "analyzing" }) {
 const ERROR_MESSAGES: Record<string, string> = {
   missing_url: "Paste a YouTube URL to get started.",
   invalid_url: "Enter a valid YouTube video URL (youtube.com or youtu.be).",
+  provider_not_configured:
+    "YouTube video analysis is not available right now. Use the Hook Analyzer to score your opening line directly.",
+  provider_unauthorized:
+    "YouTube video analysis is temporarily unavailable. Try again later.",
+  provider_actor_not_found:
+    "YouTube video analysis is temporarily unavailable. Try again later.",
   apify_token_missing:
-    "APIFY_TOKEN is not configured on this server. Contact the site admin.",
+    "YouTube video analysis is not available right now. Use the Hook Analyzer to score your opening line directly.",
   apify_unauthorized:
-    "Apify authentication failed. The APIFY_TOKEN may be invalid or expired.",
+    "YouTube video analysis is temporarily unavailable. Try again later.",
   apify_actor_not_found:
-    "Apify actor not found. Check APIFY_YOUTUBE_ACTOR_ID configuration.",
+    "YouTube video analysis is temporarily unavailable. Try again later.",
   no_data:
-    "No data returned. The video may be private, deleted, or region-restricted.",
+    "No data returned for this video. It may be private, deleted, or region-restricted.",
   scraper_timeout:
-    "The video scraper timed out. The video may be long or temporarily unavailable.",
+    "This video took too long to load. Try a shorter video or try again in a moment.",
   scraper_failed: "Could not fetch video data. Try again in a moment.",
   rate_limited: "You have reached the request limit. Try again in an hour.",
 };
@@ -482,7 +488,7 @@ export default function YoutubeVideoAnalyzerPage() {
       {/* Trust strip */}
       <div className="mb-6 grid gap-3 rounded-[28px] border border-white/10 bg-white/[0.025] p-5 md:grid-cols-3">
         {[
-          ["Real data only", "Views, likes, subscribers and transcript fetched live from YouTube via Apify. No fake metrics."],
+          ["Real data only", "Views, likes, subscribers and transcript fetched live from YouTube. No cached or manufactured metrics."],
           ["AI hook scoring", "Title analyzed for clarity, curiosity, retention risk and packaging alignment."],
           ["No account required", "Paste any public YouTube URL. Results cached for 1 hour."],
         ].map(([title, desc]) => (
@@ -574,9 +580,8 @@ export default function YoutubeVideoAnalyzerPage() {
             Video data and hook analysis will appear here.
           </h2>
           <p className="mt-4 max-w-2xl leading-7 text-white/48">
-            Paste any public YouTube URL above. The analyzer fetches real data from YouTube
-            via Apify, then scores the title hook for clarity, curiosity, retention risk and
-            packaging alignment.
+            Paste any public YouTube URL above. The analyzer fetches real public data from YouTube,
+            then scores the title hook for clarity, curiosity, retention risk and packaging alignment.
           </p>
           <div className="mt-7 grid gap-3 sm:grid-cols-3">
             {[
