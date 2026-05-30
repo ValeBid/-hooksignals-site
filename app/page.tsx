@@ -52,7 +52,7 @@ function FinalCTA() {
             Analyze Hook Text
           </a>
         </div>
-        <p className="mt-6 text-sm text-white/35">No signup needed for a preview score. Full analysis uses 5 credits.</p>
+        <p className="mt-6 text-sm text-white/35">Sign up free for 1 analysis. Upgrade for unlimited hooks, titles and scripts.</p>
       </div>
     </section>
     </FadeIn>

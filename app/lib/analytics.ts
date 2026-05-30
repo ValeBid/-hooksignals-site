@@ -7,7 +7,8 @@ type AnalyticsEvent =
   | { name: "email_submit"; props: { source: string } }
   | { name: "pricing_click"; props: { plan: string; action: string } }
   | { name: "hook_analyze"; props: { platform: string; has_niche: boolean } }
-  | { name: "video_analyze"; props: { source: string } };
+  | { name: "video_analyze"; props: { source: string } }
+  | { name: "upgrade_prompt"; props: { reason: string; tool: string } };
 
 export function trackEvent(event: AnalyticsEvent) {
   try {
