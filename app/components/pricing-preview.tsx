@@ -1,6 +1,7 @@
 "use client";
 
 import { useUser } from "@clerk/nextjs";
+import { trackEvent } from "../lib/analytics";
 
 const plans = [
   {
@@ -44,14 +45,13 @@ const plans = [
 export default function PricingPreview() {
   const { isLoaded, isSignedIn } = useUser();
 
-  function goToCheckout(path: string) {
+  function goToCheckout(plan: string, path: string) {
     if (!isLoaded) return;
-
+    trackEvent({ name: "pricing_click", props: { plan, action: isSignedIn ? "checkout" : "sign_up" } });
     if (!isSignedIn) {
       window.location.href = `/sign-up?redirect_url=${encodeURIComponent(path)}`;
       return;
     }
-
     window.location.href = path;
   }
 
@@ -101,7 +101,7 @@ export default function PricingPreview() {
 
               <button
                 type="button"
-                onClick={() => goToCheckout(plan.checkoutPath)}
+                onClick={() => goToCheckout(plan.name, plan.checkoutPath)}
                 className={`mt-8 inline-flex w-full justify-center rounded-2xl px-6 py-3 font-black transition ${plan.premium ? "bg-white text-black hover:bg-white/90" : "border border-white/10 bg-white/[0.045] text-white hover:bg-white/10"}`}
               >
                 {isSignedIn ? plan.cta : "Create account to buy"}

@@ -2,6 +2,7 @@
 
 import { motion, type Variants } from "framer-motion";
 import { useState } from "react";
+import { trackEvent } from "../lib/analytics";
 
 const EASE = "easeOut" as const;
 
@@ -223,10 +224,18 @@ export default function PredictorHero() {
           </motion.div>
 
           <motion.div variants={fadeUp} className="mt-6 flex flex-col gap-4 sm:flex-row">
-            <a href="/youtube-video-analyzer" className="group inline-flex items-center justify-center gap-3 rounded-2xl bg-gradient-to-r from-cyan-300 via-sky-400 to-violet-400 px-8 py-4 text-base font-black text-black shadow-[0_20px_48px_rgba(34,211,238,.18)] transition hover:scale-[1.01]">
+            <a
+              href="/youtube-video-analyzer"
+              onClick={() => trackEvent({ name: "cta_click", props: { label: "Analyze YouTube Video", destination: "/youtube-video-analyzer", location: "hero_primary" } })}
+              className="group inline-flex items-center justify-center gap-3 rounded-2xl bg-gradient-to-r from-cyan-300 via-sky-400 to-violet-400 px-8 py-4 text-base font-black text-black shadow-[0_20px_48px_rgba(34,211,238,.18)] transition hover:scale-[1.01]"
+            >
               Analyze YouTube Video <span className="transition group-hover:translate-x-1">→</span>
             </a>
-            <a href="/hook-analyzer" className="inline-flex items-center justify-center rounded-2xl border border-cyan-300/30 bg-cyan-300/[0.08] px-8 py-4 text-base font-black text-cyan-100 transition hover:bg-cyan-300/[0.14]">
+            <a
+              href="/hook-analyzer"
+              onClick={() => trackEvent({ name: "cta_click", props: { label: "Analyze Hook Text", destination: "/hook-analyzer", location: "hero_secondary" } })}
+              className="inline-flex items-center justify-center rounded-2xl border border-cyan-300/30 bg-cyan-300/[0.08] px-8 py-4 text-base font-black text-cyan-100 transition hover:bg-cyan-300/[0.14]"
+            >
               Analyze Hook Text
             </a>
           </motion.div>

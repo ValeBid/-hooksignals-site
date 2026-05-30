@@ -6,6 +6,8 @@ import RetentionCurveSection from "./components/retention-curve";
 import BentoGrid from "./components/bento-grid";
 import { FadeIn } from "./components/motion";
 import HookTransformSection from "./components/hook-transform-section";
+import EmailCapture from "./components/email-capture";
+import CreatorAuthoritySection from "./components/creator-authority";
 import "./components/premium-motion.css";
 import "./components/mobile-cinematic.css";
 
@@ -66,6 +68,12 @@ export default function Home() {
         <RetentionCurveSection />
         <BentoGrid />
         <HookTransformSection />
+        <CreatorAuthoritySection />
+        <FadeIn>
+          <div className="mx-auto max-w-[1320px] px-5 md:px-8">
+            <EmailCapture source="homepage_main" />
+          </div>
+        </FadeIn>
         <FinalCTA />
         <SiteFooter />
         <StickyCTA />

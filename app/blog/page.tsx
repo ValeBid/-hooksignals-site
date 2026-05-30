@@ -2,6 +2,7 @@ import Link from "next/link";
 import { blogPosts } from "../lib/seo-content";
 import SimpleNav from "../components/simple-nav";
 import SiteFooter from "../components/site-footer";
+import EmailCapture from "../components/email-capture";
 
 export const metadata = {
   title: "HookSignals Blog | Creator SEO, AI Hooks & YouTube Shorts Strategy",
@@ -28,7 +29,16 @@ export default function BlogPage() {
           </p>
         </div>
 
-        <section className="mt-16 grid gap-6 lg:grid-cols-3">
+        <div className="mt-10">
+          <EmailCapture
+            source="blog_listing"
+            compact
+            heading="Weekly Creator Intelligence"
+            subheading="New tools, hook examples and creator workflow updates delivered weekly."
+          />
+        </div>
+
+        <section className="mt-14 grid gap-6 lg:grid-cols-3">
           {blogPosts.map((post) => (
             <Link
               key={post.slug}

@@ -230,7 +230,7 @@ export default function HookTransformSection() {
                 <span className="text-2xl font-black text-white/35 line-through">{before}{suffix}</span>
                 <span className="text-2xl font-black text-cyan-300">{after}{suffix}</span>
               </div>
-              <p className="mt-1 text-xs font-black text-emerald-300">
+              <p className="mt-1 text-xs font-black text-cyan-300">
                 {invert ? `−${diff}` : `+${diff}`} {invert ? "lower risk" : "improvement"}
               </p>
             </div>

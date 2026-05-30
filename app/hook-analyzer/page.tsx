@@ -4,6 +4,7 @@ import { useState } from "react";
 import PremiumToolShell from "../components/premium-tool-shell";
 import RelatedTools from "../components/related-tools";
 import HookAnalysisResult from "../components/hook-analysis-result";
+import { trackEvent } from "../lib/analytics";
 
 type HookAnalysis = {
   hookScore: number;
@@ -110,6 +111,7 @@ export default function HookAnalyzerPage() {
     const trimmedHook = hook.trim();
     if (trimmedHook.length < 8) { setError("Enter a hook with at least 8 characters."); setResult(null); return; }
     setLoading(true); setError(""); setResult(null); setMode(null); setDiagnostic(null); setCreditsRemaining(null);
+    trackEvent({ name: "hook_analyze", props: { platform, has_niche: Boolean(niche) } });
     try {
       const response = await fetch("/api/ai/analyze-hook", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ hook: trimmedHook, platform, niche, audience }) });
       const data = (await response.json()) as AnalyzerResponse;

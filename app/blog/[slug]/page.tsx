@@ -3,6 +3,7 @@ import Link from "next/link";
 import { blogPosts } from "../../lib/seo-content";
 import SimpleNav from "../../components/simple-nav";
 import SiteFooter from "../../components/site-footer";
+import EmailCapture from "../../components/email-capture";
 import type { Metadata } from "next";
 
 type Props = { params: { slug: string } };
@@ -157,7 +158,14 @@ export default function BlogPostPage({ params }: Props) {
           ))}
         </div>
 
-        <div className="mt-16 rounded-[28px] border border-cyan-300/20 bg-cyan-300/[0.06] p-7">
+        <div className="mt-16">
+          <EmailCapture
+            source={`blog_${post.slug}`}
+            compact
+          />
+        </div>
+
+        <div className="mt-8 rounded-[28px] border border-cyan-300/20 bg-cyan-300/[0.06] p-7">
           <p className="text-sm font-black uppercase tracking-[0.14em] text-cyan-300">
             Test your hook before publishing
           </p>

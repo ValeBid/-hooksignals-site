@@ -2,6 +2,8 @@ import "./globals.css";
 import { Inter } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import GoogleAnalytics from "./components/google-analytics";
 import { siteConfig } from "./lib/seo";
 
 const inter = Inter({
@@ -71,6 +73,8 @@ export default function RootLayout({
         <body>
           {children}
           <Analytics />
+          <SpeedInsights />
+          <GoogleAnalytics />
         </body>
       </html>
     </ClerkProvider>

@@ -4,6 +4,7 @@ import { useState } from "react";
 import PremiumToolShell from "../components/premium-tool-shell";
 import RelatedTools from "../components/related-tools";
 import CopyButton from "../components/copy-button";
+import { trackEvent } from "../lib/analytics";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 type VideoAnalysis = {
@@ -435,6 +436,7 @@ export default function YoutubeVideoAnalyzerPage() {
     setError("");
     setResult(null);
     setLoadStep("fetching");
+    trackEvent({ name: "video_analyze", props: { source: "youtube_video_analyzer_page" } });
 
     try {
       // Show "analyzing" step after a short delay so the UX feels progressive
