@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
-import { runYouTubeScraper } from "../../../lib/apify";
-import { validateYouTubeUrl, extractVideoId, normalizeYouTubeData } from "../../../lib/youtube";
+import { validateYouTubeUrl, extractVideoId } from "../../../lib/youtube";
 import type { YouTubeVideoData } from "../../../lib/youtube";
+import { getYouTubeVideoProvider } from "../../../lib/providers";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -304,28 +304,25 @@ export async function POST(request: Request) {
     return NextResponse.json(payload);
   }
 
-  // Guard: APIFY_TOKEN required
-  const apifyToken = process.env.APIFY_TOKEN;
-  if (!apifyToken) {
-    return NextResponse.json(
-      {
-        error: "apify_token_missing",
-        message:
-          "APIFY_TOKEN is not configured. Add it to your environment variables to enable YouTube data fetching.",
-      },
-      { status: 503 }
-    );
-  }
-
-  const actorId =
-    process.env.APIFY_YOUTUBE_ACTOR_ID || "streamers/youtube-scraper";
-
-  // ── Fetch from Apify ────────────────────────────────────────────────────────
+  // ── Fetch via provider ──────────────────────────────────────────────────────
   let videoData: YouTubeVideoData;
   try {
-    const items = await runYouTubeScraper(rawUrl, apifyToken, actorId);
+    const provider = getYouTubeVideoProvider();
+    videoData = await provider.fetchVideo(rawUrl);
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
 
-    if (!items.length) {
+    if (msg.includes("provider_not_configured")) {
+      return NextResponse.json(
+        {
+          error: "provider_not_configured",
+          message:
+            "No YouTube provider is configured. Set APIFY_TOKEN to enable video data fetching.",
+        },
+        { status: 503 }
+      );
+    }
+    if (msg.includes("no_data")) {
       return NextResponse.json(
         {
           error: "no_data",
@@ -335,23 +332,15 @@ export async function POST(request: Request) {
         { status: 404 }
       );
     }
-
-    videoData = normalizeYouTubeData(items[0], rawUrl);
-  } catch (err) {
-    const msg = err instanceof Error ? err.message : String(err);
-
     if (msg.includes("apify_unauthorized")) {
       return NextResponse.json(
-        { error: "apify_unauthorized", message: "Apify authentication failed. Check your APIFY_TOKEN." },
+        { error: "provider_unauthorized", message: "Provider authentication failed. Check your APIFY_TOKEN." },
         { status: 503 }
       );
     }
     if (msg.includes("apify_actor_not_found")) {
       return NextResponse.json(
-        {
-          error: "apify_actor_not_found",
-          message: "Apify actor not found. Verify APIFY_YOUTUBE_ACTOR_ID is set to 'streamers/youtube-scraper'.",
-        },
+        { error: "provider_actor_not_found", message: "Provider actor not found. Check APIFY_YOUTUBE_ACTOR_ID." },
         { status: 503 }
       );
     }
@@ -361,7 +350,6 @@ export async function POST(request: Request) {
         { status: 504 }
       );
     }
-
     return NextResponse.json(
       { error: "scraper_failed", message: "Video data could not be fetched. Try again." },
       { status: 502 }

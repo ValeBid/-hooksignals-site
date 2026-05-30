@@ -41,6 +41,14 @@ const tools = [
     primary: true,
   },
   {
+    name: "YouTube Title Analyzer",
+    desc: "Score your title for CTR potential, clarity, curiosity gap and keyword placement.",
+    href: "/youtube-title-analyzer",
+    group: "Intelligence",
+    use: "Use before publishing to maximize click-through rate.",
+    primary: true,
+  },
+  {
     name: "Hook Improver",
     desc: "Rewrite weak hooks into sharper, more curiosity-driven versions.",
     href: "/hook-improver",

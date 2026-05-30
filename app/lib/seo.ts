@@ -85,7 +85,8 @@ const comparisonRoutes: SeoRoute[] = [
 
 // New static pages added in Phase C and later
 const additionalStaticRoutes: SeoRoute[] = [
-  { path: "/youtube-video-analyzer", title: "YouTube Video Analyzer | Real Data Hook Analysis | HookSignals", description: "Paste any YouTube URL to fetch real video data and get an AI analysis of hook, packaging and retention risk.", priority: 0.88, changeFrequency: "weekly", intent: "tool" },
+  { path: "/youtube-video-analyzer", title: "YouTube Video Analyzer | Real Data Hook Analysis | HookSignals",      description: "Paste any YouTube URL to fetch real video data and get an AI analysis of hook, packaging and retention risk.", priority: 0.88, changeFrequency: "weekly", intent: "tool" },
+  { path: "/youtube-title-analyzer", title: "YouTube Title Analyzer | CTR Potential & Clarity Score | HookSignals", description: "Score your YouTube title for CTR potential, clarity, curiosity gap and keyword placement before publishing.",       priority: 0.88, changeFrequency: "weekly", intent: "tool" },
 ];
 
 export const seoRoutes: SeoRoute[] = [
