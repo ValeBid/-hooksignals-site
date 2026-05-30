@@ -17,7 +17,7 @@ export default function Icon() {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          background: 'linear-gradient(135deg, #06131f 0%, #070a18 48%, #1b0b35 100%)',
+          background: 'linear-gradient(135deg, #06131f 0%, #070a18 50%, #1b0b35 100%)',
         }}
       >
         <div
@@ -26,25 +26,18 @@ export default function Icon() {
             height: 416,
             borderRadius: 108,
             display: 'flex',
-            alignItems: 'center',
+            alignItems: 'flex-end',
             justifyContent: 'center',
-            border: '10px solid rgba(34, 242, 255, 0.8)',
-            boxShadow: '0 0 48px rgba(34, 242, 255, 0.45), inset 0 0 42px rgba(168, 85, 247, 0.22)',
-            background: 'radial-gradient(circle at 28% 20%, rgba(34, 242, 255, 0.18), transparent 38%), rgba(3, 7, 18, 0.8)',
+            gap: '20px',
+            paddingBottom: '80px',
+            border: '10px solid rgba(34, 211, 238, 0.55)',
+            boxShadow: '0 0 60px rgba(34, 211, 238, 0.25)',
+            background: 'rgba(3, 7, 18, 0.88)',
           }}
         >
-          <div
-            style={{
-              fontSize: 148,
-              fontWeight: 900,
-              letterSpacing: -10,
-              color: '#eefbff',
-              textShadow: '0 0 22px rgba(34, 242, 255, 0.6)',
-              fontFamily: 'Arial, Helvetica, sans-serif',
-            }}
-          >
-            HS
-          </div>
+          <div style={{ width: 52, height: 90, background: '#22d3ee', borderRadius: '8px' }} />
+          <div style={{ width: 52, height: 175, background: '#22d3ee', borderRadius: '8px' }} />
+          <div style={{ width: 52, height: 260, background: '#22d3ee', borderRadius: '8px' }} />
         </div>
       </div>
     ),

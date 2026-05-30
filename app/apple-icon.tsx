@@ -24,26 +24,20 @@ export default function AppleIcon() {
           style={{
             width: 146,
             height: 146,
-            borderRadius: 40,
+            borderRadius: 38,
             display: 'flex',
-            alignItems: 'center',
+            alignItems: 'flex-end',
             justifyContent: 'center',
-            border: '5px solid rgba(34, 242, 255, 0.82)',
-            boxShadow: '0 0 24px rgba(34, 242, 255, 0.48), inset 0 0 18px rgba(168, 85, 247, 0.24)',
-            background: 'radial-gradient(circle at 30% 22%, rgba(34, 242, 255, 0.22), transparent 40%), rgba(3, 7, 18, 0.86)',
+            gap: '7px',
+            paddingBottom: '28px',
+            border: '5px solid rgba(34, 211, 238, 0.6)',
+            boxShadow: '0 0 24px rgba(34, 211, 238, 0.35)',
+            background: 'rgba(3, 7, 18, 0.88)',
           }}
         >
-          <div
-            style={{
-              fontSize: 56,
-              fontWeight: 900,
-              letterSpacing: -4,
-              color: '#eefbff',
-              fontFamily: 'Arial, Helvetica, sans-serif',
-            }}
-          >
-            HS
-          </div>
+          <div style={{ width: 18, height: 30, background: '#22d3ee', borderRadius: '3px' }} />
+          <div style={{ width: 18, height: 58, background: '#22d3ee', borderRadius: '3px' }} />
+          <div style={{ width: 18, height: 88, background: '#22d3ee', borderRadius: '3px' }} />
         </div>
       </div>
     ),

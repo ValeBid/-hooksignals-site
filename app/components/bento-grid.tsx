@@ -102,9 +102,9 @@ export default function BentoGrid() {
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_80%,rgba(168,85,247,.12),transparent_50%)]" />
           <div className="relative">
             <span className="inline-flex rounded-full border border-violet-300/20 bg-violet-300/[0.08] px-3 py-1 text-xs font-black uppercase tracking-[0.14em] text-violet-200">
-              Detect
+              Example
             </span>
-            <p className="mt-5 text-sm text-white/50">Outlier potential</p>
+            <p className="mt-5 text-sm text-white/50">Outlier potential — demo</p>
             <motion.p
               initial={{ opacity: 0, scale: 0.8 }}
               whileInView={{ opacity: 1, scale: 1 }}
@@ -115,7 +115,7 @@ export default function BentoGrid() {
               8.7<span className="text-4xl text-cyan-300/70">×</span>
             </motion.p>
             <p className="mt-3 text-sm leading-6 text-white/50">
-              Expected outlier multiplier detected in this hook and title pairing.
+              Example score from a real hook analysis. Your results will vary.
             </p>
           </div>
         </motion.div>

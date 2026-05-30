@@ -243,7 +243,7 @@ export async function POST(request: Request) {
     if (creditsError) return NextResponse.json({ success: false, error: 'credits_read_failed', detail: creditsError.message }, { status: 500 });
     // New user who signed in but hasn't visited /dashboard yet — bootstrap free trial on first use.
     if (!credits) {
-      await supabaseAdmin.from('credits').insert({ clerk_user_id: user.id, plan: 'free', credits_total: 5, credits_used: 0, credits_remaining: 5 });
+      await supabaseAdmin.from('credits').insert({ clerk_user_id: user.id, plan: 'free', credits_total: 15, credits_used: 0, credits_remaining: 15 });
       const { data: seeded } = await supabaseAdmin.from('credits').select('*').eq('clerk_user_id', user.id).limit(1).maybeSingle();
       credits = seeded;
     }

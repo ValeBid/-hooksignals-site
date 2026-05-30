@@ -87,9 +87,9 @@ export async function bootstrapUserProfile(input: {
     await getSupabaseAdminClient().from('credits').insert({
       clerk_user_id: input.clerkUserId,
       plan: 'free',
-      credits_total: 5,
+      credits_total: 15,
       credits_used: 0,
-      credits_remaining: 5,
+      credits_remaining: 15,
     });
   }
 }

@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useState } from "react";
+import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import SiteFooter from "./site-footer";
 import StickyCTA from "./sticky-cta";
 import type { ReactNode } from "react";
@@ -58,12 +59,11 @@ export default function PremiumToolShell({
           >
             <div className="flex items-center justify-between px-4 py-3 md:px-6">
               <a href="/" className="flex items-center gap-3" aria-label="HookSignals home">
-                <div className="relative flex h-10 w-10 items-center justify-center rounded-2xl border border-cyan-300/25 bg-gradient-to-br from-cyan-300/20 via-sky-400/10 to-violet-400/20 shadow-lg shadow-cyan-500/10">
-                  <svg width="22" height="22" viewBox="0 0 64 64" fill="none" aria-hidden="true">
-                    <path d="M18 20v24M18 32h28M46 20v24" stroke="#22d3ee" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round"/>
-                    <circle cx="50" cy="15" r="4" fill="#22d3ee"/>
-                  </svg>
-                </div>
+                <svg width="30" height="30" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+                  <rect x="6" y="44" width="14" height="14" rx="4" fill="#22d3ee"/>
+                  <rect x="25" y="28" width="14" height="30" rx="4" fill="#22d3ee"/>
+                  <rect x="44" y="8" width="14" height="50" rx="4" fill="#22d3ee"/>
+                </svg>
                 <div>
                   <span className="block text-lg font-black tracking-tight">HookSignals</span>
                   <span className="hidden text-xs uppercase tracking-[0.16em] text-cyan-300 sm:block">
@@ -88,12 +88,17 @@ export default function PremiumToolShell({
               </div>
 
               <div className="flex items-center gap-2">
-                <a
-                  href={secondaryHref}
-                  className="hidden rounded-2xl border border-white/10 bg-white/[0.035] px-4 py-2 text-sm font-semibold text-white/80 transition hover:bg-white/[0.07] sm:inline-flex"
-                >
-                  {secondaryLabel}
-                </a>
+                <SignedOut>
+                  <a href="/sign-in" className="hidden rounded-2xl border border-white/10 bg-white/[0.035] px-4 py-2 text-sm font-semibold text-white/80 transition hover:bg-white/[0.07] sm:inline-flex">
+                    Sign in
+                  </a>
+                </SignedOut>
+                <SignedIn>
+                  <a href="/dashboard" className="hidden rounded-2xl border border-white/10 bg-white/[0.035] px-4 py-2 text-sm font-semibold text-white/80 transition hover:bg-white/[0.07] sm:inline-flex">
+                    Dashboard
+                  </a>
+                  <UserButton afterSignOutUrl="/" />
+                </SignedIn>
                 <a
                   href={primaryHref}
                   className="rounded-2xl bg-gradient-to-r from-cyan-300 via-sky-400 to-violet-400 px-4 py-2 text-sm font-black text-black shadow-[0_16px_34px_rgba(34,211,238,.20)] transition hover:scale-[1.02] md:px-5"
@@ -146,13 +151,16 @@ export default function PremiumToolShell({
                   >
                     Dashboard
                   </a>
-                  <a
-                    href="/sign-in"
-                    className="mt-1 rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-center text-sm font-bold text-white/70 transition hover:bg-white/[0.07]"
-                    onClick={() => setMobileOpen(false)}
-                  >
-                    Sign in
-                  </a>
+                  <SignedOut>
+                    <a href="/sign-in" className="mt-1 rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-center text-sm font-bold text-white/70 transition hover:bg-white/[0.07]" onClick={() => setMobileOpen(false)}>
+                      Sign in
+                    </a>
+                  </SignedOut>
+                  <SignedIn>
+                    <a href="/dashboard" className="mt-1 rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-center text-sm font-bold text-white/70 transition hover:bg-white/[0.07]" onClick={() => setMobileOpen(false)}>
+                      My Dashboard
+                    </a>
+                  </SignedIn>
                 </div>
               </div>
             )}
