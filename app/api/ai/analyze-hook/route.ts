@@ -239,8 +239,14 @@ export async function POST(request: Request) {
     const audience = String(body?.audience || '').trim().slice(0, 120);
     if (hook.length < 8) return NextResponse.json({ success: false, error: 'missing_hook' }, { status: 400 });
     const supabaseAdmin = getSupabaseAdmin();
-    const { data: credits, error: creditsError } = await supabaseAdmin.from('credits').select('*').eq('clerk_user_id', user.id).limit(1).maybeSingle();
+    let { data: credits, error: creditsError } = await supabaseAdmin.from('credits').select('*').eq('clerk_user_id', user.id).limit(1).maybeSingle();
     if (creditsError) return NextResponse.json({ success: false, error: 'credits_read_failed', detail: creditsError.message }, { status: 500 });
+    // New user who signed in but hasn't visited /dashboard yet — bootstrap free trial on first use.
+    if (!credits) {
+      await supabaseAdmin.from('credits').insert({ clerk_user_id: user.id, plan: 'free', credits_total: 5, credits_used: 0, credits_remaining: 5 });
+      const { data: seeded } = await supabaseAdmin.from('credits').select('*').eq('clerk_user_id', user.id).limit(1).maybeSingle();
+      credits = seeded;
+    }
     if (!credits || Number(credits.credits_remaining || 0) < CREDIT_COST) return NextResponse.json({ success: false, error: 'insufficient_credits' }, { status: 402 });
     // Free plan users can use their 5 starter credits — this is the trial.
     // The credit balance check above is the sole gate; plan name is not a gate.
