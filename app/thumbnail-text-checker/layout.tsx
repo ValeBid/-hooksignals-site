@@ -1,7 +1,7 @@
 import ToolSEOContent from "../components/tool-seo-content";
 
 export const metadata = {
-  title: "Thumbnail Text Checker — Improve CTR Readability | HookSignals",
+  title: "Thumbnail Text Checker — Improve CTR Readability",
   description: "Check whether your thumbnail text is short, readable and built for mobile click intent. Score your thumbnail copy before publishing.",
   alternates: { canonical: "https://hooksignals.com/thumbnail-text-checker" },
   openGraph: {

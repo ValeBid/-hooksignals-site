@@ -16,7 +16,7 @@ export function generateMetadata({ params }: Props): Metadata {
   const post = blogPosts.find((p) => p.slug === params.slug);
   if (!post) return {};
   return {
-    title: `${post.title} | HookSignals Blog`,
+    title: { absolute: `${post.title} | HookSignals Blog` },
     description: post.description,
     alternates: { canonical: `https://hooksignals.com/blog/${post.slug}` },
     openGraph: {

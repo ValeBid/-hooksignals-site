@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation';
 import { getDashboardDataForUser } from '../lib/dashboard-data';
 
 export const metadata = {
-  title: 'Billing | HookSignals',
+  title: 'Billing',
   description: 'Manage your HookSignals billing and subscription.',
 };
 

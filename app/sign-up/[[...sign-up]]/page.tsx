@@ -1,8 +1,9 @@
 import { SignUp } from "@clerk/nextjs";
+import type { Metadata } from "next";
 
-export const metadata = {
-  title: "Sign up | HookSignals",
-  description: "Create your HookSignals creator workspace.",
+export const metadata: Metadata = {
+  title: "Sign up",
+  description: "Create your HookSignals creator workspace. Free to start — no card required.",
 };
 
 export default function SignUpPage() {

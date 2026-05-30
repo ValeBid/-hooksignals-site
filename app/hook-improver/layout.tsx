@@ -1,7 +1,7 @@
 import ToolSEOContent from "../components/tool-seo-content";
 
 export const metadata = {
-  title: "Hook Improver — Rewrite Weak Video Hooks | HookSignals",
+  title: "Hook Improver — Rewrite Weak Video Hooks",
   description: "Turn weak hooks into specific, curiosity-driven opening lines. Four rewrite angles for YouTube Shorts, TikTok and Reels in seconds.",
   alternates: { canonical: "https://hooksignals.com/hook-improver" },
   openGraph: {

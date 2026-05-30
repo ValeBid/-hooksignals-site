@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation';
 import { bootstrapUserProfile, getDashboardDataForUser } from '../lib/dashboard-data';
 
 export const metadata = {
-  title: 'Dashboard | HookSignals',
+  title: 'Dashboard',
   description: 'Manage HookSignals creator credits, workflows and subscription status.',
 };
 

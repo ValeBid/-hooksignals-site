@@ -77,7 +77,7 @@ export function generateMetadata({ params }: { params: { slug: string } }) {
   const page = examplePages[params.slug];
   if (!page) return {};
   return {
-    title: `${page.title} | HookSignals`,
+    title: page.title,
     description: `Browse ${page.niche} hook examples with scores, patterns and pre-publish lessons for ${page.audience}.`,
     alternates: { canonical: `/hook-examples/${params.slug}` },
   };

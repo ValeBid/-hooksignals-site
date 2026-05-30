@@ -1,7 +1,7 @@
 import ToolSEOContent from "../components/tool-seo-content";
 
 export const metadata = {
-  title: "Shorts Script Generator — AI Short-Form Scripts | HookSignals",
+  title: "Shorts Script Generator — AI Short-Form Scripts",
   description: "Generate retention-focused Shorts scripts with a strong hook, tight pacing and a clear payoff. Built for YouTube Shorts, TikTok and Reels.",
   alternates: { canonical: "https://hooksignals.com/shorts-script-generator" },
   openGraph: {
