@@ -1,6 +1,6 @@
 import { headers } from 'next/headers';
 import { NextResponse } from 'next/server';
-import { supabaseAdmin } from '../../../lib/supabase';
+import { getSupabaseAdminClient } from '../../../lib/supabase';
 import { verifyPaddleSignature } from '../../../lib/paddle';
 
 const creditsByPlan: Record<string, number> = {
@@ -67,7 +67,7 @@ export async function POST(request: Request) {
           return NextResponse.json({ error: 'Unknown Paddle price id' }, { status: 400 });
         }
 
-        const { error: subscriptionError } = await supabaseAdmin.from('subscriptions').upsert(
+        const { error: subscriptionError } = await getSupabaseAdminClient().from('subscriptions').upsert(
           {
             clerk_user_id: clerkUserId,
             paddle_customer_id: customerId,
@@ -83,7 +83,7 @@ export async function POST(request: Request) {
           return NextResponse.json({ error: 'Subscription sync failed' }, { status: 500 });
         }
 
-        const { error: creditsError } = await supabaseAdmin.from('credits').upsert(
+        const { error: creditsError } = await getSupabaseAdminClient().from('credits').upsert(
           {
             clerk_user_id: clerkUserId,
             plan,
@@ -110,8 +110,8 @@ export async function POST(request: Request) {
           return NextResponse.json({ error: 'Missing Clerk user mapping' }, { status: 400 });
         }
 
-        await supabaseAdmin.from('subscriptions').update({ status: 'canceled' }).eq('clerk_user_id', clerkUserId);
-        await supabaseAdmin.from('credits').update({ plan: 'free', credits_total: 5, credits_used: 0, credits_remaining: 5 }).eq('clerk_user_id', clerkUserId);
+        await getSupabaseAdminClient().from('subscriptions').update({ status: 'canceled' }).eq('clerk_user_id', clerkUserId);
+        await getSupabaseAdminClient().from('credits').update({ plan: 'free', credits_total: 5, credits_used: 0, credits_remaining: 5 }).eq('clerk_user_id', clerkUserId);
 
         break;
       }

@@ -1,7 +1,8 @@
 import { notFound } from 'next/navigation';
-import { supabase } from '../../lib/supabase';
+import { getSupabaseClient } from '../../lib/supabase';
 
 export async function generateMetadata({ params }: { params: { id: string } }) {
+  const supabase = getSupabaseClient();
   const { data } = await supabase
     .from('generations')
     .select('input, tool_name')
@@ -15,6 +16,7 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
 }
 
 export default async function SharePage({ params }: { params: { id: string } }) {
+  const supabase = getSupabaseClient();
   const { data } = await supabase
     .from('generations')
     .select('*')

@@ -1,4 +1,4 @@
-import { supabase, supabaseAdmin } from './supabase';
+import { getSupabaseAdminClient } from './supabase';
 
 function filterGenerations(generations: any[], matchers: string[]) {
   return generations.filter((item) => {
@@ -9,8 +9,8 @@ function filterGenerations(generations: any[], matchers: string[]) {
 
 export async function getDashboardPreviewData() {
   const [{ data: subscriptions }, { data: credits }] = await Promise.all([
-    supabaseAdmin.from('subscriptions').select('*').limit(1),
-    supabaseAdmin.from('credits').select('*').limit(1),
+    getSupabaseAdminClient().from('subscriptions').select('*').limit(1),
+    getSupabaseAdminClient().from('credits').select('*').limit(1),
   ]);
 
   return {
@@ -21,9 +21,9 @@ export async function getDashboardPreviewData() {
 
 export async function getDashboardDataForUser(clerkUserId: string) {
   const [{ data: subscriptions }, { data: credits }, { data: generations }] = await Promise.all([
-    supabaseAdmin.from('subscriptions').select('*').eq('clerk_user_id', clerkUserId).limit(1),
-    supabaseAdmin.from('credits').select('*').eq('clerk_user_id', clerkUserId).limit(1),
-    supabaseAdmin.from('generations').select('*').eq('clerk_user_id', clerkUserId).order('created_at', { ascending: false }).limit(30),
+    getSupabaseAdminClient().from('subscriptions').select('*').eq('clerk_user_id', clerkUserId).limit(1),
+    getSupabaseAdminClient().from('credits').select('*').eq('clerk_user_id', clerkUserId).limit(1),
+    getSupabaseAdminClient().from('generations').select('*').eq('clerk_user_id', clerkUserId).order('created_at', { ascending: false }).limit(30),
   ]);
 
   const safeGenerations = generations || [];
@@ -65,7 +65,7 @@ export async function bootstrapUserProfile(input: {
   fullName?: string | null;
   avatarUrl?: string | null;
 }) {
-  await supabaseAdmin.from('profiles').upsert(
+  await getSupabaseAdminClient().from('profiles').upsert(
     {
       clerk_user_id: input.clerkUserId,
       email: input.email || null,
@@ -77,14 +77,14 @@ export async function bootstrapUserProfile(input: {
     }
   );
 
-  const { data: existingCredits } = await supabaseAdmin
+  const { data: existingCredits } = await getSupabaseAdminClient()
     .from('credits')
     .select('id')
     .eq('clerk_user_id', input.clerkUserId)
     .limit(1);
 
   if (!existingCredits?.length) {
-    await supabaseAdmin.from('credits').insert({
+    await getSupabaseAdminClient().from('credits').insert({
       clerk_user_id: input.clerkUserId,
       plan: 'free',
       credits_total: 5,

@@ -14,7 +14,7 @@ export default function CreatorAnalysisCards({ title = "Creator insight layer", 
     <section className="mt-6 rounded-[28px] border border-white/10 bg-black/20 p-5 md:p-7">
       <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="text-sm font-semibold text-cyan-300">AI reasoning</p>
+          <p className="text-sm font-semibold text-cyan-300">Creator insight</p>
           <h2 className="mt-2 text-2xl font-black tracking-tight md:text-3xl">{title}</h2>
         </div>
         <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-xs font-bold uppercase tracking-[0.14em] text-white/45">Creator OS</span>
