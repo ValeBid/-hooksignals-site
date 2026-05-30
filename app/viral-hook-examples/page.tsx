@@ -1,172 +1,270 @@
-import FAQBlock from "../components/faq-block";
+import PremiumToolShell from "../components/premium-tool-shell";
+import { FadeIn, StaggerContainer, StaggerItem } from "../components/motion";
+import RelatedTools from "../components/related-tools";
+
 export const metadata = {
-  title: "Viral Hook Examples | Better YouTube & TikTok Hooks | HookSignals",
+  title: "Viral Hook Examples | YouTube & TikTok Hook Patterns | HookSignals",
   description:
-    "Explore viral hook examples for YouTube, TikTok and Shorts creators. Learn what makes viewers keep watching.",
+    "Study scored hook examples across 6 pattern types — curiosity gap, problem-first, test/proof, warning, contrast and authority. All labeled Example Score.",
+  alternates: { canonical: "https://hooksignals.com/viral-hook-examples" },
 };
 
-const examples = [
+// ─── Example data — all scores labeled "Example Score" ────────────────────
+type HookExample = {
+  hook: string;
+  pattern: string;
+  patternType: string;
+  score: number;
+  why: string;
+};
+
+const hookExamples: HookExample[] = [
   {
-    hook: "If your Shorts die after 300 views, this is probably why.",
-    type: "Problem + Curiosity",
+    hook: "If your Shorts die after 300 views, this is the exact reason why.",
+    pattern: "Problem + Curiosity",
+    patternType: "curiosity",
+    score: 79,
+    why: "Names the specific failure point (300 views), opens a direct question, viewer already knows the pain.",
   },
   {
-    hook: "I tested 50 viral hooks. These 3 worked best.",
-    type: "Experiment",
+    hook: "I uploaded 100 Shorts and only 3 got over 50k views — this is what they had in common.",
+    pattern: "Test + Proof",
+    patternType: "proof",
+    score: 88,
+    why: "Scale (100 uploads), measurable result (50k views), specific ratio creates credibility.",
   },
   {
-    hook: "Most creators are losing views because of this mistake.",
-    type: "Warning",
+    hook: "Most creators write their hooks last. That is why they underperform.",
+    pattern: "Warning + Contrast",
+    patternType: "warning",
+    score: 76,
+    why: "Challenges a common behavior, implies the viewer might be making the same mistake.",
   },
   {
-    hook: "This simple change doubled my audience retention.",
-    type: "Transformation",
+    hook: "The retention mistake I made for 6 months before one change fixed it.",
+    pattern: "Personal Proof + Timeline",
+    patternType: "proof",
+    score: 81,
+    why: "Timeframe (6 months) adds credibility. The unresolved 'one change' creates a curiosity loop.",
   },
   {
-    hook: "Nobody talks about this YouTube growth strategy.",
-    type: "Hidden Insight",
+    hook: "Stop opening your Shorts with your channel name.",
+    pattern: "Warning + Direct",
+    patternType: "warning",
+    score: 72,
+    why: "Immediate, directive, specific behavior called out — viewer checks their own habit instantly.",
+  },
+  {
+    hook: "I changed one line in my Shorts intro and first-30s retention improved by 26 points.",
+    pattern: "Specific Test + Metric",
+    patternType: "proof",
+    score: 84,
+    why: "One action, one metric, one outcome. No vagueness — viewer knows exactly what to expect.",
+  },
+  {
+    hook: "Why do some creators plateau at 1k subscribers while posting the same content as those at 100k?",
+    pattern: "Curiosity Gap + Question",
+    patternType: "curiosity",
+    score: 77,
+    why: "Establishes a contrast (1k vs 100k), raises a question the viewer may already be asking.",
+  },
+  {
+    hook: "Nobody in the creator space talks about this retention signal.",
+    pattern: "Hidden Insight",
+    patternType: "curiosity",
+    score: 68,
+    why: "Works on exclusivity. Lower score because 'nobody talks about' is overused without specificity.",
+  },
+  {
+    hook: "I tested every hook pattern for 90 days. One type won by a massive margin.",
+    pattern: "Test + Cliffhanger",
+    patternType: "proof",
+    score: 86,
+    why: "Duration (90 days) creates credibility, 'one type' opens a loop, viewer wants to know which one.",
+  },
+  {
+    hook: "Your viewer made their decision before your first sentence ended.",
+    pattern: "Insight + Immediacy",
+    patternType: "contrast",
+    score: 74,
+    why: "Reframes the creator's assumption. The viewer now wants to know what to change in their first sentence.",
   },
 ];
 
+const patterns = [
+  {
+    type: "curiosity",
+    name: "Curiosity Gap",
+    desc: "Opens an unanswered question. Works when the payoff feels worth knowing.",
+    example: "Why do creators with better content sometimes get fewer views?",
+    color: "border-violet-300/20 bg-violet-300/[0.05]",
+    label: "text-violet-200",
+  },
+  {
+    type: "proof",
+    name: "Test + Proof",
+    desc: "Leads with a real experiment, result, or specific change. Credibility signal.",
+    example: "I tested 50 hook formats and one type outperformed every other.",
+    color: "border-cyan-300/20 bg-cyan-300/[0.05]",
+    label: "text-cyan-200",
+  },
+  {
+    type: "warning",
+    name: "Warning Hook",
+    desc: "Calls out a mistake the viewer might be making. High urgency, fast attention.",
+    example: "Stop opening your videos with a greeting. Here is why.",
+    color: "border-amber-300/20 bg-amber-300/[0.05]",
+    label: "text-amber-200",
+  },
+  {
+    type: "contrast",
+    name: "Contrast",
+    desc: "Sets up two opposing states. Creates tension the viewer wants resolved.",
+    example: "Same content, same posting schedule — completely different results.",
+    color: "border-sky-300/20 bg-sky-300/[0.05]",
+    label: "text-sky-200",
+  },
+  {
+    type: "pain",
+    name: "Problem-First",
+    desc: "Opens with the viewer's pain before context or setup. Immediate relevance.",
+    example: "If your Shorts stop growing after the first week, this is the reason.",
+    color: "border-rose-300/20 bg-rose-300/[0.05]",
+    label: "text-rose-200",
+  },
+  {
+    type: "insight",
+    name: "Reframe",
+    desc: "Challenges a belief the viewer holds. Creates instant cognitive engagement.",
+    example: "A weak hook does not hurt the video. It cancels it before it starts.",
+    color: "border-emerald-300/20 bg-emerald-300/[0.05]",
+    label: "text-emerald-200",
+  },
+];
+
+function ScorePill({ score }: { score: number }) {
+  const color = score >= 80 ? "text-cyan-300 border-cyan-300/25 bg-cyan-300/[0.09]"
+    : score >= 70 ? "text-sky-300 border-sky-300/25 bg-sky-300/[0.09]"
+    : "text-white/50 border-white/15 bg-white/[0.04]";
+  return (
+    <span className={`rounded-full border px-2.5 py-0.5 text-xs font-black ${color}`}>
+      {score}
+    </span>
+  );
+}
+
 export default function ViralHookExamplesPage() {
   return (
-    <main className="min-h-screen bg-[#070708] text-white">
-      <section className="mx-auto max-w-6xl px-6 py-8">
-        <nav className="mb-10 flex items-center justify-between">
-          <a href="/" className="text-sm text-white/50">
-            ← HookSignals
-          </a>
-
-          <a
-            href="/hook-analyzer"
-            className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-white/70"
-          >
-            Analyze Hooks
-          </a>
-        </nav>
-
-        <section className="rounded-[36px] border border-white/10 bg-gradient-to-b from-white/[0.07] to-white/[0.025] p-7 md:p-12">
-          <p className="mb-4 text-sm font-semibold text-emerald-300">
-            Creator Inspiration Library
+    <PremiumToolShell
+      badge="Creator hook library"
+      title="Viral Hook Examples"
+      description="Study scored hook examples across 6 pattern types. Every score is labeled Example Score — not real user data. Use these as frameworks, not formulas."
+      primaryHref="/hook-analyzer"
+      primaryLabel="Analyze Your Hook"
+      secondaryHref="/tools"
+      secondaryLabel="All Tools"
+    >
+      {/* Pattern guide */}
+      <FadeIn>
+        <section className="rounded-[28px] border border-white/10 bg-white/[0.025] p-5 md:p-7">
+          <p className="mb-5 text-xs font-black uppercase tracking-[0.14em] text-cyan-300">
+            6 hook pattern types
           </p>
-
-          <h1 className="max-w-5xl text-5xl font-semibold tracking-tight md:text-7xl">
-            Viral Hook Examples
-          </h1>
-
-          <p className="mt-6 max-w-3xl text-lg leading-8 text-white/60">
-            Study real hook structures used across YouTube, TikTok and Shorts.
-            Learn what creates curiosity, clarity and retention in the first
-            seconds of a video.
-          </p>
-
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <a
-              href="/hook-analyzer"
-              className="rounded-2xl bg-emerald-400 px-7 py-4 text-center font-semibold text-black"
-            >
-              Analyze Your Hook
-            </a>
-
-            <a
-              href="/youtube-hook-generator"
-              className="rounded-2xl border border-white/10 bg-white/5 px-7 py-4 text-center font-semibold text-white"
-            >
-              Generate Hook Ideas
-            </a>
-          </div>
-        </section>
-
-        <section className="mt-14">
-          <p className="mb-3 text-sm font-semibold text-emerald-300">
-            Hook collection
-          </p>
-
-          <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">
-            Strong hooks create an instant reason to continue watching.
-          </h2>
-
-          <div className="mt-8 grid gap-4">
-            {examples.map((example) => (
-              <div
-                key={example.hook}
-                className="rounded-3xl border border-white/10 bg-white/[0.035] p-6"
-              >
-                <div className="mb-4 inline-flex rounded-full border border-white/10 bg-black/30 px-3 py-1 text-xs text-white/50">
-                  {example.type}
-                </div>
-
-                <p className="text-xl leading-8 text-white/75">
-                  “{example.hook}”
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {patterns.map((p) => (
+              <div key={p.type} className={`rounded-[22px] border p-5 ${p.color}`}>
+                <p className={`text-xs font-black uppercase tracking-[0.14em] ${p.label}`}>
+                  {p.name}
+                </p>
+                <p className="mt-2 text-sm leading-6 text-white/62">{p.desc}</p>
+                <p className="mt-3 rounded-xl border border-white/10 bg-black/22 px-3 py-2 text-xs leading-5 text-white/45">
+                  &ldquo;{p.example}&rdquo;
                 </p>
               </div>
             ))}
           </div>
         </section>
+      </FadeIn>
 
-        <section className="mt-14 grid gap-4 md:grid-cols-3">
-          {[
-            [
-              "Curiosity",
-              "The viewer should feel an information gap immediately.",
-            ],
-            [
-              "Specificity",
-              "Generic hooks perform worse than precise promises.",
-            ],
-            [
-              "Retention",
-              "The hook should naturally lead into the next sentence.",
-            ],
-          ].map(([title, desc]) => (
-            <div
-              key={title}
-              className="rounded-3xl border border-white/10 bg-white/[0.035] p-6"
-            >
-              <h2 className="text-xl font-semibold">{title}</h2>
-              <p className="mt-3 leading-7 text-white/50">{desc}</p>
-            </div>
-          ))}
-        </section>
-
-        <section className="mt-14 rounded-[32px] border border-emerald-300/20 bg-emerald-300/[0.06] p-7 md:p-10">
-          <h2 className="text-3xl font-semibold">
-            Test your own hook before publishing.
-          </h2>
-
-          <p className="mt-4 max-w-3xl leading-8 text-white/60">
-            Do not guess if your opening line is strong. Use HookSignals to
-            analyze clarity, curiosity and retention before your video goes
-            live.
+      {/* Hook examples grid */}
+      <div className="mt-6">
+        <div className="mb-4 flex items-center justify-between">
+          <p className="text-xs font-black uppercase tracking-[0.14em] text-white/38">
+            Scored examples — Example Score, not real user data
           </p>
+          <span className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-xs text-white/35">
+            {hookExamples.length} examples
+          </span>
+        </div>
 
-          <a
-            href="/hook-analyzer"
-            className="mt-7 inline-block rounded-2xl bg-emerald-400 px-7 py-4 font-semibold text-black"
-          >
-            Open Hook Analyzer
-          </a>
+        <StaggerContainer className="grid gap-3 md:grid-cols-2">
+          {hookExamples.map((ex) => (
+            <StaggerItem key={ex.hook}>
+              <div className="rounded-[24px] border border-white/10 bg-black/24 p-5 transition hover:border-white/18">
+                <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+                  <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-0.5 text-xs text-white/45">
+                    {ex.pattern}
+                  </span>
+                  <div className="flex items-center gap-1.5 text-xs text-white/35">
+                    Example Score: <ScorePill score={ex.score} />
+                  </div>
+                </div>
+                <p className="leading-7 text-white/80">&ldquo;{ex.hook}&rdquo;</p>
+                <p className="mt-3 text-xs leading-5 text-white/42">{ex.why}</p>
+              </div>
+            </StaggerItem>
+          ))}
+        </StaggerContainer>
+      </div>
+
+      {/* What makes a weak hook */}
+      <FadeIn>
+        <section className="mt-8 rounded-[28px] border border-white/10 bg-black/22 p-5 md:p-7">
+          <p className="mb-5 text-xs font-black uppercase tracking-[0.14em] text-white/38">
+            Weak hook patterns to avoid
+          </p>
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {[
+              { label: "\"This changed everything\"", problem: "No subject, no payoff, no tension." },
+              { label: "\"You need to see this\"", problem: "Viewer has no idea what to expect." },
+              { label: "\"Welcome back to the channel\"", problem: "Uses the opening to greet, not to hook." },
+              { label: "\"Today I want to talk about...\"", problem: "Slow setup burns the first two seconds." },
+              { label: "\"This is crazy\"", problem: "Generic emotion without a specific subject." },
+              { label: "\"Trust me on this one\"", problem: "Promises credibility without earning it." },
+            ].map(({ label, problem }) => (
+              <div key={label} className="rounded-[20px] border border-red-400/12 bg-red-400/[0.035] p-4">
+                <p className="text-sm font-black text-white/70">{label}</p>
+                <p className="mt-1.5 text-xs leading-5 text-white/40">{problem}</p>
+              </div>
+            ))}
+          </div>
         </section>
-        <FAQBlock
-          items={[
-            {
-              question: "Why do some hooks go viral?",
-              answer:
-                "Viral hooks usually create immediate curiosity, tension or emotional contrast. They make viewers feel that the next seconds are important.",
-            },
-            {
-              question: "Should I copy viral hooks?",
-              answer:
-                "You should study structures and patterns instead of copying exact wording. Strong hooks often follow repeatable psychological principles.",
-            },
-            {
-              question: "What is the best hook style for Shorts?",
-              answer:
-                "Shorts hooks perform best when they are fast, specific and emotionally clear within the first seconds of the video.",
-            },
-          ]}
-        />
-      </section>
-    </main>
+      </FadeIn>
+
+      {/* Principles */}
+      <FadeIn delay={0.1}>
+        <section className="mt-6 rounded-[28px] border border-cyan-300/18 bg-cyan-300/[0.04] p-5 md:p-7">
+          <p className="mb-5 text-xs font-black uppercase tracking-[0.14em] text-cyan-300">
+            Hook quality signals
+          </p>
+          <div className="grid gap-3 sm:grid-cols-3">
+            {[
+              ["Specificity", "The viewer knows the subject, scale or context before the first sentence ends."],
+              ["Tension", "Something is unresolved — a mistake, a contrast, a result not yet revealed."],
+              ["Payoff clarity", "The viewer can picture the value they get from watching."],
+            ].map(([title, desc]) => (
+              <div key={title as string} className="rounded-[20px] border border-white/10 bg-black/24 p-4">
+                <p className="font-black text-white">{title}</p>
+                <p className="mt-2 text-sm leading-6 text-white/52">{desc}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      </FadeIn>
+
+      <div className="mt-8">
+        <RelatedTools />
+      </div>
+    </PremiumToolShell>
   );
 }

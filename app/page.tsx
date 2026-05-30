@@ -5,6 +5,7 @@ import PredictorHero from "./components/predictor-hero";
 import RetentionCurveSection from "./components/retention-curve";
 import BentoGrid from "./components/bento-grid";
 import { FadeIn } from "./components/motion";
+import HookTransformSection from "./components/hook-transform-section";
 import "./components/premium-motion.css";
 import "./components/mobile-cinematic.css";
 
@@ -64,6 +65,7 @@ export default function Home() {
         <PredictorHero />
         <RetentionCurveSection />
         <BentoGrid />
+        <HookTransformSection />
         <FinalCTA />
         <SiteFooter />
         <StickyCTA />

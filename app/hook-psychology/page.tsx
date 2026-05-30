@@ -1,172 +1,178 @@
+import PremiumToolShell from "../components/premium-tool-shell";
+import { FadeIn, StaggerContainer, StaggerItem } from "../components/motion";
 import RelatedTools from "../components/related-tools";
-import SiteFooter from "../components/site-footer";
 
 export const metadata = {
   title: "Hook Psychology for YouTube Shorts and TikTok | HookSignals",
   description:
-    "Learn why strong hooks work, how creators stop the scroll, and how viewer psychology affects retention on Shorts, TikTok and YouTube.",
+    "Learn why strong hooks work, how viewer psychology drives retention in the first seconds, and how to apply attention principles before publishing.",
+  alternates: { canonical: "https://hooksignals.com/hook-psychology" },
 };
 
 const principles = [
   {
     title: "Curiosity Gap",
-    desc: "Strong hooks create an unanswered question in the viewer’s mind. The brain naturally wants closure.",
+    icon: "◎",
+    color: "border-violet-300/20 bg-violet-300/[0.06]",
+    label: "text-violet-200",
+    desc: "A strong hook opens a gap between what the viewer knows and what they want to know. The brain experiences this gap as mild discomfort — and completion as relief. The goal is not to trick, but to make the payoff feel genuinely worth the next 30 seconds.",
+    signals: ["Unanswered question", "Missing information", "Implied consequence"],
   },
   {
-    title: "Specificity",
-    desc: "Vague hooks feel generic. Specific hooks create trust and immediate context.",
+    title: "Pattern Interrupt",
+    icon: "⌁",
+    color: "border-cyan-300/20 bg-cyan-300/[0.06]",
+    label: "text-cyan-200",
+    desc: "Viewers scroll in a semi-automated state. The hook has to disrupt that state before the viewer realizes they are still watching. Anything that breaks the visual, auditory or conceptual expectation forces re-engagement.",
+    signals: ["Unexpected statement", "Visual disruption", "Counter-intuitive claim"],
   },
   {
-    title: "Tension",
-    desc: "The best hooks create a subtle emotional tension that makes the next sentence feel necessary.",
+    title: "Relevance Signal",
+    icon: "◈",
+    color: "border-sky-300/20 bg-sky-300/[0.06]",
+    label: "text-sky-200",
+    desc: "Viewers run a subconscious relevance check in the first seconds: is this for me? Hooks that name the audience, situation or problem explicitly pass this check faster. Vague hooks fail it silently.",
+    signals: ["Named audience type", "Specific situation", "Recognizable pain point"],
   },
   {
-    title: "Fast Clarity",
-    desc: "Viewers should understand the topic immediately without needing extra effort.",
+    title: "Payoff Promise",
+    icon: "◐",
+    color: "border-amber-300/20 bg-amber-300/[0.06]",
+    label: "text-amber-200",
+    desc: "The viewer needs a reason to invest the next 15 to 90 seconds. The hook creates that reason. Without a payoff promise — a result, a revelation, a mistake to avoid — there is nothing to stay for.",
+    signals: ["Stated outcome", "Implied result", "Problem resolution"],
   },
+];
+
+const weakPatterns = [
+  { label: "Slow setup", example: "So today I wanted to talk about something...", problem: "Viewer has left before the topic appears." },
+  { label: "Generic emotion", example: "This is absolutely insane.", problem: "No subject. Emotion without context loses fast." },
+  { label: "Channel greeting", example: "Welcome back! If you're new here...", problem: "Viewer knows the video is about the creator, not them." },
+  { label: "Vague promise", example: "This changed everything for me.", problem: "Changed what? For whom? Stakes are invisible." },
+];
+
+const dropoffData = [
+  { second: "0s",  pct: 100 },
+  { second: "3s",  pct: 82  },
+  { second: "10s", pct: 61  },
+  { second: "20s", pct: 48  },
+  { second: "30s", pct: 38  },
+  { second: "45s", pct: 31  },
+  { second: "60s", pct: 27  },
 ];
 
 export default function HookPsychologyPage() {
   return (
-    <main className="min-h-screen bg-[#070708] text-white">
-      <section className="mx-auto max-w-5xl px-6 py-10">
-        <nav className="mb-10 flex items-center justify-between">
-          <a href="/" className="text-sm text-white/50">
-            ← HookSignals
-          </a>
+    <PremiumToolShell
+      badge="Hook psychology"
+      title="Why viewers leave in the first seconds."
+      description="Hook performance is not about tricks — it is about matching the viewer's psychological state. Learn the four attention principles that determine whether a viewer stays or swipes."
+      primaryHref="/hook-analyzer"
+      primaryLabel="Analyze Your Hook"
+      secondaryHref="/viral-hook-examples"
+      secondaryLabel="Hook Examples"
+    >
 
-          <a
-            href="/hook-analyzer"
-            className="rounded-full bg-emerald-400 px-4 py-2 text-sm font-semibold text-black"
-          >
-            Analyze Hooks
-          </a>
-        </nav>
-
-        <section className="rounded-[36px] border border-white/10 bg-gradient-to-b from-white/[0.08] to-white/[0.025] p-8 md:p-12">
-          <p className="mb-4 text-sm font-semibold text-emerald-300">
-            Creator Psychology
+      {/* Attention timeline */}
+      <FadeIn>
+        <section className="rounded-[28px] border border-white/10 bg-white/[0.025] p-5 md:p-7">
+          <p className="mb-2 text-xs font-black uppercase tracking-[0.14em] text-white/38">
+            Illustrative viewer drop-off pattern — not real data
           </p>
-
-          <h1 className="max-w-4xl text-5xl font-semibold tracking-tight md:text-7xl">
-            Hook Psychology Explained
-          </h1>
-
-          <p className="mt-6 max-w-3xl text-lg leading-8 text-white/60">
-            The first seconds of a video decide whether viewers stay or leave.
-            Strong hooks are not random. They use attention psychology,
-            curiosity and clarity to stop the scroll.
-          </p>
-        </section>
-
-        <section className="mt-14 space-y-10">
-          <div>
-            <h2 className="text-3xl font-semibold">
-              Why hooks matter more than most creators think
-            </h2>
-
-            <p className="mt-5 leading-8 text-white/65">
-              On YouTube Shorts, TikTok and Instagram Reels, viewers make
-              decisions extremely fast. Most videos are judged in the first few
-              seconds. If the opening feels vague, slow or confusing, retention
-              drops immediately.
-            </p>
-
-            <p className="mt-5 leading-8 text-white/65">
-              Strong hooks help creators create momentum early. They communicate
-              value quickly, introduce tension and create a reason for the
-              viewer to continue watching.
-            </p>
-          </div>
-
-          <div className="grid gap-4 md:grid-cols-2">
-            {principles.map((item) => (
-              <div
-                key={item.title}
-                className="rounded-3xl border border-white/10 bg-white/[0.035] p-6"
-              >
-                <h3 className="text-2xl font-semibold">{item.title}</h3>
-
-                <p className="mt-4 leading-7 text-white/55">
-                  {item.desc}
-                </p>
+          <h2 className="mb-6 text-2xl font-black tracking-tight">
+            The decision window closes fast.
+          </h2>
+          <div className="grid grid-cols-7 gap-1">
+            {dropoffData.map(({ second, pct }) => (
+              <div key={second} className="flex flex-col items-center gap-2">
+                <div className="flex w-full flex-col-reverse rounded-xl bg-white/[0.06]" style={{ height: 120 }}>
+                  <div
+                    className="w-full rounded-xl bg-gradient-to-t from-cyan-300/60 to-cyan-300/20"
+                    style={{ height: `${pct}%` }}
+                  />
+                </div>
+                <p className="text-[10px] font-black text-white/38">{pct}%</p>
+                <p className="text-[10px] text-white/28">{second}</p>
               </div>
             ))}
           </div>
+          <p className="mt-4 text-xs text-white/32">
+            Illustrative pattern only. Actual drop-off varies by platform, content type and audience.
+          </p>
+        </section>
+      </FadeIn>
 
-          <div>
-            <h2 className="text-3xl font-semibold">
-              What weak hooks usually look like
-            </h2>
-
-            <div className="mt-6 space-y-4">
-              {[
-                "Long introductions before the real topic starts.",
-                "Generic phrases without a clear promise.",
-                "No emotional tension or curiosity.",
-                "Slow pacing that wastes the first seconds.",
-              ].map((item) => (
-                <div
-                  key={item}
-                  className="rounded-2xl border border-white/10 bg-black/30 p-5 text-white/65"
-                >
-                  {item}
+      {/* 4 principles */}
+      <div className="mt-6">
+        <p className="mb-4 text-xs font-black uppercase tracking-[0.14em] text-white/38">
+          The four attention principles
+        </p>
+        <StaggerContainer className="grid gap-4 md:grid-cols-2">
+          {principles.map((p) => (
+            <StaggerItem key={p.title}>
+              <div className={`rounded-[24px] border p-5 md:p-6 ${p.color}`}>
+                <div className="mb-4 flex items-center gap-3">
+                  <span className={`text-2xl ${p.label}`}>{p.icon}</span>
+                  <p className={`text-sm font-black uppercase tracking-[0.14em] ${p.label}`}>
+                    {p.title}
+                  </p>
                 </div>
-              ))}
-            </div>
-          </div>
+                <p className="text-sm leading-7 text-white/65">{p.desc}</p>
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {p.signals.map((s) => (
+                    <span
+                      key={s}
+                      className="rounded-full border border-white/10 bg-black/22 px-2.5 py-1 text-xs text-white/45"
+                    >
+                      {s}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </StaggerItem>
+          ))}
+        </StaggerContainer>
+      </div>
 
-          <div>
-            <h2 className="text-3xl font-semibold">
-              The goal is not clickbait
-            </h2>
-
-            <p className="mt-5 leading-8 text-white/65">
-              Strong hooks are often confused with clickbait. In reality,
-              effective hooks simply communicate value faster. The goal is not
-              to trick viewers. The goal is to make the value of the content
-              obvious immediately.
-            </p>
-
-            <p className="mt-5 leading-8 text-white/65">
-              Creators who combine clarity with curiosity usually perform better
-              over time because viewers understand what they are watching while
-              still feeling motivated to continue.
-            </p>
-          </div>
-
-          <div className="rounded-[32px] border border-emerald-300/20 bg-emerald-300/[0.06] p-8">
-            <h2 className="text-3xl font-semibold">
-              Improve your next hook
-            </h2>
-
-            <p className="mt-4 max-w-2xl leading-8 text-white/65">
-              Use HookSignals tools to analyze weak openings, generate stronger
-              hook structures and improve retention before publishing.
-            </p>
-
-            <div className="mt-8 flex flex-wrap gap-4">
-              <a
-                href="/hook-analyzer"
-                className="rounded-2xl bg-emerald-400 px-6 py-3 font-semibold text-black"
-              >
-                Hook Analyzer
-              </a>
-
-              <a
-                href="/hook-improver"
-                className="rounded-2xl border border-white/10 bg-black/30 px-6 py-3 font-semibold text-white"
-              >
-                Hook Improver
-              </a>
-            </div>
+      {/* Weak patterns */}
+      <FadeIn>
+        <section className="mt-6 rounded-[28px] border border-white/10 bg-black/22 p-5 md:p-7">
+          <p className="mb-5 text-xs font-black uppercase tracking-[0.14em] text-white/38">
+            Common weak patterns
+          </p>
+          <div className="grid gap-3 sm:grid-cols-2">
+            {weakPatterns.map(({ label, example, problem }) => (
+              <div key={label} className="rounded-[20px] border border-red-400/12 bg-red-400/[0.035] p-5">
+                <p className="text-xs font-black uppercase tracking-[0.14em] text-red-300/70">{label}</p>
+                <p className="mt-2 text-sm font-black text-white/70">&ldquo;{example}&rdquo;</p>
+                <p className="mt-2 text-xs leading-5 text-white/42">{problem}</p>
+              </div>
+            ))}
           </div>
         </section>
+      </FadeIn>
 
+      {/* Not clickbait note */}
+      <FadeIn delay={0.08}>
+        <section className="mt-6 grid gap-4 md:grid-cols-2">
+          <div className="rounded-[24px] border border-cyan-300/18 bg-cyan-300/[0.05] p-5">
+            <p className="text-xs font-black uppercase tracking-[0.14em] text-cyan-300">Strong hook</p>
+            <p className="mt-3 leading-7 text-white/72">
+              Creates a specific reason to watch. The viewer knows the subject and senses the payoff within the first sentence.
+            </p>
+          </div>
+          <div className="rounded-[24px] border border-white/10 bg-black/24 p-5">
+            <p className="text-xs font-black uppercase tracking-[0.14em] text-white/35">Clickbait</p>
+            <p className="mt-3 leading-7 text-white/55">
+              Overpromises to get a click, then underdelivers. Damages trust and long-term retention. HookSignals is built to avoid this.
+            </p>
+          </div>
+        </section>
+      </FadeIn>
+
+      <div className="mt-8">
         <RelatedTools />
-      </section>
-
-      <SiteFooter />
-    </main>
+      </div>
+    </PremiumToolShell>
   );
 }
