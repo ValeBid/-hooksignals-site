@@ -39,6 +39,7 @@ input,
 textarea,
 select {
   font-family: inherit;
+  color: inherit;
 }
 
 /* ─── Text selection ────────────────────────────────────────────────────────── */

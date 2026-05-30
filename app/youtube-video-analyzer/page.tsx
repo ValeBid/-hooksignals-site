@@ -152,8 +152,8 @@ function VideoMetaCard({ result }: { result: VideoResult }) {
       )}
 
       {result.hasSubtitles && (
-        <div className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-emerald-300/20 bg-emerald-300/[0.07] px-3 py-1 text-xs text-emerald-200">
-          <span className="text-emerald-300">✓</span> Transcript available
+        <div className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-cyan-300/20 bg-cyan-300/[0.07] px-3 py-1 text-xs text-cyan-200">
+          <span className="text-cyan-300">✓</span> Transcript available
         </div>
       )}
 
@@ -265,7 +265,7 @@ function AnalysisCard({ result }: { result: VideoResult }) {
               key={item}
               className="flex gap-3 rounded-2xl border border-white/10 bg-white/[0.03] p-4 text-sm leading-6 text-white/62"
             >
-              <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-emerald-300/25 bg-emerald-300/10 text-xs text-emerald-300">
+              <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-cyan-300/25 bg-cyan-300/10 text-xs text-cyan-300">
                 ✓
               </span>
               <p>{item}</p>

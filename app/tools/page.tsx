@@ -25,19 +25,19 @@ const workflow = [
 
 const tools = [
   {
+    name: "YouTube Video Analyzer",
+    desc: "Paste any YouTube URL to fetch real video data — views, likes, transcript — and get an AI hook and packaging analysis.",
+    href: "/youtube-video-analyzer",
+    group: "Flagship",
+    use: "Start here to analyze any public YouTube video with live data.",
+    primary: true,
+  },
+  {
     name: "Hook Analyzer",
     desc: "Score your opening line for clarity, curiosity and retention strength.",
     href: "/hook-analyzer",
     group: "Diagnose",
-    use: "Use first when the idea feels unclear.",
-    primary: true,
-  },
-  {
-    name: "YouTube Video Analyzer",
-    desc: "Paste a YouTube URL to fetch real video data and get an AI hook analysis.",
-    href: "/youtube-video-analyzer",
-    group: "Intelligence",
-    use: "Use to analyze any public YouTube video with real data.",
+    use: "Use when the idea feels unclear or the hook needs a score.",
     primary: true,
   },
   {
@@ -120,8 +120,8 @@ export default function ToolsPage() {
       badge="Creator operating workflow"
       title="Move from rough idea to cleaner publishing decision."
       description="HookSignals is organized around the real creator workflow: diagnose the opening, improve the angle, package the promise and publish with stronger retention cues."
-      primaryHref="/hook-analyzer"
-      primaryLabel="Start with diagnosis"
+      primaryHref="/youtube-video-analyzer"
+      primaryLabel="Analyze YouTube Video"
     >
       <section className="grid gap-3 rounded-[30px] border border-white/10 bg-white/[0.025] p-4 md:grid-cols-4 md:p-5">
         {workflow.map(([step, title, text]) => (

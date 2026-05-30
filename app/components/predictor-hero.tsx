@@ -13,8 +13,8 @@ const scores = [
 ];
 
 const navLinks = [
+  { label: "YouTube Analyzer", href: "/youtube-video-analyzer" },
   { label: "Tools", href: "/tools" },
-  { label: "Analyzer", href: "/hook-analyzer" },
   { label: "Pricing", href: "/pricing" },
   { label: "Blog", href: "/blog" },
 ];
@@ -108,6 +108,7 @@ function PredictorCard() {
 
 export default function PredictorHero() {
   const [hook, setHook] = useState("");
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
     <section className="relative overflow-hidden border-b border-white/10">
@@ -118,28 +119,70 @@ export default function PredictorHero() {
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: EASE }}
-        className="relative z-40 mx-auto flex max-w-[1440px] items-center justify-between px-5 py-5 md:px-8"
+        className="relative z-40 mx-auto max-w-[1440px] px-5 md:px-8"
       >
-        <a href="/" className="flex items-center gap-3" aria-label="HookSignals home">
-          <LogoMark />
-          <div>
-            <span className="block text-lg font-black tracking-tight text-white">HookSignals</span>
-            <span className="hidden text-xs uppercase tracking-[0.16em] text-cyan-300 sm:block">Video Predictor</span>
+        <div className="flex items-center justify-between py-5">
+          <a href="/" className="flex items-center gap-3" aria-label="HookSignals home">
+            <LogoMark />
+            <div>
+              <span className="block text-lg font-black tracking-tight text-white">HookSignals</span>
+              <span className="hidden text-xs uppercase tracking-[0.16em] text-cyan-300 sm:block">Creator Intelligence</span>
+            </div>
+          </a>
+          <nav className="hidden items-center gap-7 text-sm text-white/58 lg:flex">
+            {navLinks.map((link) => (
+              <a key={link.href} className="transition hover:text-white" href={link.href}>{link.label}</a>
+            ))}
+            <a href="/dashboard" className="transition hover:text-white text-white/58">Dashboard</a>
+          </nav>
+          <div className="flex items-center gap-2">
+            <a href="/sign-in" className="hidden rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm font-bold text-white/70 transition hover:bg-white/10 sm:inline-flex">
+              Sign in
+            </a>
+            <a href="/youtube-video-analyzer" className="rounded-2xl bg-gradient-to-r from-cyan-300 via-sky-400 to-violet-400 px-4 py-2.5 text-sm font-black text-black shadow-[0_16px_34px_rgba(34,211,238,.18)] transition hover:scale-[1.01] md:px-5">
+              Analyze Video
+            </a>
+            <button
+              type="button"
+              onClick={() => setMobileOpen((v) => !v)}
+              className="flex h-9 w-9 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.04] text-white/70 transition hover:bg-white/[0.08] lg:hidden"
+              aria-label="Toggle navigation"
+            >
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                {mobileOpen ? (
+                  <>
+                    <line x1="2" y1="2" x2="14" y2="14" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                    <line x1="14" y1="2" x2="2" y2="14" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                  </>
+                ) : (
+                  <>
+                    <line x1="2" y1="4" x2="14" y2="4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                    <line x1="2" y1="8" x2="14" y2="8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                    <line x1="2" y1="12" x2="14" y2="12" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                  </>
+                )}
+              </svg>
+            </button>
           </div>
-        </a>
-        <nav className="hidden items-center gap-7 text-sm text-white/58 lg:flex">
-          {navLinks.map((link) => (
-            <a key={link.href} className="transition hover:text-white" href={link.href}>{link.label}</a>
-          ))}
-        </nav>
-        <div className="flex items-center gap-2">
-          <a href="/sign-in" className="hidden rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm font-bold text-white/70 transition hover:bg-white/10 sm:inline-flex">
-            Sign in
-          </a>
-          <a href="/hook-analyzer" className="rounded-2xl bg-gradient-to-r from-cyan-300 via-sky-400 to-violet-400 px-4 py-2.5 text-sm font-black text-black shadow-[0_16px_34px_rgba(34,211,238,.18)] transition hover:scale-[1.01] md:px-5">
-            Analyze Video
-          </a>
         </div>
+        {mobileOpen && (
+          <div className="border-t border-white/10 pb-4 pt-3 lg:hidden">
+            <div className="grid gap-1">
+              {navLinks.map((link) => (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  className="rounded-2xl px-4 py-3 text-sm font-semibold text-white/70 transition hover:bg-white/[0.04] hover:text-white"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  {link.label}
+                </a>
+              ))}
+              <a href="/dashboard" className="rounded-2xl px-4 py-3 text-sm font-semibold text-white/70 transition hover:bg-white/[0.04] hover:text-white" onClick={() => setMobileOpen(false)}>Dashboard</a>
+              <a href="/sign-in" className="mt-1 rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-center text-sm font-bold text-white/70 transition hover:bg-white/[0.07]" onClick={() => setMobileOpen(false)}>Sign in</a>
+            </div>
+          </div>
+        )}
       </motion.header>
 
       <div className="relative mx-auto grid max-w-[1440px] gap-10 px-5 pb-24 pt-12 md:px-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-center lg:pb-32 lg:pt-20">
@@ -154,7 +197,7 @@ export default function PredictorHero() {
 
           <motion.h1 variants={fadeUp} className="mt-5 max-w-5xl text-6xl font-black leading-[0.92] tracking-[-0.08em] text-white md:text-7xl xl:text-[96px]">
             Predict.<br />Perfect.<br />
-            <span className="bg-gradient-to-r from-cyan-300 via-sky-400 to-violet-400 bg-clip-text text-transparent">Perform.</span>
+            <span className="bg-gradient-to-r from-cyan-300 via-sky-400 to-violet-400 bg-clip-text text-transparent">Publish.</span>
           </motion.h1>
 
           <motion.p variants={fadeUp} className="mt-8 max-w-2xl text-lg leading-8 text-white/62 md:text-xl">
@@ -180,18 +223,18 @@ export default function PredictorHero() {
           </motion.div>
 
           <motion.div variants={fadeUp} className="mt-6 flex flex-col gap-4 sm:flex-row">
-            <a href="/hook-analyzer" className="group inline-flex items-center justify-center gap-3 rounded-2xl bg-gradient-to-r from-cyan-300 via-sky-400 to-violet-400 px-8 py-4 text-base font-black text-black shadow-[0_20px_48px_rgba(34,211,238,.18)] transition hover:scale-[1.01]">
-              Full Analysis <span className="transition group-hover:translate-x-1">→</span>
+            <a href="/youtube-video-analyzer" className="group inline-flex items-center justify-center gap-3 rounded-2xl bg-gradient-to-r from-cyan-300 via-sky-400 to-violet-400 px-8 py-4 text-base font-black text-black shadow-[0_20px_48px_rgba(34,211,238,.18)] transition hover:scale-[1.01]">
+              Analyze YouTube Video <span className="transition group-hover:translate-x-1">→</span>
             </a>
-            <a href="/pricing" className="inline-flex items-center justify-center rounded-2xl border border-cyan-300/30 bg-cyan-300/[0.08] px-8 py-4 text-base font-black text-cyan-100 transition hover:bg-cyan-300/[0.14]">
-              View Pricing
+            <a href="/hook-analyzer" className="inline-flex items-center justify-center rounded-2xl border border-cyan-300/30 bg-cyan-300/[0.08] px-8 py-4 text-base font-black text-cyan-100 transition hover:bg-cyan-300/[0.14]">
+              Analyze Hook Text
             </a>
           </motion.div>
 
           <motion.div variants={fadeUp} className="mt-7 flex flex-wrap gap-5 text-sm text-white/38">
-            <span>✓ No signup for preview</span>
-            <span>✓ 5 credits per full analysis</span>
-            <span>✓ Results in seconds</span>
+            <span>✓ Real YouTube data via Apify</span>
+            <span>✓ AI hook + packaging analysis</span>
+            <span>✓ No account needed to preview</span>
           </motion.div>
         </motion.div>
 

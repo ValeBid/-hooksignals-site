@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useState } from "react";
 import SiteFooter from "./site-footer";
 import StickyCTA from "./sticky-cta";
 import type { ReactNode } from "react";
@@ -8,8 +9,9 @@ import type { ReactNode } from "react";
 const SPRING = [0.16, 1, 0.3, 1] as const;
 
 const navLinks = [
+  ["YouTube Analyzer", "/youtube-video-analyzer"],
+  ["Hook Analyzer", "/hook-analyzer"],
   ["Tools", "/tools"],
-  ["Examples", "/viral-hook-examples"],
   ["Pricing", "/pricing"],
   ["Blog", "/blog"],
 ];
@@ -30,13 +32,15 @@ export default function PremiumToolShell({
   badge,
   title,
   description,
-  primaryHref = "/hook-analyzer",
-  primaryLabel = "Analyze Hook",
+  primaryHref = "/youtube-video-analyzer",
+  primaryLabel = "Analyze Video",
   secondaryHref = "/tools",
   secondaryLabel = "All Tools",
   children,
   footer,
 }: PremiumToolShellProps) {
+  const [mobileOpen, setMobileOpen] = useState(false);
+
   return (
     <main className="min-h-screen overflow-hidden bg-[#020408] pb-28 text-white">
       <section className="relative overflow-hidden border-b border-white/10">
@@ -50,48 +54,105 @@ export default function PremiumToolShell({
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: SPRING }}
-            className="sticky top-4 z-50 flex items-center justify-between rounded-[26px] border border-white/10 bg-black/30 px-4 py-3 shadow-2xl shadow-black/30 backdrop-blur-2xl md:px-6"
+            className="sticky top-4 z-50 rounded-[26px] border border-white/10 bg-black/30 shadow-2xl shadow-black/30 backdrop-blur-2xl"
           >
-            <a href="/" className="flex items-center gap-3" aria-label="HookSignals home">
-              <img
-                src="/hs-logo.svg"
-                alt="HookSignals logo"
-                className="h-12 w-12 rounded-2xl border border-cyan-300/20 bg-black/30 object-cover shadow-[0_0_40px_rgba(34,211,238,.18)]"
-              />
-              <div>
-                <span className="block text-xl font-black tracking-tight">HookSignals</span>
-                <span className="hidden text-xs uppercase tracking-[0.16em] text-cyan-300 sm:block">
-                  Creator Intelligence
-                </span>
-              </div>
-            </a>
+            <div className="flex items-center justify-between px-4 py-3 md:px-6">
+              <a href="/" className="flex items-center gap-3" aria-label="HookSignals home">
+                <div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-cyan-300/22 bg-cyan-400/[0.12]">
+                  <span className="text-sm font-black tracking-[-0.08em] text-cyan-300">HS</span>
+                </div>
+                <div>
+                  <span className="block text-lg font-black tracking-tight">HookSignals</span>
+                  <span className="hidden text-xs uppercase tracking-[0.16em] text-cyan-300 sm:block">
+                    Creator Intelligence
+                  </span>
+                </div>
+              </a>
 
-            <div className="hidden items-center gap-7 text-sm text-white/55 lg:flex">
-              {navLinks.map(([label, href]) => (
-                <a
-                  key={href}
-                  className="transition-colors duration-200 hover:text-white"
-                  href={href}
-                >
-                  {label}
+              <div className="hidden items-center gap-6 text-sm text-white/55 lg:flex">
+                {navLinks.map(([label, href]) => (
+                  <a
+                    key={href}
+                    className="transition-colors duration-200 hover:text-white"
+                    href={href}
+                  >
+                    {label}
+                  </a>
+                ))}
+                <a href="/dashboard" className="transition-colors duration-200 hover:text-white">
+                  Dashboard
                 </a>
-              ))}
+              </div>
+
+              <div className="flex items-center gap-2">
+                <a
+                  href={secondaryHref}
+                  className="hidden rounded-2xl border border-white/10 bg-white/[0.035] px-4 py-2 text-sm font-semibold text-white/80 transition hover:bg-white/[0.07] sm:inline-flex"
+                >
+                  {secondaryLabel}
+                </a>
+                <a
+                  href={primaryHref}
+                  className="rounded-2xl bg-gradient-to-r from-cyan-300 via-sky-400 to-violet-400 px-4 py-2 text-sm font-black text-black shadow-[0_16px_34px_rgba(34,211,238,.20)] transition hover:scale-[1.02] md:px-5"
+                >
+                  {primaryLabel}
+                </a>
+                {/* Mobile hamburger */}
+                <button
+                  type="button"
+                  onClick={() => setMobileOpen((v) => !v)}
+                  className="ml-1 flex h-9 w-9 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.04] text-white/70 transition hover:bg-white/[0.08] lg:hidden"
+                  aria-label="Toggle navigation"
+                >
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    {mobileOpen ? (
+                      <>
+                        <line x1="2" y1="2" x2="14" y2="14" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                        <line x1="14" y1="2" x2="2" y2="14" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                      </>
+                    ) : (
+                      <>
+                        <line x1="2" y1="4" x2="14" y2="4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                        <line x1="2" y1="8" x2="14" y2="8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                        <line x1="2" y1="12" x2="14" y2="12" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                      </>
+                    )}
+                  </svg>
+                </button>
+              </div>
             </div>
 
-            <div className="flex items-center gap-3">
-              <a
-                href={secondaryHref}
-                className="hidden rounded-2xl border border-white/10 bg-white/[0.035] px-5 py-2.5 text-sm font-semibold text-white/80 transition hover:bg-white/[0.07] sm:inline-flex"
-              >
-                {secondaryLabel}
-              </a>
-              <a
-                href={primaryHref}
-                className="rounded-2xl bg-gradient-to-r from-cyan-300 via-sky-400 to-violet-400 px-5 py-2.5 text-sm font-black text-black shadow-[0_20px_40px_rgba(34,211,238,.22)] transition hover:scale-[1.02]"
-              >
-                {primaryLabel}
-              </a>
-            </div>
+            {/* Mobile drawer */}
+            {mobileOpen && (
+              <div className="border-t border-white/10 px-4 pb-4 pt-3 lg:hidden">
+                <div className="grid gap-1">
+                  {navLinks.map(([label, href]) => (
+                    <a
+                      key={href}
+                      href={href}
+                      className="rounded-2xl border border-transparent px-4 py-3 text-sm font-semibold text-white/70 transition hover:border-white/10 hover:bg-white/[0.04] hover:text-white"
+                      onClick={() => setMobileOpen(false)}
+                    >
+                      {label}
+                    </a>
+                  ))}
+                  <a
+                    href="/dashboard"
+                    className="rounded-2xl border border-transparent px-4 py-3 text-sm font-semibold text-white/70 transition hover:border-white/10 hover:bg-white/[0.04] hover:text-white"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    Dashboard
+                  </a>
+                  <a
+                    href="/sign-in"
+                    className="mt-1 rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-center text-sm font-bold text-white/70 transition hover:bg-white/[0.07]"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    Sign in
+                  </a>
+                </div>
+              </div>
+            )}
           </motion.nav>
 
           {/* Hero */}
