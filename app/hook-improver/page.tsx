@@ -54,7 +54,7 @@ export default function HookImproverPage() {
   }
 
   return (
-    <PremiumToolShell badge="AI hook workflow" title="Hook Improver for YouTube Shorts, TikTok and Reels" description="Rewrite weak video ideas into sharper hook variations designed for clarity, curiosity, audience fit and viewer retention." primaryHref="/hook-analyzer" primaryLabel="Analyze Hook">
+    <PremiumToolShell badge="Hook workflow" title="Hook Improver for YouTube Shorts, TikTok and Reels" description="Rewrite weak video ideas into sharper hook variations designed for clarity, curiosity, audience fit and viewer retention." primaryHref="/hook-analyzer" primaryLabel="Analyze Hook">
       <div className="grid gap-5 lg:grid-cols-[0.92fr_1.08fr]">
         <div className="rounded-[28px] border border-white/10 bg-black/30 p-5 shadow-[0_24px_80px_rgba(0,0,0,.35)] md:p-7">
           <div className="mb-5 rounded-[22px] border border-cyan-300/15 bg-cyan-300/[0.06] p-4">
@@ -82,7 +82,7 @@ export default function HookImproverPage() {
           {result && (
             <div>
               <div className="rounded-2xl border border-cyan-300/20 bg-cyan-300/[0.06] p-5">
-                <div className="flex items-center justify-between gap-4"><p className="text-sm font-semibold text-cyan-300">AI diagnosis</p><span className="rounded-full border border-white/10 bg-black/25 px-3 py-1 text-xs text-white/55">{result.confidence}% confidence</span></div>
+                <div className="flex items-center justify-between gap-4"><p className="text-sm font-semibold text-cyan-300">Diagnosis</p><span className="rounded-full border border-white/10 bg-black/25 px-3 py-1 text-xs text-white/55">{result.confidence}% confidence</span></div>
                 <p className="mt-4 leading-7 text-white/68">{result.diagnosis}</p>
               </div>
               <p className="mt-6 text-sm font-semibold text-cyan-300">Improved versions</p>

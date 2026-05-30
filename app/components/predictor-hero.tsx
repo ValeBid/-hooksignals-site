@@ -88,7 +88,7 @@ function PredictorCard() {
           </div>
 
           <div className="mt-5 rounded-3xl border border-violet-300/14 bg-violet-300/[0.055] p-4">
-            <p className="text-xs font-black uppercase tracking-[0.16em] text-violet-200">AI Insight</p>
+            <p className="text-xs font-black uppercase tracking-[0.16em] text-violet-200">Example Insight</p>
             <p className="mt-2 text-sm leading-6 text-white/62">
               Strong packaging. Move the result to second 1–3 instead of the setup to push retention above 75%.
             </p>

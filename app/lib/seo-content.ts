@@ -162,9 +162,9 @@ export function getSoftwareSchema() {
       "AI creator workflow platform for hook analysis, YouTube Shorts SEO, TikTok hooks, script generation and thumbnail text optimization.",
     publisher: { "@id": `${siteUrl}/#organization` },
     offers: [
-      { "@type": "Offer", name: "Starter", priceCurrency: "USD", price: "19", url: `${siteUrl}/checkout/starter` },
-      { "@type": "Offer", name: "Creator Pro", priceCurrency: "USD", price: "49", url: `${siteUrl}/checkout/pro` },
-      { "@type": "Offer", name: "Elite", priceCurrency: "USD", price: "99", url: `${siteUrl}/checkout/elite` },
+      { "@type": "Offer", name: "Starter", priceCurrency: "USD", price: "10", url: `${siteUrl}/checkout/starter` },
+      { "@type": "Offer", name: "Creator Pro", priceCurrency: "USD", price: "20", url: `${siteUrl}/checkout/pro` },
+      { "@type": "Offer", name: "Elite", priceCurrency: "USD", price: "50", url: `${siteUrl}/checkout/elite` },
     ],
   };
 }
@@ -182,8 +182,8 @@ export function getProductSchema() {
     offers: {
       "@type": "AggregateOffer",
       priceCurrency: "USD",
-      lowPrice: "19",
-      highPrice: "99",
+      lowPrice: "10",
+      highPrice: "50",
       offerCount: "3",
       url: `${siteUrl}/pricing`,
     },
