@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-
 function fallbackHooks(topic: string) {
   const subject = topic.trim().replace(/[.!?]+$/, "") || "your video idea";
   return [
@@ -24,6 +22,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ hooks: fallbackHooks(cleanTopic), mode: "rules" });
     }
 
+    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
     const completion = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       temperature: 0.75,
