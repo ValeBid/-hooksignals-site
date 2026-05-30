@@ -1,5 +1,9 @@
+// Canonical checkout routes. Match the [plan] segments in app/checkout/[plan]/page.tsx.
 export const purchaseLinks = {
-  free: "/tools",
-  creatorPro: process.env.NEXT_PUBLIC_PADDLE_CREATOR_PRO_CHECKOUT_URL || "/checkout/creator-pro",
-  studio: process.env.NEXT_PUBLIC_PADDLE_STUDIO_CHECKOUT_URL || "/checkout/studio",
-};
+  starter: "/checkout/starter",
+  pro: "/checkout/pro",
+  elite: "/checkout/elite",
+  pricing: "/pricing",
+} as const;
+
+export type PurchasePlan = keyof typeof purchaseLinks;
