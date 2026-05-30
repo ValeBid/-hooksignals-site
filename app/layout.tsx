@@ -1,7 +1,15 @@
 import "./globals.css";
+import { Inter } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Analytics } from "@vercel/analytics/react";
 import { siteConfig } from "./lib/seo";
+
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-inter",
+  weight: ["400", "500", "600", "700", "800", "900"],
+});
 
 export const metadata = {
   metadataBase: new URL(siteConfig.url),
@@ -59,7 +67,7 @@ export default function RootLayout({
 }) {
   return (
     <ClerkProvider>
-      <html lang="en">
+      <html lang="en" className={inter.variable}>
         <body>
           {children}
           <Analytics />
