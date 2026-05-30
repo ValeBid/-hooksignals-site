@@ -1,5 +1,6 @@
 import PricingPreview from "../components/pricing-preview";
 import SiteFooter from "../components/site-footer";
+import SimpleNav from "../components/simple-nav";
 
 export const metadata = {
   title: "Pricing",
@@ -18,7 +19,9 @@ export const metadata = {
 
 export default function PricingPage() {
   return (
-    <main className="min-h-screen bg-[#030507] text-white">
+    <div className="min-h-screen bg-[#030507] text-white">
+    <SimpleNav />
+    <main>
       <div className="mx-auto max-w-[1280px] px-5 py-14 md:px-8 md:py-20">
         <div className="max-w-4xl">
           <p className="text-sm font-bold uppercase tracking-[0.16em] text-cyan-300">
@@ -37,7 +40,8 @@ export default function PricingPage() {
         <PricingPreview />
       </div>
 
-      <SiteFooter />
     </main>
+    <SiteFooter />
+    </div>
   );
 }

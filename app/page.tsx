@@ -38,16 +38,16 @@ function FinalCTA() {
         </p>
         <div className="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
           <a
-            href="/hook-analyzer"
+            href="/youtube-video-analyzer"
             className="inline-flex justify-center rounded-2xl bg-white px-8 py-4 font-black text-black transition hover:scale-[1.02]"
           >
-            Analyze Your Video
+            Analyze YouTube Video
           </a>
           <a
-            href="/pricing"
+            href="/hook-analyzer"
             className="inline-flex justify-center rounded-2xl border border-cyan-300/30 bg-cyan-300/[0.08] px-8 py-4 font-black text-cyan-100 transition hover:bg-cyan-300/[0.14]"
           >
-            View Pricing
+            Analyze Hook Text
           </a>
         </div>
         <p className="mt-6 text-sm text-white/35">No signup needed for a preview score. Full analysis uses 5 credits.</p>

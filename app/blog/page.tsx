@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { blogPosts } from "../lib/seo-content";
+import SimpleNav from "../components/simple-nav";
+import SiteFooter from "../components/site-footer";
 
 export const metadata = {
   title: "HookSignals Blog | Creator SEO, AI Hooks & YouTube Shorts Strategy",
@@ -9,7 +11,9 @@ export const metadata = {
 
 export default function BlogPage() {
   return (
-    <main className="min-h-screen bg-[#030507] px-5 py-20 text-white md:px-8">
+    <div className="min-h-screen bg-[#030507] text-white">
+    <SimpleNav />
+    <main className="px-5 py-20 md:px-8">
       <div className="mx-auto max-w-6xl">
         <div className="max-w-3xl">
           <p className="text-sm font-bold uppercase tracking-[0.18em] text-cyan-300">
@@ -53,5 +57,7 @@ export default function BlogPage() {
         </section>
       </div>
     </main>
+    <SiteFooter />
+    </div>
   );
 }

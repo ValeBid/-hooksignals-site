@@ -1,8 +1,9 @@
 const toolLinks = [
+  ["YouTube Video Analyzer", "/youtube-video-analyzer"],
+  ["YouTube Title Analyzer", "/youtube-title-analyzer"],
   ["Hook Analyzer", "/hook-analyzer"],
   ["Hook Improver", "/hook-improver"],
-  ["Title Generator", "/youtube-title-generator"],
-  ["Thumbnail Checker", "/thumbnail-text-checker"],
+  ["Shorts Script Generator", "/shorts-script-generator"],
 ];
 
 const resourceLinks = [

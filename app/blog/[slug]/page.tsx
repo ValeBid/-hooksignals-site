@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { blogPosts } from "../../lib/seo-content";
+import SimpleNav from "../../components/simple-nav";
+import SiteFooter from "../../components/site-footer";
 import type { Metadata } from "next";
 
 type Props = { params: { slug: string } };
@@ -116,7 +118,9 @@ export default function BlogPostPage({ params }: Props) {
   const content = postContent[post.slug];
 
   return (
-    <main className="min-h-screen bg-[#030507] px-5 py-20 text-white md:px-8">
+    <div className="min-h-screen bg-[#030507] text-white">
+    <SimpleNav />
+    <main className="px-5 py-16 md:px-8">
       <div className="mx-auto max-w-3xl">
         <Link href="/blog" className="text-sm font-bold text-white/45 transition hover:text-white">
           ← Blog
@@ -194,5 +198,7 @@ export default function BlogPostPage({ params }: Props) {
         </div>
       </div>
     </main>
+    <SiteFooter />
+    </div>
   );
 }
