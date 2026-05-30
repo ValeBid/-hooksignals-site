@@ -86,7 +86,7 @@ export default function EmailCapture({
   }
 
   return (
-    <section className="mt-16 rounded-[38px] border border-cyan-300/20 bg-[radial-gradient(circle_at_20%_20%,rgba(34,211,238,.16),transparent_32%),linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.02))] p-8 shadow-[0_40px_120px_rgba(34,211,238,.10)] md:p-12">
+    <section className="mt-10 rounded-[38px] border border-cyan-300/20 bg-[radial-gradient(circle_at_20%_20%,rgba(34,211,238,.16),transparent_32%),linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.02))] p-8 shadow-[0_40px_120px_rgba(34,211,238,.10)] md:p-12">
       <div className="grid gap-8 lg:grid-cols-[1fr_0.8fr] lg:items-center">
         <div>
           <p className="text-sm font-black uppercase tracking-[0.16em] text-cyan-300">Weekly creator intelligence</p>

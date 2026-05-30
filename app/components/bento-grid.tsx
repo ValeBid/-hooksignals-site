@@ -36,7 +36,7 @@ function MiniBar({ value }: { value: number }) {
 
 export default function BentoGrid() {
   return (
-    <section className="mx-auto mt-20 max-w-[1320px] px-5 md:px-8">
+    <section className="mx-auto mt-14 max-w-[1320px] px-5 md:px-8">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}

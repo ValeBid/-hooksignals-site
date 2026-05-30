@@ -184,7 +184,7 @@ function PlatformSignals() {
 // ─── Main export ──────────────────────────────────────────────────────────────
 export default function CreatorAuthoritySection() {
   return (
-    <section className="mx-auto mt-20 max-w-[1320px] px-5 md:px-8">
+    <section className="mx-auto mt-14 max-w-[1320px] px-5 md:px-8">
       {/* Section header */}
       <motion.div {...fade()} className="mb-10 max-w-3xl">
         <p className="text-sm font-black uppercase tracking-[0.18em] text-cyan-300">Creator intelligence</p>

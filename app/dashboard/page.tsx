@@ -168,7 +168,7 @@ function StatCard({
 // ─── Page ─────────────────────────────────────────────────────────────────────
 export default async function DashboardPage({ searchParams }: DashboardPageProps) {
   const user = await currentUser();
-  if (!user) redirect('/sign-in');
+  if (!user) redirect('/sign-in?redirect_url=/dashboard');
 
   const email = user.emailAddresses?.[0]?.emailAddress ?? null;
   const fullName = [user.firstName, user.lastName].filter(Boolean).join(' ') || null;
