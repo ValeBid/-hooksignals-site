@@ -47,27 +47,54 @@ const staticRoutes: SeoRoute[] = [
 ];
 
 const platformHookRoutes: SeoRoute[] = [
-  ["youtube-shorts", "YouTube Shorts Hook Analyzer | HookSignals", "Analyze YouTube Shorts hooks for clarity, curiosity, retention risk and first-three-second stopping power."],
-  ["tiktok", "TikTok Hook Analyzer | HookSignals", "Analyze TikTok hooks for scroll stopping power, curiosity gap, pacing and audience fit before posting."],
-  ["instagram-reels", "Instagram Reels Hook Analyzer | HookSignals", "Analyze Instagram Reels hooks for retention, clarity, visual promise and short-form attention."],
-  ["fitness", "Fitness Hook Analyzer | HookSignals", "Analyze fitness hooks for transformation promise, specificity, tension and viewer retention."],
-  ["ai", "AI Content Hook Analyzer | HookSignals", "Analyze AI content hooks for novelty, clarity, proof and stronger audience curiosity."],
-  ["saas", "SaaS Hook Analyzer | HookSignals", "Analyze SaaS hooks for pain, outcome clarity, proof and demo-first retention."],
-  ["ecommerce", "Ecommerce Hook Analyzer | HookSignals", "Analyze ecommerce hooks for product clarity, desire, objections and conversion-focused retention."],
-  ["coaching", "Coaching Hook Analyzer | HookSignals", "Analyze coaching hooks for audience pain, promise strength, authority and retention."],
-  ["personal-finance", "Personal Finance Hook Analyzer | HookSignals", "Analyze personal finance hooks for specificity, trust, payoff and early retention risk."],
-  ["real-estate", "Real Estate Hook Analyzer | HookSignals", "Analyze real estate hooks for local relevance, buyer intent, specificity and retention."],
-].map(([slug, title, description]) => ({ path: `/hooks/${slug}`, title, description, priority: 0.78, changeFrequency: "weekly", intent: "tool" }));
+  ["youtube-shorts",  "YouTube Shorts Hook Analyzer | HookSignals",    "Analyze YouTube Shorts hooks for clarity, curiosity, retention risk and first-three-second stopping power."],
+  ["tiktok",          "TikTok Hook Analyzer | HookSignals",             "Analyze TikTok hooks for scroll stopping power, curiosity gap, pacing and audience fit before posting."],
+  ["instagram-reels", "Instagram Reels Hook Analyzer | HookSignals",   "Analyze Instagram Reels hooks for retention, clarity, visual promise and short-form attention."],
+  ["fitness",         "Fitness Hook Analyzer | HookSignals",            "Analyze fitness hooks for transformation promise, specificity, tension and viewer retention."],
+  ["ai",              "AI Content Hook Analyzer | HookSignals",         "Analyze AI content hooks for novelty, clarity, proof and stronger audience curiosity."],
+  ["saas",            "SaaS Hook Analyzer | HookSignals",               "Analyze SaaS hooks for pain, outcome clarity, proof and demo-first retention."],
+  ["ecommerce",       "Ecommerce Hook Analyzer | HookSignals",          "Analyze ecommerce hooks for product clarity, desire, objections and conversion-focused retention."],
+  ["coaching",        "Coaching Hook Analyzer | HookSignals",           "Analyze coaching hooks for audience pain, promise strength, authority and retention."],
+  ["personal-finance","Personal Finance Hook Analyzer | HookSignals",   "Analyze personal finance hooks for specificity, trust, payoff and early retention risk."],
+  ["real-estate",     "Real Estate Hook Analyzer | HookSignals",        "Analyze real estate hooks for local relevance, buyer intent, specificity and retention."],
+  // Phase D additions
+  ["gaming",          "Gaming Hook Analyzer | HookSignals",             "Analyze gaming hooks for excitement clarity, skill payoff and first-second stopping power."],
+  ["finance",         "Finance Content Hook Analyzer | HookSignals",    "Analyze finance content hooks for credibility, specificity and trust-building without vague claims."],
+  ["crypto",          "Crypto Content Hook Analyzer | HookSignals",     "Score crypto content hooks for analytical credibility, discovery framing and educational payoff."],
+  ["business",        "Business Content Hook Analyzer | HookSignals",   "Analyze business content hooks for ROI clarity, founder relevance and operational credibility."],
+  ["education",       "Education Content Hook Analyzer | HookSignals",  "Score education content hooks for learning outcome clarity and student relevance."],
+  ["podcast",         "Podcast Hook Analyzer | HookSignals",            "Analyze podcast episode hooks for listener retention, topic clarity and download-driving tension."],
+].map(([slug, title, description]) => ({ path: `/hooks/${slug}`, title, description, priority: 0.78, changeFrequency: "weekly" as const, intent: "tool" as const }));
 
 const exampleRoutes: SeoRoute[] = [
-  ["fitness", "Fitness Hook Examples | HookSignals", "Browse fitness hook examples for transformation, discipline, fat loss, strength and short-form retention."],
-  ["ai", "AI Hook Examples | HookSignals", "Browse AI hook examples for tools, workflows, automation, productivity and creator content."],
-  ["finance", "Finance Hook Examples | HookSignals", "Browse finance hook examples for saving, investing, money mistakes and trust-focused content."],
-  ["saas", "SaaS Hook Examples | HookSignals", "Browse SaaS hook examples for product demos, pain points, use cases and founder-led content."],
+  ["fitness",   "Fitness Hook Examples | HookSignals",   "Browse fitness hook examples for transformation, discipline, fat loss, strength and short-form retention."],
+  ["ai",        "AI Hook Examples | HookSignals",        "Browse AI hook examples for tools, workflows, automation, productivity and creator content."],
+  ["finance",   "Finance Hook Examples | HookSignals",   "Browse finance hook examples for saving, investing, money mistakes and trust-focused content."],
+  ["saas",      "SaaS Hook Examples | HookSignals",      "Browse SaaS hook examples for product demos, pain points, use cases and founder-led content."],
   ["ecommerce", "Ecommerce Hook Examples | HookSignals", "Browse ecommerce hook examples for product discovery, objections, offers and short-form ads."],
-].map(([slug, title, description]) => ({ path: `/hook-examples/${slug}`, title, description, priority: 0.72, changeFrequency: "weekly", intent: "examples" }));
+].map(([slug, title, description]) => ({ path: `/hook-examples/${slug}`, title, description, priority: 0.72, changeFrequency: "weekly" as const, intent: "examples" as const }));
 
-export const seoRoutes: SeoRoute[] = [...staticRoutes, ...platformHookRoutes, ...exampleRoutes];
+const comparisonRoutes: SeoRoute[] = [
+  { path: "/seo/hooksignals-vs-vidiq",        title: "HookSignals vs vidIQ | Pre-Publish Hook Scoring vs Analytics",        description: "Compare HookSignals pre-publish hook analysis with vidIQ YouTube analytics and channel growth tools.",       priority: 0.72, changeFrequency: "monthly", intent: "education" },
+  { path: "/seo/hooksignals-vs-tubebuddy",    title: "HookSignals vs TubeBuddy | Hook Analysis vs Channel Management",      description: "Compare HookSignals hook scoring with TubeBuddy YouTube extension and management tools.",                 priority: 0.72, changeFrequency: "monthly", intent: "education" },
+  { path: "/seo/hooksignals-vs-chatgpt",      title: "HookSignals vs ChatGPT for YouTube Hooks | HookSignals",              description: "Compare HookSignals creator-specific hook analysis with using ChatGPT for YouTube hook writing.",          priority: 0.72, changeFrequency: "monthly", intent: "education" },
+  { path: "/seo/best-hook-analyzer",          title: "Best Hook Analyzer for YouTube and TikTok | HookSignals",             description: "Find the best hook analyzer for YouTube Shorts, TikTok and Reels creators in 2026.",                     priority: 0.80, changeFrequency: "monthly", intent: "education" },
+  { path: "/seo/best-youtube-hook-generator", title: "Best YouTube Hook Generator for Shorts and Long-Form | HookSignals",  description: "Find the best YouTube hook generator for Shorts, long-form videos and TikTok creators.",                 priority: 0.80, changeFrequency: "monthly", intent: "education" },
+  { path: "/seo/best-creator-growth-tools",   title: "Best Creator Growth Tools for YouTube and Short-Form | HookSignals",  description: "Compare the best creator growth tools for YouTube, Shorts and TikTok channels.",                         priority: 0.76, changeFrequency: "monthly", intent: "education" },
+];
+
+// New static pages added in Phase C and later
+const additionalStaticRoutes: SeoRoute[] = [
+  { path: "/youtube-video-analyzer", title: "YouTube Video Analyzer | Real Data Hook Analysis | HookSignals", description: "Paste any YouTube URL to fetch real video data and get an AI analysis of hook, packaging and retention risk.", priority: 0.88, changeFrequency: "weekly", intent: "tool" },
+];
+
+export const seoRoutes: SeoRoute[] = [
+  ...staticRoutes,
+  ...additionalStaticRoutes,
+  ...platformHookRoutes,
+  ...exampleRoutes,
+  ...comparisonRoutes,
+];
 
 export function absoluteUrl(path: string) {
   return `${siteConfig.url}${path === "/" ? "" : path}`;
