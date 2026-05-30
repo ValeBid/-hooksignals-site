@@ -33,8 +33,11 @@ const fadeUp: Variants = {
 function LogoMark() {
   return (
     <div className="relative flex h-11 w-11 items-center justify-center rounded-2xl border border-cyan-300/25 bg-gradient-to-br from-cyan-300/20 via-sky-400/10 to-violet-400/20 shadow-lg shadow-cyan-500/10">
-      <div className="absolute inset-1 rounded-xl border border-white/10" />
-      <span className="text-lg font-black tracking-[-0.08em] text-cyan-100">HS</span>
+      <div className="absolute inset-1 rounded-xl border border-white/8" />
+      <svg width="26" height="26" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+        <path d="M18 20v24M18 32h28M46 20v24" stroke="#22d3ee" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round"/>
+        <circle cx="50" cy="15" r="4" fill="#22d3ee"/>
+      </svg>
     </div>
   );
 }
@@ -205,21 +208,43 @@ export default function PredictorHero() {
             Analyze your title, hook, and thumbnail before publishing. Detect retention risks, weak packaging, and outlier potential in seconds.
           </motion.p>
 
-          <motion.div variants={fadeUp} className="mt-8 rounded-[24px] border border-white/10 bg-white/[0.04] p-3.5 backdrop-blur-xl">
-            <p className="mb-2.5 px-1 text-xs font-black uppercase tracking-[0.14em] text-white/38">Quick hook preview</p>
+          <motion.div variants={fadeUp} className="mt-8 rounded-[28px] border border-cyan-300/18 bg-[linear-gradient(135deg,rgba(34,211,238,.055),rgba(0,0,0,.52))] p-5 shadow-[0_24px_64px_rgba(0,0,0,.4)] backdrop-blur-xl">
+            <div className="mb-3 flex items-center gap-2">
+              <span className="text-[11px] text-cyan-300">✦</span>
+              <p className="text-xs font-black uppercase tracking-[0.16em] text-white/50">Score your opening line</p>
+            </div>
             <div className="flex gap-2.5">
               <input
                 value={hook}
-                onChange={(e) => setHook(e.target.value)}
-                placeholder="Paste your hook or video title..."
-                className="flex-1 min-w-0 rounded-2xl border border-white/10 bg-black/28 px-4 py-3 text-sm text-white outline-none placeholder:text-white/25 focus:border-cyan-300/40"
+                onChange={(e) => setHook(e.target.value.slice(0, 500))}
+                placeholder="Paste your hook or opening line..."
+                className="flex-1 min-w-0 rounded-2xl border border-white/12 bg-black/40 px-4 py-3.5 text-sm text-white outline-none placeholder:text-white/22 focus:border-cyan-300/40 transition"
               />
               <a
-                href={`/hook-analyzer${hook ? `?hook=${encodeURIComponent(hook)}` : ""}`}
-                className="shrink-0 inline-flex items-center rounded-2xl bg-gradient-to-r from-cyan-300 via-sky-400 to-violet-400 px-5 py-3 text-sm font-black text-black shadow-[0_18px_42px_rgba(34,211,238,.16)] transition hover:scale-[1.01]"
+                href={`/hook-analyzer${hook.trim() ? `?hook=${encodeURIComponent(hook.trim())}` : ""}`}
+                className="shrink-0 inline-flex items-center rounded-2xl bg-gradient-to-r from-cyan-300 via-sky-400 to-violet-400 px-5 py-3 text-sm font-black text-black shadow-[0_16px_36px_rgba(34,211,238,.22)] transition hover:scale-[1.01] whitespace-nowrap"
               >
-                Analyze →
+                Score Hook →
               </a>
+            </div>
+            <div className="mt-3.5">
+              <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.14em] text-white/28">Try an example:</p>
+              <div className="flex flex-wrap gap-1.5">
+                {[
+                  "I uploaded 100 Shorts in 30 days. Only 3 worked.",
+                  "The thumbnail mistake that killed my last 5 videos",
+                  "I changed one line in my intro and retention jumped 26 points",
+                ].map((ex) => (
+                  <button
+                    key={ex}
+                    type="button"
+                    onClick={() => setHook(ex)}
+                    className="rounded-xl border border-white/10 bg-white/[0.04] px-3 py-1.5 text-left text-xs text-white/48 transition hover:border-cyan-300/25 hover:bg-cyan-300/[0.06] hover:text-white/75"
+                  >
+                    &ldquo;{ex.length > 42 ? ex.slice(0, 42) + "…" : ex}&rdquo;
+                  </button>
+                ))}
+              </div>
             </div>
           </motion.div>
 
@@ -240,10 +265,10 @@ export default function PredictorHero() {
             </a>
           </motion.div>
 
-          <motion.div variants={fadeUp} className="mt-7 flex flex-wrap gap-5 text-sm text-white/38">
-            <span>✓ Real YouTube data via Apify</span>
-            <span>✓ AI hook + packaging analysis</span>
-            <span>✓ 1 free analysis on signup</span>
+          <motion.div variants={fadeUp} className="mt-7 flex flex-wrap gap-5 text-sm text-white/42">
+            <span>✓ Live YouTube data</span>
+            <span>✓ AI hook + packaging scoring</span>
+            <span>✓ Free to start — no card required</span>
           </motion.div>
         </motion.div>
 

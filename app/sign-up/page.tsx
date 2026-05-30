@@ -10,8 +10,11 @@ export default function SignUpPage() {
     <main className="min-h-screen bg-[#030507] px-5 py-16 text-white">
       <div className="mx-auto flex max-w-lg flex-col items-center">
         <a href="/" className="mb-8 flex items-center gap-3" aria-label="HookSignals home">
-          <div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-cyan-300/25 bg-cyan-400/10 shadow-lg shadow-cyan-500/10">
-            <span className="text-sm font-black tracking-[-0.08em] text-cyan-300">HS</span>
+          <div className="relative flex h-10 w-10 items-center justify-center rounded-2xl border border-cyan-300/25 bg-gradient-to-br from-cyan-300/20 via-sky-400/10 to-violet-400/20 shadow-lg shadow-cyan-500/10">
+            <svg width="22" height="22" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+              <path d="M18 20v24M18 32h28M46 20v24" stroke="#22d3ee" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round"/>
+              <circle cx="50" cy="15" r="4" fill="#22d3ee"/>
+            </svg>
           </div>
           <div>
             <span className="block text-xl font-black tracking-tight">HookSignals</span>

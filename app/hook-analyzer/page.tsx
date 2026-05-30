@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@clerk/nextjs";
 import PremiumToolShell from "../components/premium-tool-shell";
 import RelatedTools from "../components/related-tools";
@@ -107,6 +107,13 @@ export default function HookAnalyzerPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const { isSignedIn, isLoaded } = useAuth();
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const prefill = params.get("hook");
+    if (prefill) setHook(prefill.slice(0, 500));
+  }, []);
+
   const characterCount = hook.trim().length;
   const insightNotice = getInsightNotice(mode, diagnostic, creditsRemaining);
 
