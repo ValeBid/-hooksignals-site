@@ -242,8 +242,8 @@ export async function POST(request: Request) {
     const { data: credits, error: creditsError } = await supabaseAdmin.from('credits').select('*').eq('clerk_user_id', user.id).limit(1).maybeSingle();
     if (creditsError) return NextResponse.json({ success: false, error: 'credits_read_failed', detail: creditsError.message }, { status: 500 });
     if (!credits || Number(credits.credits_remaining || 0) < CREDIT_COST) return NextResponse.json({ success: false, error: 'insufficient_credits' }, { status: 402 });
-    const plan = String(credits.plan || 'starter').toLowerCase();
-    if (plan === 'free') return NextResponse.json({ success: false, error: 'upgrade_required' }, { status: 402 });
+    // Free plan users can use their 5 starter credits — this is the trial.
+    // The credit balance check above is the sole gate; plan name is not a gate.
     const { analysis, mode, diagnostic } = await analyzeWithOpenAI(hook, platform, niche, audience);
     const nextUsed = Number(credits.credits_used || 0) + CREDIT_COST;
     const nextRemaining = Math.max(0, Number(credits.credits_remaining || 0) - CREDIT_COST);

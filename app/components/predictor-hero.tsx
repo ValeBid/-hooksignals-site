@@ -243,7 +243,7 @@ export default function PredictorHero() {
           <motion.div variants={fadeUp} className="mt-7 flex flex-wrap gap-5 text-sm text-white/38">
             <span>✓ Real YouTube data via Apify</span>
             <span>✓ AI hook + packaging analysis</span>
-            <span>✓ No account needed to preview</span>
+            <span>✓ 1 free analysis on signup</span>
           </motion.div>
         </motion.div>
 
