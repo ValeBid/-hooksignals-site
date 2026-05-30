@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useUser } from "@clerk/nextjs";
 import { useParams } from "next/navigation";
 
-const paddleToken = "live_af5c9cec32aec5fc5c8f8c35773";
+const paddleToken = process.env.NEXT_PUBLIC_PADDLE_CLIENT_TOKEN;
 
 const plans: Record<string, {
   name: string;
@@ -85,12 +85,16 @@ function getPaddleWindow() {
   return window as PaddleWindow;
 }
 
-function loadPaddle() {
+const paddleEnv = process.env.NEXT_PUBLIC_PADDLE_ENV === "sandbox" ? "sandbox" : "production";
+
+function loadPaddle(): Promise<void> {
   if (typeof window === "undefined") return Promise.resolve();
+  if (!paddleToken) return Promise.reject(new Error("NEXT_PUBLIC_PADDLE_CLIENT_TOKEN is not configured"));
+
   const paddleWindow = getPaddleWindow();
 
   if (paddleWindow.Paddle) {
-    paddleWindow.Paddle.Environment?.set("production");
+    paddleWindow.Paddle.Environment?.set(paddleEnv);
     paddleWindow.Paddle.Initialize({ token: paddleToken });
     return Promise.resolve();
   }
@@ -103,8 +107,8 @@ function loadPaddle() {
     script.async = true;
     script.onload = () => {
       const loadedWindow = getPaddleWindow();
-      loadedWindow.Paddle?.Environment?.set("production");
-      loadedWindow.Paddle?.Initialize({ token: paddleToken });
+      loadedWindow.Paddle?.Environment?.set(paddleEnv);
+      loadedWindow.Paddle?.Initialize({ token: paddleToken! });
       resolve();
     };
     script.onerror = reject;
@@ -167,6 +171,19 @@ export default function CheckoutPage() {
         <div className="mx-auto max-w-3xl rounded-[34px] border border-white/10 bg-white/[0.035] p-8">
           <p className="text-sm font-black uppercase tracking-[0.14em] text-red-300">Plan not found</p>
           <h1 className="mt-4 text-4xl font-black">Choose a valid HookSignals plan.</h1>
+          <Link href="/pricing" className="mt-6 inline-flex rounded-2xl bg-white px-5 py-3 text-sm font-black text-black">Back to pricing</Link>
+        </div>
+      </main>
+    );
+  }
+
+  if (!paddleToken) {
+    return (
+      <main className="min-h-screen bg-[#030507] px-5 py-16 text-white">
+        <div className="mx-auto max-w-3xl rounded-[34px] border border-red-400/20 bg-red-400/[0.06] p-8">
+          <p className="text-sm font-black uppercase tracking-[0.14em] text-red-300">Checkout unavailable</p>
+          <h1 className="mt-4 text-3xl font-black">Checkout is not configured.</h1>
+          <p className="mt-4 text-white/60">Please contact support at support@hooksignals.com to complete your purchase.</p>
           <Link href="/pricing" className="mt-6 inline-flex rounded-2xl bg-white px-5 py-3 text-sm font-black text-black">Back to pricing</Link>
         </div>
       </main>
