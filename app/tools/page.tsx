@@ -29,6 +29,15 @@ const tools = [
     href: "/hook-analyzer",
     group: "Diagnose",
     use: "Use first when the idea feels unclear.",
+    primary: true,
+  },
+  {
+    name: "YouTube Video Analyzer",
+    desc: "Paste a YouTube URL to fetch real video data and get an AI hook analysis.",
+    href: "/youtube-video-analyzer",
+    group: "Intelligence",
+    use: "Use to analyze any public YouTube video with real data.",
+    primary: true,
   },
   {
     name: "Hook Improver",
@@ -36,6 +45,7 @@ const tools = [
     href: "/hook-improver",
     group: "Improve",
     use: "Use after you know what is weak.",
+    primary: false,
   },
   {
     name: "YouTube Hook Generator",
@@ -43,6 +53,7 @@ const tools = [
     href: "/youtube-hook-generator",
     group: "Generate",
     use: "Use when you need more opening angles.",
+    primary: false,
   },
   {
     name: "TikTok Hook Generator",
@@ -50,6 +61,7 @@ const tools = [
     href: "/tiktok-hook-generator",
     group: "Generate",
     use: "Use for short-form concepts and fast tests.",
+    primary: false,
   },
   {
     name: "YouTube Title Generator",
@@ -57,6 +69,7 @@ const tools = [
     href: "/youtube-title-generator",
     group: "Package",
     use: "Use before locking the final topic promise.",
+    primary: false,
   },
   {
     name: "Shorts Script Generator",
@@ -64,6 +77,7 @@ const tools = [
     href: "/shorts-script-generator",
     group: "Script",
     use: "Use after the hook angle is validated.",
+    primary: false,
   },
   {
     name: "Thumbnail Text Checker",
@@ -71,6 +85,7 @@ const tools = [
     href: "/thumbnail-text-checker",
     group: "Package",
     use: "Use before designing or publishing the thumbnail.",
+    primary: false,
   },
   {
     name: "Viewer Retention Tips",
@@ -78,6 +93,7 @@ const tools = [
     href: "/viewer-retention-tips",
     group: "Publish",
     use: "Use when the structure needs stronger pacing.",
+    primary: false,
   },
   {
     name: "Viral Hook Examples",
@@ -85,6 +101,7 @@ const tools = [
     href: "/viral-hook-examples",
     group: "Research",
     use: "Use before creating a new batch of ideas.",
+    primary: false,
   },
 ];
 
@@ -112,19 +129,32 @@ export default function ToolsPage() {
           <a
             key={tool.href}
             href={tool.href}
-            className="rounded-[28px] border border-white/10 bg-black/24 p-6 transition hover:-translate-y-0.5 hover:border-cyan-300/30 hover:bg-cyan-300/[0.045]"
+            className={`group rounded-[28px] border p-6 transition hover:-translate-y-0.5 ${
+              tool.primary
+                ? 'border-cyan-300/25 bg-cyan-300/[0.05] hover:border-cyan-300/40 hover:bg-cyan-300/[0.08]'
+                : 'border-white/10 bg-black/24 hover:border-cyan-300/28 hover:bg-cyan-300/[0.04]'
+            }`}
           >
-            <p className="text-xs font-bold uppercase tracking-[0.14em] text-cyan-300">
-              {tool.group}
-            </p>
-            <h2 className="mt-5 text-2xl font-black tracking-tight">
+            <div className="flex items-center justify-between gap-3">
+              <p className={`text-xs font-black uppercase tracking-[0.14em] ${tool.primary ? 'text-cyan-300' : 'text-white/35'}`}>
+                {tool.group}
+              </p>
+              {tool.primary && (
+                <span className="rounded-full border border-cyan-300/22 bg-cyan-300/[0.09] px-2 py-0.5 text-[10px] font-black uppercase tracking-[0.1em] text-cyan-200">
+                  Featured
+                </span>
+              )}
+            </div>
+            <h2 className="mt-4 text-xl font-black tracking-tight text-white">
               {tool.name}
             </h2>
-            <p className="mt-4 leading-7 text-white/58">{tool.desc}</p>
-            <p className="mt-5 rounded-2xl border border-white/10 bg-white/[0.035] px-4 py-3 text-sm leading-6 text-white/48">
+            <p className="mt-3 text-sm leading-6 text-white/55">{tool.desc}</p>
+            <p className="mt-4 rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-2.5 text-xs leading-5 text-white/40">
               {tool.use}
             </p>
-            <p className="mt-6 text-sm font-bold text-cyan-300">Open →</p>
+            <p className={`mt-5 text-sm font-black transition group-hover:text-white ${tool.primary ? 'text-cyan-300' : 'text-cyan-300/70'}`}>
+              Open →
+            </p>
           </a>
         ))}
       </div>
