@@ -157,7 +157,7 @@ function HookCard({
 // ─── Section ───────────────────────────────────────────────────────────────
 export default function HookTransformSection() {
   return (
-    <section className="mx-auto mt-20 max-w-[1320px] px-5 md:px-8">
+    <section className="mx-auto mt-14 max-w-[1320px] px-5 md:px-8">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}

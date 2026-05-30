@@ -18,7 +18,7 @@ const planDetails = {
 
 export default async function BillingPage() {
   const user = await currentUser();
-  if (!user) redirect('/sign-in');
+  if (!user) redirect('/sign-in?redirect_url=/billing');
 
   const data = await getDashboardDataForUser(user.id);
   const plan = (data.credits?.plan ?? data.subscription?.plan ?? 'free') as keyof typeof planDetails;

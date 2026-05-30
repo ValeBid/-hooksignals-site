@@ -56,7 +56,7 @@ export default function RetentionCurveSection() {
   useEffect(() => setMounted(true), []);
 
   return (
-    <section className="mx-auto mt-20 max-w-[1320px] px-5 md:px-8">
+    <section className="mx-auto mt-14 max-w-[1320px] px-5 md:px-8">
       <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
 
         {/* Left: text */}

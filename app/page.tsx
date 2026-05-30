@@ -29,7 +29,7 @@ export const metadata = {
 function FinalCTA() {
   return (
     <FadeIn>
-    <section className="mx-auto mt-20 max-w-[1320px] px-5 pb-24 md:px-8">
+    <section className="mx-auto mt-14 max-w-[1320px] px-5 pb-16 md:px-8">
       <div className="overflow-hidden rounded-[40px] border border-cyan-300/20 bg-[radial-gradient(circle_at_20%_20%,rgba(34,211,238,.16),transparent_32%),radial-gradient(circle_at_80%_20%,rgba(168,85,247,.16),transparent_32%),linear-gradient(135deg,rgba(255,255,255,.07),rgba(255,255,255,.025))] p-8 text-center shadow-[0_30px_100px_rgba(34,211,238,.10)] md:p-14">
         <p className="text-sm font-black uppercase tracking-[0.18em] text-cyan-200">Start predicting</p>
         <h2 className="mx-auto mt-4 max-w-4xl text-4xl font-black tracking-[-0.06em] text-white md:text-6xl">
@@ -70,7 +70,7 @@ export default function Home() {
         <HookTransformSection />
         <CreatorAuthoritySection />
         <FadeIn>
-          <div className="mx-auto max-w-[1320px] px-5 md:px-8">
+          <div id="creator-intelligence" className="mx-auto max-w-[1320px] px-5 md:px-8">
             <EmailCapture source="homepage_main" />
           </div>
         </FadeIn>
