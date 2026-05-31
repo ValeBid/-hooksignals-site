@@ -73,14 +73,14 @@ function PredictorCard() {
         <div className="rounded-[28px] border border-white/10 bg-[radial-gradient(circle_at_18%_16%,rgba(34,211,238,.14),transparent_30%),radial-gradient(circle_at_82%_10%,rgba(168,85,247,.14),transparent_30%),linear-gradient(135deg,rgba(255,255,255,.05),rgba(255,255,255,.018))] p-5">
           <div className="flex items-start justify-between gap-4">
             <div className="min-w-0">
-              <p className="text-xs font-black uppercase tracking-[0.18em] text-cyan-300">Example Analysis</p>
+              <p className="text-xs font-black uppercase tracking-[0.18em] text-cyan-300">Analysis output</p>
               <p className="mt-2 text-sm leading-5 text-white/60 max-w-[230px]">
-                "I uploaded 100 shorts in 30 days and only one changed everything"
+                &ldquo;I uploaded 100 Shorts in 30 days and only 3 got traction&rdquo;
               </p>
             </div>
             <div className="shrink-0 rounded-2xl border border-cyan-300/20 bg-cyan-300/10 px-3 py-2 text-right">
-              <p className="text-[10px] text-white/48">Demo</p>
-              <p className="text-xl font-black text-cyan-200">8.7×</p>
+              <p className="text-[10px] text-white/48">Hook score</p>
+              <p className="text-xl font-black text-cyan-200">87</p>
             </div>
           </div>
 
@@ -91,17 +91,17 @@ function PredictorCard() {
           </div>
 
           <div className="mt-5 rounded-3xl border border-violet-300/14 bg-violet-300/[0.055] p-4">
-            <p className="text-xs font-black uppercase tracking-[0.16em] text-violet-200">Example Insight</p>
+            <p className="text-xs font-black uppercase tracking-[0.16em] text-violet-200">Title diagnosis</p>
             <p className="mt-2 text-sm leading-6 text-white/62">
-              Strong packaging. Move the result to second 1–3 instead of the setup to push retention above 75%.
+              Strong packaging. The specific ratio (100 videos, 3 results) creates credibility before the viewer decides whether to watch.
             </p>
           </div>
 
           <a
-            href="/hook-analyzer"
+            href="/youtube-video-analyzer"
             className="mt-4 block rounded-2xl border border-cyan-300/18 bg-cyan-300/[0.055] p-3 text-center text-sm font-black text-cyan-200 transition hover:bg-cyan-300/[0.12]"
           >
-            Run your own analysis →
+            Analyze your own video →
           </a>
         </div>
       </motion.div>
@@ -110,7 +110,6 @@ function PredictorCard() {
 }
 
 export default function PredictorHero() {
-  const [hook, setHook] = useState("");
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
@@ -220,60 +219,20 @@ export default function PredictorHero() {
             Analyze your title, hook, and thumbnail before publishing. Detect retention risks, weak packaging, and outlier potential in seconds.
           </motion.p>
 
-          <motion.div variants={fadeUp} className="mt-8 rounded-[28px] border border-cyan-300/18 bg-[linear-gradient(135deg,rgba(34,211,238,.055),rgba(0,0,0,.52))] p-5 shadow-[0_24px_64px_rgba(0,0,0,.4)] backdrop-blur-xl">
-            <div className="mb-3 flex items-center gap-2">
-              <span className="text-[11px] text-cyan-300">✦</span>
-              <p className="text-xs font-black uppercase tracking-[0.16em] text-white/50">Score your opening line</p>
-            </div>
-            <div className="flex gap-2.5">
-              <input
-                value={hook}
-                onChange={(e) => setHook(e.target.value.slice(0, 500))}
-                placeholder="Paste your hook or opening line..."
-                className="flex-1 min-w-0 rounded-2xl border border-white/12 bg-black/40 px-4 py-3.5 text-sm text-white outline-none placeholder:text-white/22 focus:border-cyan-300/40 transition"
-              />
-              <a
-                href={`/hook-analyzer${hook.trim() ? `?hook=${encodeURIComponent(hook.trim())}` : ""}`}
-                className="shrink-0 inline-flex items-center rounded-2xl bg-gradient-to-r from-cyan-300 via-sky-400 to-violet-400 px-5 py-3 text-sm font-black text-black shadow-[0_16px_36px_rgba(34,211,238,.22)] transition hover:scale-[1.01] whitespace-nowrap"
-              >
-                Score Hook →
-              </a>
-            </div>
-            <div className="mt-3.5">
-              <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.14em] text-white/28">Try an example:</p>
-              <div className="flex flex-wrap gap-1.5">
-                {[
-                  "I uploaded 100 Shorts in 30 days. Only 3 worked.",
-                  "The thumbnail mistake that killed my last 5 videos",
-                  "I changed one line in my intro and retention jumped 26 points",
-                ].map((ex) => (
-                  <button
-                    key={ex}
-                    type="button"
-                    onClick={() => setHook(ex)}
-                    className="rounded-xl border border-white/10 bg-white/[0.04] px-3 py-1.5 text-left text-xs text-white/48 transition hover:border-cyan-300/25 hover:bg-cyan-300/[0.06] hover:text-white/75"
-                  >
-                    &ldquo;{ex.length > 42 ? ex.slice(0, 42) + "…" : ex}&rdquo;
-                  </button>
-                ))}
-              </div>
-            </div>
-          </motion.div>
-
-          <motion.div variants={fadeUp} className="mt-6 flex flex-col gap-4 sm:flex-row">
+          <motion.div variants={fadeUp} className="mt-8 flex flex-col gap-4 sm:flex-row">
             <a
-              href="/hook-analyzer"
-              onClick={() => trackEvent({ name: "cta_click", props: { label: "Analyze Hook", destination: "/hook-analyzer", location: "hero_primary" } })}
+              href="/youtube-video-analyzer"
+              onClick={() => trackEvent({ name: "cta_click", props: { label: "Analyze YouTube Video", destination: "/youtube-video-analyzer", location: "hero_primary" } })}
               className="group inline-flex items-center justify-center gap-3 rounded-2xl bg-gradient-to-r from-cyan-300 via-sky-400 to-violet-400 px-8 py-4 text-base font-black text-black shadow-[0_20px_48px_rgba(34,211,238,.18)] transition hover:scale-[1.01]"
             >
-              Analyze Hook <span className="transition group-hover:translate-x-1">→</span>
+              Analyze YouTube Video <span className="transition group-hover:translate-x-1">→</span>
             </a>
             <a
-              href="/youtube-title-analyzer"
-              onClick={() => trackEvent({ name: "cta_click", props: { label: "Analyze Title", destination: "/youtube-title-analyzer", location: "hero_secondary" } })}
+              href="/hook-analyzer"
+              onClick={() => trackEvent({ name: "cta_click", props: { label: "Analyze Hook", destination: "/hook-analyzer", location: "hero_secondary" } })}
               className="inline-flex items-center justify-center rounded-2xl border border-cyan-300/30 bg-cyan-300/[0.08] px-8 py-4 text-base font-black text-cyan-100 transition hover:bg-cyan-300/[0.14]"
             >
-              Analyze a Title
+              Score a Hook
             </a>
           </motion.div>
 
