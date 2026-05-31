@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+
+# Next.js build output
+.next/
+out/
+
+# Build artifacts
+*.tsbuildinfo
+
+# Environment variables (never commit secrets)
+.env*
+!.env.example
+
+# Vercel
+.vercel/
+
+# Clerk configuration (can include secrets)
+/.clerk/
+
+# OS artifacts
+.DS_Store
+Thumbs.db
+
+# Domain verification (not needed in repo)
+*.html.txt
