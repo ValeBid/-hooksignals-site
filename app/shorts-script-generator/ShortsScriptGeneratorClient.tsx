@@ -56,7 +56,7 @@ export default function ShortsScriptGeneratorClient() {
         </div>
       </div>
       <section className="mt-6 grid gap-4 md:grid-cols-3">{scriptPrinciples.map(([title, desc]) => <div key={title} className="rounded-[22px] border border-white/10 bg-black/20 p-5"><p className="text-sm font-bold uppercase tracking-[0.14em] text-violet-300">Script principle</p><h2 className="mt-3 text-xl font-bold">{title}</h2><p className="mt-3 leading-7 text-white/50">{desc}</p></div>)}</section>
-      <RelatedTools />
+      <RelatedTools primary="hook-analyzer" secondary="youtube-title-analyzer" context="Score the hook from your script before you shoot. A weak opening costs the first 30 seconds." />
     </PremiumToolShell>
   );
 }

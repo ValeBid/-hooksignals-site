@@ -412,7 +412,7 @@ export default function YoutubeVideoAnalyzerPage() {
       )}
 
       <div className="mt-6">
-        <RelatedTools />
+        <RelatedTools primary="hook-analyzer" secondary="hook-improver" context="Score the hook you want to use for this video, then sharpen it." />
       </div>
     </PremiumToolShell>
   );

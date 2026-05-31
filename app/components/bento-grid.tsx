@@ -1,7 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { AnimatedCounter } from "./motion";
 
 const EASE = "easeOut" as const;
 
@@ -94,35 +93,36 @@ export default function BentoGrid() {
           </div>
         </motion.a>
 
-        {/* Card 2 — Outlier Score (small) */}
-        <motion.div
+        {/* Card 2 — Live YouTube Data */}
+        <motion.a
+          href="/youtube-video-analyzer"
           {...fadeCard(0.08)}
-          className="relative overflow-hidden rounded-[32px] border border-cyan-300/20 bg-[radial-gradient(circle_at_30%_30%,rgba(34,211,238,.12),transparent_55%),linear-gradient(135deg,rgba(34,211,238,.06),rgba(168,85,247,.06))] p-6 md:p-8"
+          whileHover={hoverProps}
+          className="relative overflow-hidden rounded-[32px] border border-cyan-300/20 bg-[radial-gradient(circle_at_30%_30%,rgba(34,211,238,.12),transparent_55%),linear-gradient(135deg,rgba(34,211,238,.06),rgba(168,85,247,.06))] p-6 md:p-8 cursor-pointer"
         >
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_80%,rgba(168,85,247,.12),transparent_50%)]" />
           <div className="relative">
-            <span className="inline-flex rounded-full border border-violet-300/20 bg-violet-300/[0.08] px-3 py-1 text-xs font-black uppercase tracking-[0.14em] text-violet-200">
-              Example
+            <span className="inline-flex rounded-full border border-cyan-300/22 bg-cyan-300/[0.10] px-3 py-1 text-xs font-black uppercase tracking-[0.14em] text-cyan-200">
+              Live data
             </span>
-            <p className="mt-5 text-sm text-white/50">Outlier potential — demo</p>
-            <motion.p
-              initial={{ opacity: 0, scale: 0.8 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.2, ease: EASE }}
-              className="mt-2 text-7xl font-black tracking-[-0.06em] text-cyan-200"
-            >
-              8.7<span className="text-4xl text-cyan-300/70">×</span>
-            </motion.p>
-            <p className="mt-3 text-sm leading-6 text-white/50">
-              Example score from a real hook analysis. Your results will vary.
+            <p className="mt-5 text-sm font-bold text-white/70">YouTube Video Analyzer</p>
+            <p className="mt-2 text-sm leading-6 text-white/50">
+              Paste any public URL. Fetches real views, likes, duration and thumbnail via YouTube Data API — then runs AI packaging analysis.
             </p>
+            <div className="mt-5 space-y-2">
+              {["Real metadata fetch", "AI packaging score", "Title + hook rewrites"].map((line) => (
+                <div key={line} className="flex items-center gap-2">
+                  <span className="text-[10px] text-cyan-300">✓</span>
+                  <span className="text-xs font-bold text-white/60">{line}</span>
+                </div>
+              ))}
+            </div>
           </div>
-        </motion.div>
+        </motion.a>
 
-        {/* Card 3 — CTR Signal */}
+        {/* Card 3 — Title Analyzer */}
         <motion.a
-          href="/hook-analyzer"
+          href="/youtube-title-analyzer"
           {...fadeCard(0.12)}
           whileHover={hoverProps}
           className="group rounded-[32px] border border-white/10 bg-black/24 p-6 cursor-pointer"
@@ -130,23 +130,31 @@ export default function BentoGrid() {
           <span className="inline-flex rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-xs font-black uppercase tracking-[0.14em] text-white/45">
             Package
           </span>
-          <h3 className="mt-4 text-xl font-black text-white">CTR Potential</h3>
-          <p className="mt-2 text-sm leading-6 text-white/48">Title and thumbnail click signal before publishing.</p>
+          <h3 className="mt-4 text-xl font-black text-white">Title Analyzer</h3>
+          <p className="mt-2 text-sm leading-6 text-white/48">Score CTR potential, clarity, curiosity gap and keyword placement before publishing.</p>
 
-          <div className="mt-6">
-            <div className="flex items-end justify-between">
-              <AnimatedCounter to={90} duration={1.4} className="text-5xl font-black text-white" />
-              <span className="mb-2 text-white/38">/100</span>
-            </div>
-            <div className="mt-3 h-2 overflow-hidden rounded-full bg-white/10">
-              <motion.div
-                className="h-full rounded-full bg-gradient-to-r from-cyan-300 to-sky-400"
-                initial={{ width: "0%" }}
-                whileInView={{ width: "90%" }}
-                viewport={{ once: true }}
-                transition={{ duration: 1.1, delay: 0.3, ease: EASE }}
-              />
-            </div>
+          <div className="mt-6 space-y-3">
+            {[
+              { label: "CTR potential", pct: 88 },
+              { label: "Clarity", pct: 91 },
+              { label: "Curiosity gap", pct: 76 },
+            ].map(({ label, pct }) => (
+              <div key={label}>
+                <div className="mb-1 flex justify-between text-xs text-white/45">
+                  <span>{label}</span>
+                  <span className="font-bold text-white/60">{pct}</span>
+                </div>
+                <div className="h-1.5 overflow-hidden rounded-full bg-white/10">
+                  <motion.div
+                    className="h-full rounded-full bg-gradient-to-r from-cyan-300 to-sky-400"
+                    initial={{ width: "0%" }}
+                    whileInView={{ width: `${pct}%` }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 1.0, delay: 0.2, ease: EASE }}
+                  />
+                </div>
+              </div>
+            ))}
           </div>
           <p className="mt-5 text-sm font-black text-cyan-300 transition group-hover:translate-x-1">Analyze title →</p>
         </motion.a>
@@ -164,11 +172,15 @@ export default function BentoGrid() {
           <h3 className="mt-4 text-xl font-black text-white">Retention Risk</h3>
           <p className="mt-2 text-sm leading-6 text-white/48">Early drop-off probability from the opening signal.</p>
 
-          <div className="mt-6 grid grid-cols-3 gap-2">
-            {[18, 22, 14].map((v, i) => (
-              <div key={i} className="rounded-xl border border-white/10 bg-white/[0.035] p-3 text-center">
-                <p className="text-xl font-black text-white">{v}%</p>
-                <p className="mt-1 text-[10px] text-white/38">{["30s", "60s", "End"][i]}</p>
+          <div className="mt-6 space-y-2">
+            {[
+              { label: "Opening 3 seconds", risk: "Highest" },
+              { label: "30-second gate", risk: "Critical" },
+              { label: "60-second drop", risk: "Moderate" },
+            ].map(({ label, risk }) => (
+              <div key={label} className="flex items-center justify-between rounded-xl border border-white/10 bg-white/[0.035] px-3 py-2.5">
+                <span className="text-xs text-white/50">{label}</span>
+                <span className="text-xs font-black text-amber-300">{risk}</span>
               </div>
             ))}
           </div>

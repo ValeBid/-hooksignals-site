@@ -166,10 +166,6 @@ export default function HookTransformSection() {
         transition={{ duration: 0.65, ease: EASE }}
         className="mb-10"
       >
-        <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-xs font-black uppercase tracking-[0.14em] text-white/45">
-          <span className="inline-block h-1.5 w-1.5 rounded-full bg-cyan-300" />
-          Example Analysis — not real user data
-        </div>
         <h2 className="max-w-3xl text-4xl font-black tracking-[-0.05em] text-white md:text-5xl">
           See what the analyzer actually does.
         </h2>

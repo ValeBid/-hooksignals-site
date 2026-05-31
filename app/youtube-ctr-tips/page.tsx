@@ -140,7 +140,7 @@ export default function YouTubeCTRTipsPage() {
           </div>
         </section>
 
-        <RelatedTools />
+        <RelatedTools primary="youtube-title-analyzer" secondary="youtube-video-analyzer" context="Apply these CTR principles — score your title for click-through potential now." />
       </section>
 
       <SiteFooter />

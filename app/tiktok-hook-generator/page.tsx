@@ -158,7 +158,7 @@ export default function TikTokHookGeneratorPage() {
         </a>
       </section>
 
-      <RelatedTools />
+      <RelatedTools primary="hook-analyzer" secondary="hook-improver" context="Score the TikTok hook you generated, then refine the weakest signal." />
     </PremiumToolShell>
   );
 }
