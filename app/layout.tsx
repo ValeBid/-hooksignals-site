@@ -4,6 +4,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import GoogleAnalytics from "./components/google-analytics";
+import MicrosoftClarity from "./components/microsoft-clarity";
 import { siteConfig } from "./lib/seo";
 
 const inter = Inter({
@@ -75,6 +76,7 @@ export default function RootLayout({
           <Analytics />
           <SpeedInsights />
           <GoogleAnalytics />
+          <MicrosoftClarity />
         </body>
       </html>
     </ClerkProvider>
