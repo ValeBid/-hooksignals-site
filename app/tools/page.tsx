@@ -1,5 +1,5 @@
 import PremiumToolShell from "../components/premium-tool-shell";
-import { StaggerContainer, StaggerItem, FadeIn } from "../components/motion";
+import { FadeIn } from "../components/motion";
 
 export const metadata = {
   title: "AI Creator Tools for Hooks, Titles, Scripts & Retention",
@@ -16,172 +16,186 @@ export const metadata = {
   },
 };
 
-const workflow = [
-  ["01", "Diagnose", "Find the weak point in the opening promise."],
-  ["02", "Improve", "Rewrite the hook and tighten the script angle."],
-  ["03", "Package", "Align title and thumbnail with one clear payoff."],
-  ["04", "Publish", "Use retention cues before the idea goes live."],
-];
+type Tool = {
+  name: string;
+  desc: string;
+  href: string;
+  stage: string;
+  cta: string;
+  accent?: boolean;
+};
 
-const tools = [
-  {
-    name: "YouTube Video Analyzer",
-    desc: "Paste any YouTube URL to fetch real video data — views, likes, transcript — and get an AI hook and packaging analysis.",
-    href: "/youtube-video-analyzer",
-    group: "Flagship",
-    use: "Start here to analyze any public YouTube video with live data.",
-    primary: true,
-  },
+const supporting: Tool[] = [
   {
     name: "Hook Analyzer",
-    desc: "Score your opening line for clarity, curiosity and retention strength.",
+    desc: "Score your opening line for clarity, curiosity gap and retention risk across platforms.",
     href: "/hook-analyzer",
-    group: "Diagnose",
-    use: "Use when the idea feels unclear or the hook needs a score.",
-    primary: true,
+    stage: "Analyze",
+    cta: "Score your hook →",
+    accent: true,
   },
   {
     name: "YouTube Title Analyzer",
     desc: "Score your title for CTR potential, clarity, curiosity gap and keyword placement.",
     href: "/youtube-title-analyzer",
-    group: "Intelligence",
-    use: "Use before publishing to maximize click-through rate.",
-    primary: true,
+    stage: "Analyze",
+    cta: "Score your title →",
+    accent: true,
   },
   {
     name: "Hook Improver",
-    desc: "Rewrite weak hooks into sharper, more curiosity-driven versions.",
+    desc: "Rewrite weak hooks into sharper, tension-driven versions with named rewrite angles.",
     href: "/hook-improver",
-    group: "Improve",
-    use: "Use after you know what is weak.",
-    primary: false,
+    stage: "Improve",
+    cta: "Rewrite your hook →",
   },
   {
     name: "YouTube Hook Generator",
     desc: "Generate stronger opening lines for YouTube videos and Shorts.",
     href: "/youtube-hook-generator",
-    group: "Generate",
-    use: "Use when you need more opening angles.",
-    primary: false,
+    stage: "Improve",
+    cta: "Generate hooks →",
   },
   {
     name: "TikTok Hook Generator",
-    desc: "Create TikTok hooks designed to stop the scroll quickly.",
+    desc: "Create TikTok hooks designed to stop the scroll in the first word.",
     href: "/tiktok-hook-generator",
-    group: "Generate",
-    use: "Use for short-form concepts and fast tests.",
-    primary: false,
+    stage: "Improve",
+    cta: "Generate TikTok hooks →",
   },
   {
     name: "YouTube Title Generator",
-    desc: "Generate clickable YouTube titles built around curiosity and CTR.",
+    desc: "Generate clickable YouTube titles built around curiosity and CTR signals.",
     href: "/youtube-title-generator",
-    group: "Package",
-    use: "Use before locking the final topic promise.",
-    primary: false,
-  },
-  {
-    name: "Shorts Script Generator",
-    desc: "Build fast-paced Shorts scripts designed for retention.",
-    href: "/shorts-script-generator",
-    group: "Script",
-    use: "Use after the hook angle is validated.",
-    primary: false,
+    stage: "Package",
+    cta: "Generate titles →",
   },
   {
     name: "Thumbnail Text Checker",
-    desc: "Check if thumbnail text is short, readable and CTR-friendly.",
+    desc: "Check if thumbnail text is short, readable and CTR-friendly before designing.",
     href: "/thumbnail-text-checker",
-    group: "Package",
-    use: "Use before designing or publishing the thumbnail.",
-    primary: false,
+    stage: "Package",
+    cta: "Check thumbnail →",
   },
   {
-    name: "Viewer Retention Tips",
-    desc: "Learn retention principles for Shorts, TikTok and YouTube.",
-    href: "/viewer-retention-tips",
-    group: "Publish",
-    use: "Use when the structure needs stronger pacing.",
-    primary: false,
+    name: "Shorts Script Generator",
+    desc: "Build retention-focused Shorts scripts with a structured hook, beat and payoff.",
+    href: "/shorts-script-generator",
+    stage: "Script",
+    cta: "Build a script →",
   },
   {
     name: "Viral Hook Examples",
-    desc: "Study hook examples and short-form patterns.",
+    desc: "Study hook patterns across 6 types — proof, warning, curiosity gap and more.",
     href: "/viral-hook-examples",
-    group: "Research",
-    use: "Use before creating a new batch of ideas.",
-    primary: false,
+    stage: "Research",
+    cta: "Study patterns →",
+  },
+  {
+    name: "Viewer Retention Tips",
+    desc: "Learn retention principles for Shorts, TikTok and YouTube long-form.",
+    href: "/viewer-retention-tips",
+    stage: "Research",
+    cta: "Read tips →",
   },
 ];
+
+const stageColor: Record<string, string> = {
+  Analyze: "text-cyan-300",
+  Improve: "text-violet-300",
+  Package: "text-sky-300",
+  Script: "text-emerald-300",
+  Research: "text-amber-300",
+};
 
 export default function ToolsPage() {
   return (
     <PremiumToolShell
-      badge="Creator operating workflow"
-      title="Move from rough idea to cleaner publishing decision."
-      description="HookSignals is organized around the real creator workflow: diagnose the opening, improve the angle, package the promise and publish with stronger retention cues."
+      badge="Creator tool suite"
+      title="Every pre-publish signal in one place."
+      description="Paste a URL, a hook, or a title. Get scores, diagnosis and rewrites before the video goes live."
       primaryHref="/youtube-video-analyzer"
       primaryLabel="Analyze YouTube Video"
     >
-      <section className="grid gap-3 rounded-[30px] border border-white/10 bg-white/[0.025] p-4 md:grid-cols-4 md:p-5">
-        {workflow.map(([step, title, text]) => (
-          <div key={step} className="rounded-[22px] border border-white/10 bg-black/25 p-5">
-            <p className="text-xs font-black uppercase tracking-[0.14em] text-cyan-300">{step}</p>
-            <h2 className="mt-3 text-xl font-black tracking-tight">{title}</h2>
-            <p className="mt-3 text-sm leading-6 text-white/48">{text}</p>
-          </div>
-        ))}
-      </section>
-
-      <StaggerContainer className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {tools.map((tool) => (
-          <StaggerItem key={tool.href}>
-            <a
-              href={tool.href}
-              className={`group block h-full rounded-[28px] border p-6 transition hover:-translate-y-0.5 ${
-                tool.primary
-                  ? 'border-cyan-300/25 bg-cyan-300/[0.05] hover:border-cyan-300/40 hover:bg-cyan-300/[0.09]'
-                  : 'border-white/10 bg-black/24 hover:border-cyan-300/25 hover:bg-cyan-300/[0.04]'
-              }`}
-            >
-              <div className="flex items-center justify-between gap-3">
-                <p className={`text-xs font-black uppercase tracking-[0.14em] ${tool.primary ? 'text-cyan-300' : 'text-white/35'}`}>
-                  {tool.group}
-                </p>
-                {tool.primary && (
-                  <span className="rounded-full border border-cyan-300/22 bg-cyan-300/[0.09] px-2 py-0.5 text-[10px] font-black uppercase tracking-[0.1em] text-cyan-200">
-                    Featured
-                  </span>
-                )}
-              </div>
-              <h2 className="mt-4 text-xl font-black tracking-tight text-white">
-                {tool.name}
-              </h2>
-              <p className="mt-3 text-sm leading-6 text-white/55">{tool.desc}</p>
-              <p className="mt-4 rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-2.5 text-xs leading-5 text-white/40">
-                {tool.use}
-              </p>
-              <p className={`mt-5 text-sm font-black transition group-hover:text-white ${tool.primary ? 'text-cyan-300' : 'text-cyan-300/70'}`}>
-                Open →
-              </p>
-            </a>
-          </StaggerItem>
-        ))}
-      </StaggerContainer>
-
+      {/* Flagship card — YouTube Video Analyzer */}
       <FadeIn>
-        <section className="mt-8 rounded-[30px] border border-cyan-300/18 bg-cyan-300/[0.045] p-6 md:p-8">
-          <p className="text-sm font-bold uppercase tracking-[0.14em] text-cyan-300">
-            Recommended workflow
-          </p>
-          <h2 className="mt-4 text-3xl font-black tracking-tight">
-            Start with the hook. Then lock the title, script and thumbnail.
+        <a
+          href="/youtube-video-analyzer"
+          className="group block rounded-[32px] border border-cyan-300/30 bg-[radial-gradient(circle_at_20%_20%,rgba(34,211,238,.12),transparent_40%),linear-gradient(135deg,rgba(34,211,238,.06),rgba(124,58,237,.04))] p-7 transition hover:border-cyan-300/50 md:p-9"
+        >
+          <div className="flex flex-wrap items-center gap-3">
+            <span className="inline-flex rounded-full border border-cyan-300/30 bg-cyan-300/[0.12] px-3 py-1 text-xs font-black uppercase tracking-[0.14em] text-cyan-200">
+              Flagship
+            </span>
+            <span className="inline-flex rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-xs font-black uppercase tracking-[0.14em] text-white/40">
+              Live YouTube data
+            </span>
+          </div>
+
+          <h2 className="mt-5 text-3xl font-black tracking-[-0.04em] text-white md:text-4xl">
+            YouTube Video Analyzer
           </h2>
-          <p className="mt-5 max-w-3xl leading-8 text-white/58">
-            A stronger hook improves retention, a clearer title improves clicks,
-            and a sharper thumbnail improves the first impression. Treat every tool as one part of the same publishing decision.
+          <p className="mt-3 max-w-2xl text-base leading-8 text-white/58">
+            Paste any public YouTube URL. The analyzer fetches real metadata via the YouTube Data API — views, likes, duration, thumbnail — then runs AI packaging analysis across 9 signals and returns scored output with title rewrites, hook alternatives and thumbnail ideas.
           </p>
-        </section>
+
+          <div className="mt-7 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {[
+              { label: "Packaging score", val: "0–100" },
+              { label: "Hook strength", val: "0–100" },
+              { label: "CTR potential", val: "0–100" },
+              { label: "Retention risk", val: "Low / Med / High" },
+            ].map(({ label, val }) => (
+              <div key={label} className="rounded-[18px] border border-white/10 bg-black/24 px-4 py-3">
+                <p className="text-xs text-white/40">{label}</p>
+                <p className="mt-1 text-sm font-black text-white/80">{val}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-6 flex flex-wrap items-center gap-4">
+            <span className="text-sm font-black text-cyan-300 transition group-hover:translate-x-1">
+              Analyze a video →
+            </span>
+            <span className="text-xs text-white/35">Also returns: better titles, opening hook ideas, thumbnail text, description angle</span>
+          </div>
+        </a>
+      </FadeIn>
+
+      {/* Supporting tools grid */}
+      <FadeIn delay={0.08}>
+        <div className="mt-6">
+          <p className="mb-4 text-xs font-black uppercase tracking-[0.14em] text-white/35">
+            Supporting tools
+          </p>
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {supporting.map((tool) => {
+              const stageClass = stageColor[tool.stage] ?? "text-white/40";
+              return (
+                <a
+                  key={tool.href}
+                  href={tool.href}
+                  className={`group block rounded-[26px] border p-6 transition hover:-translate-y-0.5 ${
+                    tool.accent
+                      ? "border-cyan-300/20 bg-cyan-300/[0.04] hover:border-cyan-300/35 hover:bg-cyan-300/[0.07]"
+                      : "border-white/10 bg-black/22 hover:border-white/18 hover:bg-white/[0.03]"
+                  }`}
+                >
+                  <p className={`text-[10px] font-black uppercase tracking-[0.14em] ${stageClass}`}>
+                    {tool.stage}
+                  </p>
+                  <h3 className="mt-3 text-lg font-black tracking-tight text-white">
+                    {tool.name}
+                  </h3>
+                  <p className="mt-2 text-sm leading-6 text-white/52">{tool.desc}</p>
+                  <p className={`mt-5 text-sm font-black transition group-hover:translate-x-0.5 ${tool.accent ? "text-cyan-300" : "text-cyan-300/65 group-hover:text-cyan-300"}`}>
+                    {tool.cta}
+                  </p>
+                </a>
+              );
+            })}
+          </div>
+        </div>
       </FadeIn>
     </PremiumToolShell>
   );

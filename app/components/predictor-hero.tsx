@@ -216,7 +216,7 @@ export default function PredictorHero() {
           </motion.h1>
 
           <motion.p variants={fadeUp} className="mt-8 max-w-2xl text-lg leading-8 text-white/62 md:text-xl">
-            Analyze your title, hook, and thumbnail before publishing. Detect retention risks, weak packaging, and outlier potential in seconds.
+            Most creators find out what was wrong with their hook from viewer drop-off data — after the video is already live. HookSignals runs the diagnosis before you publish.
           </motion.p>
 
           <motion.div variants={fadeUp} className="mt-8 flex flex-col gap-4 sm:flex-row">
@@ -236,10 +236,17 @@ export default function PredictorHero() {
             </a>
           </motion.div>
 
-          <motion.div variants={fadeUp} className="mt-7 flex flex-wrap gap-5 text-sm text-white/42">
-            <span>✓ Live YouTube data</span>
-            <span>✓ AI hook + packaging scoring</span>
-            <span>✓ Free to start — no card required</span>
+          <motion.div variants={fadeUp} className="mt-7 grid grid-cols-1 gap-2 sm:grid-cols-3">
+            {[
+              { stat: "9 signals", label: "scored per hook — clarity, curiosity gap, retention risk and more" },
+              { stat: "Live data", label: "real YouTube metadata fetched via YouTube Data API on every URL" },
+              { stat: "Free start", label: "3 full analyses included — no card required to begin" },
+            ].map(({ stat, label }) => (
+              <div key={stat} className="flex items-start gap-3 rounded-[18px] border border-white/8 bg-white/[0.025] px-3.5 py-3">
+                <span className="mt-0.5 shrink-0 text-sm font-black text-cyan-300">{stat}</span>
+                <span className="text-xs leading-5 text-white/42">{label}</span>
+              </div>
+            ))}
           </motion.div>
         </motion.div>
 
