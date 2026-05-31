@@ -309,9 +309,9 @@ export default function YoutubeVideoAnalyzerPage() {
 
   return (
     <PremiumToolShell
-      badge="Live Analyzer"
-      title="YouTube Video Analyzer"
-      description="Analyze public YouTube videos using real metadata and AI packaging intelligence. Get packaging scores, title diagnosis, retention risk and improvement ideas."
+      badge="Video analyzer"
+      title="Find out why any YouTube video worked — or didn't."
+      description="Paste any public YouTube URL. Get real metadata from the YouTube Data API, AI packaging scores across 9 signals, and specific improvement ideas for title, hook and thumbnail."
       primaryHref="/hook-analyzer"
       primaryLabel="Analyze Hook Text"
     >

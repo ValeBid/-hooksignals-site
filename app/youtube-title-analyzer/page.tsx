@@ -85,14 +85,14 @@ function CharBar({ chars }: { chars: number }) {
 function EmptyState() {
   return (
     <div className="rounded-[28px] border border-white/10 bg-black/22 p-7">
-      <p className="text-sm text-cyan-300">Analysis will appear here</p>
+      <p className="text-sm text-cyan-300">Title scorer</p>
       <h2 className="mt-4 max-w-xl text-3xl font-black tracking-tight">
-        Score your title before publishing.
+        Find out if your title will get clicks.
       </h2>
       <p className="mt-4 max-w-2xl leading-7 text-white/48">
-        HookSignals checks your YouTube title for CTR potential, clarity,
-        curiosity gap, character length and keyword placement. Get improvement
-        suggestions before your video goes live.
+        HookSignals scores your YouTube title for CTR potential, clarity, curiosity gap,
+        character length and keyword placement — then returns an improved version and
+        alternative angles before your video goes live.
       </p>
       <div className="mt-7 grid gap-3 sm:grid-cols-3">
         {[
@@ -307,9 +307,9 @@ export default function YouTubeTitleAnalyzerPage() {
 
   return (
     <PremiumToolShell
-      badge="Title intelligence"
-      title="YouTube Title Analyzer"
-      description="Score your title for CTR potential, clarity, curiosity gap, keyword placement and optimal length. Get AI-powered improvements before your video goes live."
+      badge="Title scorer"
+      title="Find out if your title will get clicks."
+      description="Paste your YouTube title. Get a score for CTR potential, clarity, curiosity gap and keyword placement — plus an improved version and alternative angles."
       primaryHref="/hook-analyzer"
       primaryLabel="Analyze Hook"
       secondaryHref="/tools"

@@ -97,11 +97,11 @@ export default function HookImproverPage() {
 
   return (
     <PremiumToolShell
-      badge="Hook workflow"
-      title="Hook Improver for YouTube Shorts, TikTok and Reels"
-      description="Rewrite weak video ideas into sharper hook variations designed for clarity, curiosity, audience fit and viewer retention."
+      badge="Hook rewriter"
+      title="Turn a weak opening into 4 testable hooks."
+      description="Paste any rough video idea or weak hook. Get four rewritten versions — each using a different psychological angle — ready to test in the analyzer."
       primaryHref="/hook-analyzer"
-      primaryLabel="Analyze Hook"
+      primaryLabel="Score a Hook"
     >
       <div className="grid gap-5 lg:grid-cols-[0.92fr_1.08fr]">
         {/* Input panel */}
@@ -276,18 +276,6 @@ export default function HookImproverPage() {
             </article>
           ))}
         </div>
-      </section>
-
-      <section className="mt-6 grid gap-4 md:grid-cols-3">
-        {principles.map(([title, desc]) => (
-          <div
-            key={title}
-            className="rounded-[22px] border border-white/10 bg-black/20 p-5"
-          >
-            <h2 className="text-xl font-bold">{title}</h2>
-            <p className="mt-3 leading-7 text-white/50">{desc}</p>
-          </div>
-        ))}
       </section>
 
       <RelatedTools primary="hook-analyzer" secondary="youtube-title-analyzer" context="Check the score of your improved hook, or align it with your title." />
