@@ -9,7 +9,8 @@ HookSignals — AI creator intelligence SaaS for YouTube, Shorts, TikTok and cre
 - Supabase (database) — `@supabase/supabase-js`
 - Paddle (billing) — client-side JS + webhook API
 - OpenAI — `gpt-4o-mini` for hook analysis
-- Apify — YouTube video scraper
+- YouTube Data API v3 — via server-side `YOUTUBE_API_KEY` (primary YouTube provider)
+- Apify — legacy/optional fallback for YouTube scraping (not required)
 - Vercel (hosting + analytics)
 - Tailwind CSS + Framer Motion
 
@@ -87,19 +88,23 @@ export const metadata = { title: "Hook Analyzer | HookSignals" }
 | `OPENAI_API_KEY` | YES | Hook analysis AI |
 | `NEXT_PUBLIC_PADDLE_CLIENT_TOKEN` | YES | Paddle checkout |
 | `PADDLE_WEBHOOK_SECRET` | YES | Webhook verification |
-| `APIFY_TOKEN` | For YouTube analyzer | Apify scraper |
+| `YOUTUBE_API_KEY` | For YouTube URL analyzer | YouTube Data API v3 (primary). Also checks `GOOGLE_YOUTUBE_API_KEY`, `YOUTUBE_DATA_API_KEY`. Without this, URL mode falls back to manual mode — page stays functional. |
+| `APIFY_TOKEN` | Optional legacy | Apify scraper fallback if `YOUTUBE_API_KEY` is not set. Not required. |
 | `NEXT_PUBLIC_GA_MEASUREMENT_ID` | Optional | Google Analytics |
 | `OPENAI_MODEL` | Optional | Defaults to gpt-4o-mini |
 
-## Known Production Issue — DNS (May 2026)
-`clerk.hooksignals.com` CNAME is not set. Auth widgets (SignIn, SignUp) render blank.
+## YouTube Video Analyzer
 
-**Fix:** Add to DNS (Namecheap):
-- Type: CNAME
-- Host: clerk
-- Value: frontend-api.clerk.services
+`/youtube-video-analyzer` is a real working tool (not early access).
 
-This is a DNS-level fix, not a code fix.
+- **URL mode**: Requires `YOUTUBE_API_KEY`. Fetches real public metadata via YouTube Data API v3.
+- **Manual mode**: No API key needed. User pastes title, hook, thumbnail text. Always works.
+- Provider priority: `YOUTUBE_API_KEY` → `APIFY_TOKEN` → graceful manual-mode fallback.
+- Scores are AI estimates based on public packaging signals — never claim real CTR/retention data.
+
+## Known Production Status — DNS (May 2026)
+`clerk.hooksignals.com` CNAME was added by owner. Verify propagation with `dig clerk.hooksignals.com`.
+If still NXDOMAIN, check Namecheap DNS for: Type=CNAME, Host=clerk, Value=frontend-api.clerk.services.
 
 ## HookSignalOS
 See `ops/` directory for the full operating system:

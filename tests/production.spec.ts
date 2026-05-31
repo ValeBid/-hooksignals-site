@@ -214,7 +214,8 @@ test("10. Homepage internal links do not 404", async ({ page, request }) => {
     links.map((l) => (l as HTMLAnchorElement).href)
   );
 
-  const unique = [...new Set(hrefs)].slice(0, 20); // check first 20
+  const seen = new Set<string>();
+  const unique = hrefs.filter((h) => { if (seen.has(h)) return false; seen.add(h); return true; }).slice(0, 20);
   const broken: string[] = [];
 
   for (const href of unique) {
@@ -278,4 +279,95 @@ test("12. Pricing page CTA links go to checkout or sign-up (not 404)", async ({
     const res = await request.get(href, { timeout: 8000 });
     expect([200, 301, 302, 307, 308]).toContain(res.status());
   }
+});
+
+// ── 13. YouTube Video Analyzer — page loads ──────────────────────────────────
+test("13. YouTube Video Analyzer page loads correctly", async ({ page }) => {
+  await page.goto(`${BASE}/youtube-video-analyzer`, { waitUntil: "domcontentloaded" });
+
+  const title = await page.title();
+  console.log(`YouTube Analyzer title: ${title}`);
+
+  expect(title).toContain("YouTube Video Analyzer");
+  expect(hasDuplicateTitle(title)).toBe(false);
+});
+
+// ── 14. YouTube Analyzer — not early access ──────────────────────────────────
+test("14. YouTube Analyzer does not show coming-soon/early-access as primary state", async ({ page }) => {
+  await page.goto(`${BASE}/youtube-video-analyzer`, { waitUntil: "domcontentloaded" });
+
+  const body = await page.content();
+
+  // Should NOT be an early-access only page
+  const hasPrimaryComingSoon = body.includes("Full YouTube data analysis is on the way");
+  const hasPrimaryEmailCapture = body.includes("Enter your email below to be first to know");
+
+  expect(hasPrimaryComingSoon).toBe(false);
+  expect(hasPrimaryEmailCapture).toBe(false);
+
+  console.log(`Coming-soon primary state: ${hasPrimaryComingSoon ? "PRESENT (BAD)" : "ABSENT (GOOD)"}`);
+});
+
+// ── 15. YouTube Analyzer — URL input visible ─────────────────────────────────
+test("15. YouTube Analyzer has URL input and analyze button", async ({ page }) => {
+  await page.goto(`${BASE}/youtube-video-analyzer`, { waitUntil: "domcontentloaded" });
+
+  const urlInput = page.locator('input[placeholder*="youtube"]').first();
+  const analyzeButton = page.locator('button:has-text("Analyze")').first();
+
+  const inputVisible = (await urlInput.count()) > 0;
+  const buttonVisible = (await analyzeButton.count()) > 0;
+
+  console.log(`URL input present: ${inputVisible}`);
+  console.log(`Analyze button present: ${buttonVisible}`);
+
+  expect(inputVisible).toBe(true);
+  expect(buttonVisible).toBe(true);
+});
+
+// ── 16. YouTube Analyzer — manual mode available ─────────────────────────────
+test("16. YouTube Analyzer has manual analysis fallback mode", async ({ page }) => {
+  await page.goto(`${BASE}/youtube-video-analyzer`, { waitUntil: "domcontentloaded" });
+
+  const manualButton = page.locator('button:has-text("Manual")').first();
+  const manualVisible = (await manualButton.count()) > 0;
+
+  console.log(`Manual mode button present: ${manualVisible}`);
+  expect(manualVisible).toBe(true);
+});
+
+// ── 17. YouTube Analyzer — trust disclaimer visible ──────────────────────────
+test("17. YouTube Analyzer shows trust/disclaimer note", async ({ page }) => {
+  await page.goto(`${BASE}/youtube-video-analyzer`, { waitUntil: "domcontentloaded" });
+
+  const body = await page.content();
+  const hasTrustNote =
+    body.includes("does not access private") ||
+    body.includes("YouTube Studio") ||
+    body.includes("public YouTube metadata");
+
+  console.log(`Trust disclaimer present: ${hasTrustNote}`);
+  expect(hasTrustNote).toBe(true);
+});
+
+// ── 18. YouTube Analyzer — no critical console errors ────────────────────────
+test("18. YouTube Analyzer page has no JS exceptions", async ({ page }) => {
+  const jsErrors: string[] = [];
+  page.on("console", (msg) => {
+    if (msg.type() === "error" && !msg.text().includes("clerk.hooksignals.com")) {
+      jsErrors.push(msg.text());
+    }
+  });
+
+  await page.goto(`${BASE}/youtube-video-analyzer`, { waitUntil: "domcontentloaded" });
+
+  const nonClerkErrors = jsErrors.filter(
+    (e) => !e.includes("clerk") && !e.includes("Clerk")
+  );
+
+  if (nonClerkErrors.length > 0) {
+    console.warn("Non-Clerk JS errors:", nonClerkErrors.join("\n"));
+  }
+
+  expect(nonClerkErrors.length).toBe(0);
 });
