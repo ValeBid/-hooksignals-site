@@ -1,61 +1,79 @@
 import { NextResponse } from "next/server";
 import { validateYouTubeUrl, extractVideoId } from "../../../lib/youtube";
-import type { YouTubeVideoData } from "../../../lib/youtube";
 import { getYouTubeVideoProvider } from "../../../lib/providers";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
-export const maxDuration = 90;
+export const maxDuration = 30;
 
 const OPENAI_URL = "https://api.openai.com/v1/chat/completions";
 const MODEL = process.env.OPENAI_MODEL || "gpt-4o-mini";
 
 // ─── Rate limiting ────────────────────────────────────────────────────────────
-// In-memory per-IP limiter: 5 requests / hour.
-// NOTE: resets on cold start on serverless; this matches the existing pattern
-// used across this codebase (see app/api/analyze-hook/route.ts).
 const RATE_WINDOW_MS = 60 * 60 * 1000;
-const RATE_MAX = 5;
+const RATE_MAX = 10;
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
 
-// ─── Cache ────────────────────────────────────────────────────────────────────
-// Video data + analysis cached by video ID for 1 hour.
-type CacheEntry = {
-  data: YouTubeVideoData;
-  analysis: VideoAnalysisResult;
-  cachedAt: number;
-};
+// ─── Cache: video data + analysis by video ID ─────────────────────────────────
 const CACHE_TTL_MS = 60 * 60 * 1000;
-const videoCache = new Map<string, CacheEntry>();
+const videoCache = new Map<string, { payload: AnalyzeResponse; cachedAt: number }>();
 
 // ─── Types ────────────────────────────────────────────────────────────────────
-type VideoAnalysisResult = {
-  hookScore: number;
-  clarityScore: number;
-  curiosityScore: number;
-  retentionRisk: number;
-  pattern: string;
-  weakness: string;
-  improvedHook: string;
-  variants: string[];
-  retentionNotes: string[];
-  scoreRationale: string[];
-  audienceTrigger: string;
-  titlePairings: string[];
-  thumbnailAngles: string[];
+export type VideoInfo = {
+  id: string;
+  title: string;
+  description: string;
+  channelTitle: string;
+  publishedAt: string | null;
+  duration: string | null;
+  thumbnailUrl: string;
+  viewCount: number | null;
+  likeCount: number | null;
+  commentCount: number | null;
 };
 
-export type VideoAnalyzeResponse = YouTubeVideoData & {
-  analysis: VideoAnalysisResult;
-  mode: "ai" | "rules" | "cached";
-  cached: boolean;
+export type Scores = {
+  packagingScore: number;
+  hookStrength: number;
+  curiosityScore: number;
+  clarityScore: number;
+  ctrPotential: number;
+  retentionRisk: number;
+  outlierPotential: number;
+};
+
+export type Analysis = {
+  summary: string;
+  strengths: string[];
+  risks: string[];
+  titleDiagnosis: string;
+  thumbnailDiagnosis: string;
+  retentionDiagnosis: string;
+  positioningDiagnosis: string;
+};
+
+export type Recommendations = {
+  betterTitles: string[];
+  thumbnailTextIdeas: string[];
+  openingHookIdeas: string[];
+  descriptionAngle: string;
+};
+
+export type AnalyzeResponse = {
+  source: "youtube_api" | "manual" | "cached";
+  video: VideoInfo;
+  scores: Scores;
+  analysis: Analysis;
+  recommendations: Recommendations;
+  mode: "ai" | "rules";
+  disclaimer: string;
 };
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-function getClientIp(request: Request): string {
+function getClientIp(req: Request): string {
   return (
-    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
-    request.headers.get("x-real-ip")?.trim() ??
+    req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
+    req.headers.get("x-real-ip")?.trim() ??
     "anonymous"
   );
 }
@@ -72,191 +90,236 @@ function checkRateLimit(ip: string): boolean {
   return false;
 }
 
-function getCached(videoId: string): CacheEntry | null {
-  const entry = videoCache.get(videoId);
-  if (!entry) return null;
-  if (Date.now() - entry.cachedAt > CACHE_TTL_MS) {
-    videoCache.delete(videoId);
-    return null;
-  }
-  return entry;
-}
-
-function clean(value: unknown, max = 80): string {
-  return typeof value === "string"
-    ? value.trim().replace(/\s+/g, " ").slice(0, max)
-    : "";
-}
-
-function cleanArr(value: unknown, fallback: string[], limit = 5): string[] {
-  if (!Array.isArray(value)) return fallback;
-  const items = value
-    .map((v) => clean(String(v), 220))
-    .filter(Boolean)
-    .slice(0, limit);
-  return items.length ? items : fallback;
-}
-
-function clamp(value: unknown, fallback: number): number {
-  const n = Number(value);
+function clamp(v: unknown, fallback: number): number {
+  const n = Number(v);
   return Number.isFinite(n) ? Math.max(0, Math.min(100, Math.round(n))) : fallback;
 }
 
-function fallbackAnalysis(title: string): VideoAnalysisResult {
+function cleanStr(v: unknown, max = 300): string {
+  return typeof v === "string" ? v.trim().slice(0, max) : "";
+}
+
+function cleanArr(v: unknown, fallback: string[], limit = 5): string[] {
+  if (!Array.isArray(v)) return fallback;
+  const items = v.map((x) => cleanStr(String(x), 280)).filter(Boolean).slice(0, limit);
+  return items.length ? items : fallback;
+}
+
+const DISCLAIMER =
+  "This analysis uses public YouTube metadata and AI packaging signals. " +
+  "It does not access private YouTube Studio data such as retention curves, actual CTR, or watch time.";
+
+// ─── Heuristic scoring (no OpenAI) ───────────────────────────────────────────
+function heuristicScores(title: string, description: string): Scores {
+  const words = title.trim().split(/\s+/).filter(Boolean);
+  const lower = title.toLowerCase();
+  const hasNumber = /\d/.test(title);
+  const hasTension = /mistake|secret|stop|why|hidden|truth|avoid|but|failed|lost|wrong|before|after|nobody|one|changed|surprised/i.test(title);
+  const hasOutcome = /doubled|increased|grew|saved|lost|failed|worked|result|retention|views|click|ctr|sales|revenue|growth/i.test(title);
+  const hasTimeframe = /hour|day|week|month|year|48|24|30|7/i.test(title);
+  const hasTest = /tested|uploaded|tried|analyzed|compared|reviewed|studied/i.test(title);
+  const wordCount = words.length;
+  const descLen = description.length;
+
+  let base = 30;
+  if (wordCount >= 6 && wordCount <= 14) base += 14;
+  if (hasNumber) base += 14;
+  if (hasTension) base += 12;
+  if (hasOutcome) base += 12;
+  if (hasTimeframe) base += 8;
+  if (hasTest) base += 8;
+  if (wordCount > 20) base -= 10;
+  if (!hasTension && !hasNumber) base -= 8;
+
+  const packagingScore = Math.max(10, Math.min(90, base));
+  const hookStrength = Math.max(10, Math.min(90, base + (hasNumber ? 4 : 0)));
+  const clarityScore = Math.max(10, Math.min(90, 35 + (hasNumber ? 14 : 0) + (hasOutcome ? 14 : 0) + (wordCount >= 6 && wordCount <= 12 ? 10 : 0)));
+  const curiosityScore = Math.max(10, Math.min(90, 28 + (hasTension ? 22 : 0) + (hasNumber ? 12 : 0) + (hasTest ? 10 : 0)));
+  const ctrPotential = Math.max(10, Math.min(90, Math.round((packagingScore + curiosityScore) / 2)));
+  const retentionRisk = Math.max(10, Math.min(90, 90 - packagingScore + (wordCount > 18 ? 8 : 0)));
+  const outlierPotential = Math.max(10, Math.min(90, hasNumber && hasTension && hasOutcome ? 72 : hasNumber || hasTension ? 52 : 32));
+
+  return { packagingScore, hookStrength, curiosityScore, clarityScore, ctrPotential, retentionRisk, outlierPotential };
+}
+
+function heuristicAnalysis(title: string, scores: Scores): Analysis {
+  const weak = scores.packagingScore < 50;
   return {
-    hookScore: 50,
-    clarityScore: 55,
-    curiosityScore: 50,
-    retentionRisk: 55,
-    pattern: "Title-based analysis",
-    weakness: "No OpenAI key configured — scored with heuristics only.",
-    improvedHook: title,
-    variants: [
-      title,
-      `The truth behind: ${title.toLowerCase()}`,
-      `What nobody tells you about: ${title.toLowerCase()}`,
+    summary: weak
+      ? `The title "${title}" has a weak packaging signal. It lacks the specificity and tension needed to stop a viewer mid-scroll.`
+      : `The title "${title}" has usable packaging. There are opportunities to sharpen the tension and make the payoff more concrete.`,
+    strengths: [
+      scores.clarityScore >= 60 ? "The topic is understandable at a glance." : "The core subject is identifiable.",
+      scores.curiosityScore >= 60 ? "There is some curiosity signal in the framing." : "The title attempts a promise.",
+    ].filter(Boolean),
+    risks: [
+      scores.packagingScore < 50 ? "Weak tension — the title doesn't create a reason to click." : "Tension could be sharper.",
+      scores.retentionRisk > 60 ? "High early drop-off risk — the payoff isn't clear in the first three seconds." : "Retention setup is moderate.",
+      "Heuristic estimate only — configure OpenAI for deeper AI analysis.",
     ],
-    retentionNotes: [
-      "Open with the payoff in the first three seconds, not the setup.",
-      "Ensure the title and thumbnail make the same promise.",
-      "Add a specific outcome, number, or tension to the hook.",
-    ],
-    scoreRationale: [
-      "AI analysis unavailable — OpenAI key not configured.",
-      "Score is a heuristic baseline only.",
-      "Configure OPENAI_API_KEY for a real analysis.",
-    ],
-    audienceTrigger: "Unable to determine without AI analysis.",
-    titlePairings: [
-      title,
-      `I tested this: ${title.toLowerCase()}`,
-      `The mistake behind: ${title.toLowerCase()}`,
-    ],
-    thumbnailAngles: [
-      "Bold result word",
-      "Before / after contrast",
-      "Mistake label over key moment",
-    ],
+    titleDiagnosis: weak
+      ? "The title lacks a concrete outcome, number, or tension. It reads as a topic description rather than a viewer promise."
+      : "The title is functional but could be stronger with a more specific number, tension, or outcome.",
+    thumbnailDiagnosis: "Unable to analyze thumbnail without image data. Ensure the thumbnail text reinforces the title's core promise.",
+    retentionDiagnosis: scores.retentionRisk > 60
+      ? "High estimated retention risk. The opening needs to deliver the title's promise immediately."
+      : "Moderate retention risk. Open with the payoff — don't delay the reason viewers clicked.",
+    positioningDiagnosis: "Positioning analysis requires AI. The topic appears general — consider narrowing to a specific audience or outcome.",
   };
 }
 
-function normalizeAnalysis(raw: unknown, title: string): VideoAnalysisResult {
-  if (!raw || typeof raw !== "object") return fallbackAnalysis(title);
-  const r = raw as Record<string, unknown>;
-  const fb = fallbackAnalysis(title);
+function heuristicRecommendations(title: string): Recommendations {
+  const safe = title.replace(/[?.!]+$/g, "");
   return {
-    hookScore: clamp(r.hookScore, fb.hookScore),
-    clarityScore: clamp(r.clarityScore, fb.clarityScore),
-    curiosityScore: clamp(r.curiosityScore, fb.curiosityScore),
-    retentionRisk: clamp(r.retentionRisk, fb.retentionRisk),
-    pattern: clean(r.pattern, 200) || fb.pattern,
-    weakness: clean(r.weakness, 320) || fb.weakness,
-    improvedHook: clean(r.improvedHook, 260) || fb.improvedHook,
-    variants: cleanArr(r.variants, fb.variants, 5),
-    retentionNotes: cleanArr(r.retentionNotes, fb.retentionNotes, 5),
-    scoreRationale: cleanArr(r.scoreRationale, fb.scoreRationale, 5),
-    audienceTrigger: clean(r.audienceTrigger, 300) || fb.audienceTrigger,
-    titlePairings: cleanArr(r.titlePairings, fb.titlePairings, 5),
-    thumbnailAngles: cleanArr(r.thumbnailAngles, fb.thumbnailAngles, 5),
+    betterTitles: [
+      `I tested ${safe.toLowerCase()} and one result changed the whole approach`,
+      `The mistake behind ${safe.toLowerCase()} that most creators miss`,
+      `Before you publish: ${safe.toLowerCase()} — what to fix first`,
+    ],
+    thumbnailTextIdeas: [
+      "ONE MISTAKE",
+      "THE RESULT",
+      "BEFORE / AFTER",
+    ],
+    openingHookIdeas: [
+      `Most creators get ${safe.toLowerCase()} wrong because they skip one step.`,
+      `I spent 30 days testing ${safe.toLowerCase()} — here's what actually worked.`,
+      `Before you post your next video, check this one thing about ${safe.toLowerCase()}.`,
+    ],
+    descriptionAngle:
+      "Open the description with the core outcome or insight — not just a summary. Front-load the value so it appears in search snippets.",
   };
 }
 
-async function analyzeVideoWithAI(
-  video: YouTubeVideoData
-): Promise<{ analysis: VideoAnalysisResult; mode: "ai" | "rules" }> {
+// ─── AI analysis via OpenAI ───────────────────────────────────────────────────
+async function aiAnalysis(video: VideoInfo): Promise<{
+  scores: Scores;
+  analysis: Analysis;
+  recommendations: Recommendations;
+  mode: "ai" | "rules";
+}> {
   const apiKey = process.env.OPENAI_API_KEY || process.env.OPENAI_API_TOKEN;
-  if (!apiKey) return { analysis: fallbackAnalysis(video.title), mode: "rules" };
+  const fallbackScores = heuristicScores(video.title, video.description);
 
-  const descPreview = video.description
-    .slice(0, 500)
-    .replace(/\n+/g, " ")
-    .trim();
+  if (!apiKey) {
+    return {
+      scores: fallbackScores,
+      analysis: heuristicAnalysis(video.title, fallbackScores),
+      recommendations: heuristicRecommendations(video.title),
+      mode: "rules",
+    };
+  }
 
-  const transcriptLine = video.subtitlePreview
-    ? `Opening transcript: "${video.subtitlePreview.slice(0, 400)}"`
-    : "";
-
-  const contextLines = [
-    `Video title (the hook): "${video.title}"`,
-    video.channelName ? `Channel: ${video.channelName}` : "",
+  const ctx = [
+    `Title: "${video.title}"`,
+    video.channelTitle ? `Channel: ${video.channelTitle}` : "",
     video.viewCount != null ? `Views: ${video.viewCount.toLocaleString()}` : "",
-    video.likes != null ? `Likes: ${video.likes.toLocaleString()}` : "",
-    video.subscriberCount != null
-      ? `Subscribers: ${video.subscriberCount.toLocaleString()}`
-      : "",
+    video.likeCount != null ? `Likes: ${video.likeCount.toLocaleString()}` : "",
     video.duration ? `Duration: ${video.duration}` : "",
-    video.uploadDate ? `Uploaded: ${video.uploadDate}` : "",
-    descPreview ? `Description preview: "${descPreview}"` : "",
-    transcriptLine,
-  ]
-    .filter(Boolean)
-    .join("\n");
+    video.publishedAt ? `Published: ${video.publishedAt.slice(0, 10)}` : "",
+    video.description ? `Description preview: "${video.description.slice(0, 600).replace(/\n+/g, " ")}"` : "",
+  ].filter(Boolean).join("\n");
+
+  const prompt = `You are HookSignals, a strict YouTube packaging analyst. Analyze this video's public metadata for creator intelligence.
+
+${ctx}
+
+Return valid JSON with these exact keys:
+{
+  "packagingScore": 0-100,
+  "hookStrength": 0-100,
+  "curiosityScore": 0-100,
+  "clarityScore": 0-100,
+  "ctrPotential": 0-100,
+  "retentionRisk": 0-100,
+  "outlierPotential": 0-100,
+  "summary": "2-3 sentence executive summary of the video's packaging",
+  "strengths": ["strength 1", "strength 2", "strength 3"],
+  "risks": ["risk 1", "risk 2", "risk 3"],
+  "titleDiagnosis": "specific diagnosis of the title's click-through potential",
+  "thumbnailDiagnosis": "advice on thumbnail/title alignment based on title and description",
+  "retentionDiagnosis": "estimated early retention risk from the title promise and description",
+  "positioningDiagnosis": "how well the video is positioned for its target audience",
+  "betterTitles": ["alternative 1", "alternative 2", "alternative 3"],
+  "thumbnailTextIdeas": ["text idea 1", "text idea 2", "text idea 3"],
+  "openingHookIdeas": ["hook 1", "hook 2", "hook 3"],
+  "descriptionAngle": "one specific recommendation for the description opening"
+}
+
+Scoring rules:
+- 85-100: Elite packaging — specific, high-tension, measurable payoff, clear audience
+- 70-84: Strong — good clarity and curiosity, minor weaknesses
+- 50-69: Average — usable but weak stakes or vague promise
+- 20-49: Weak — generic, low tension, unclear viewer benefit
+- 0-19: Very weak or meaningless
+
+IMPORTANT: These are estimates based on public metadata only. Do NOT claim actual CTR, retention, or watch time data. Be honest that scores are estimated signals, not measured analytics.
+
+Be direct. Be specific. Reference the actual title and channel in your analysis. Do not produce filler or generic advice.`;
 
   try {
-    const response = await fetch(OPENAI_URL, {
+    const res = await fetch(OPENAI_URL, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
-      },
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
       body: JSON.stringify({
         model: MODEL,
-        temperature: 0.1,
+        temperature: 0.15,
         response_format: { type: "json_object" },
         messages: [
-          {
-            role: "system",
-            content:
-              "You are HookSignals, a strict YouTube video performance analyst. " +
-              "The video title IS the hook — score it for clarity, curiosity, retention pull, and packaging alignment. " +
-              "Use description, transcript, and channel metrics as supporting context. " +
-              "Score harshly. Vague, generic, or clickbait-without-payoff titles score below 50. " +
-              "Return only valid JSON.",
-          },
-          {
-            role: "user",
-            content:
-              `Analyze this YouTube video's hook and packaging performance.\n\n${contextLines}\n\n` +
-              "Return JSON with these exact keys:\n" +
-              "hookScore (0-100), clarityScore (0-100), curiosityScore (0-100), retentionRisk (0-100),\n" +
-              "pattern (string), weakness (string), improvedHook (string — a stronger version of the title),\n" +
-              "variants (array of 3 improved title alternatives),\n" +
-              "retentionNotes (array of 3 observations about early retention risk from the title/hook),\n" +
-              "scoreRationale (array of 3 reasons for the hookScore),\n" +
-              "audienceTrigger (string — what viewer emotion or intent this targets),\n" +
-              "titlePairings (array of 3 complementary title options),\n" +
-              "thumbnailAngles (array of 3 thumbnail ideas that match the hook promise).\n\n" +
-              "Scoring calibration:\n" +
-              "85-100 = elite — specific audience, measurable payoff, strong tension, immediate curiosity.\n" +
-              "70-84 = strong — clear payoff and curiosity with minor weaknesses.\n" +
-              "50-69 = average — usable premise but weak stakes or vague promise.\n" +
-              "20-49 = weak — generic, no tension, or no clear viewer benefit.\n" +
-              "0-19 = very weak — vague, misleading, or meaningless.",
-          },
+          { role: "system", content: "You are a strict YouTube packaging analyst. Return only valid JSON. Be specific. Reference the actual video." },
+          { role: "user", content: prompt },
         ],
       }),
-      signal: AbortSignal.timeout(25_000),
+      signal: AbortSignal.timeout(22_000),
     });
 
-    if (!response.ok) {
-      return { analysis: fallbackAnalysis(video.title), mode: "rules" };
-    }
-
-    const data = await response.json() as { choices?: Array<{ message?: { content?: string } }> };
+    if (!res.ok) throw new Error(`openai_${res.status}`);
+    const data = await res.json() as { choices?: Array<{ message?: { content?: string } }> };
     const content = data?.choices?.[0]?.message?.content;
-    if (!content) return { analysis: fallbackAnalysis(video.title), mode: "rules" };
+    if (!content) throw new Error("empty_openai_response");
 
-    const parsed: unknown = JSON.parse(content);
-    return { analysis: normalizeAnalysis(parsed, video.title), mode: "ai" };
+    const raw = JSON.parse(content) as Record<string, unknown>;
+
+    return {
+      scores: {
+        packagingScore: clamp(raw.packagingScore, fallbackScores.packagingScore),
+        hookStrength: clamp(raw.hookStrength, fallbackScores.hookStrength),
+        curiosityScore: clamp(raw.curiosityScore, fallbackScores.curiosityScore),
+        clarityScore: clamp(raw.clarityScore, fallbackScores.clarityScore),
+        ctrPotential: clamp(raw.ctrPotential, fallbackScores.ctrPotential),
+        retentionRisk: clamp(raw.retentionRisk, fallbackScores.retentionRisk),
+        outlierPotential: clamp(raw.outlierPotential, fallbackScores.outlierPotential),
+      },
+      analysis: {
+        summary: cleanStr(raw.summary, 500) || heuristicAnalysis(video.title, fallbackScores).summary,
+        strengths: cleanArr(raw.strengths, ["Strong topic area.", "Clear subject matter."]),
+        risks: cleanArr(raw.risks, ["Packaging could be stronger.", "Tension is not explicit."]),
+        titleDiagnosis: cleanStr(raw.titleDiagnosis, 400) || "Title analysis unavailable.",
+        thumbnailDiagnosis: cleanStr(raw.thumbnailDiagnosis, 400) || "Thumbnail alignment analysis unavailable.",
+        retentionDiagnosis: cleanStr(raw.retentionDiagnosis, 400) || "Retention analysis unavailable.",
+        positioningDiagnosis: cleanStr(raw.positioningDiagnosis, 400) || "Positioning analysis unavailable.",
+      },
+      recommendations: {
+        betterTitles: cleanArr(raw.betterTitles, heuristicRecommendations(video.title).betterTitles),
+        thumbnailTextIdeas: cleanArr(raw.thumbnailTextIdeas, ["ONE RESULT", "THE MISTAKE", "BEFORE/AFTER"]),
+        openingHookIdeas: cleanArr(raw.openingHookIdeas, heuristicRecommendations(video.title).openingHookIdeas),
+        descriptionAngle: cleanStr(raw.descriptionAngle, 300) || "Open with the core outcome or insight in the first line.",
+      },
+      mode: "ai",
+    };
   } catch {
-    return { analysis: fallbackAnalysis(video.title), mode: "rules" };
+    return {
+      scores: fallbackScores,
+      analysis: heuristicAnalysis(video.title, fallbackScores),
+      recommendations: heuristicRecommendations(video.title),
+      mode: "rules",
+    };
   }
 }
 
 // ─── Route handler ────────────────────────────────────────────────────────────
 export async function POST(request: Request) {
   const ip = getClientIp(request);
-
   if (checkRateLimit(ip)) {
     return NextResponse.json(
       { error: "rate_limited", message: "Rate limit reached. Try again in an hour." },
@@ -264,110 +327,136 @@ export async function POST(request: Request) {
     );
   }
 
-  let body: unknown;
+  let body: Record<string, unknown>;
   try {
-    body = await request.json();
+    body = (await request.json()) as Record<string, unknown>;
   } catch {
     return NextResponse.json({ error: "invalid_json" }, { status: 400 });
   }
 
-  const rawUrl =
-    typeof (body as Record<string, unknown>)?.url === "string"
-      ? ((body as Record<string, unknown>).url as string).trim()
-      : "";
+  const rawUrl = typeof body?.url === "string" ? body.url.trim() : "";
 
+  // ── Manual analysis mode ──────────────────────────────────────────────────
   if (!rawUrl) {
-    return NextResponse.json(
-      { error: "missing_url", message: "A YouTube URL is required." },
-      { status: 400 }
-    );
+    const title = typeof body?.title === "string" ? body.title.trim().slice(0, 300) : "";
+    const hook = typeof body?.hook === "string" ? body.hook.trim().slice(0, 500) : "";
+    const thumbnailText = typeof body?.thumbnailText === "string" ? body.thumbnailText.trim().slice(0, 200) : "";
+    const description = typeof body?.description === "string" ? body.description.trim().slice(0, 2000) : "";
+    const channelName = typeof body?.channelName === "string" ? body.channelName.trim().slice(0, 150) : "";
+
+    if (!title && !hook) {
+      return NextResponse.json(
+        { error: "missing_input", message: "Provide a YouTube URL, or a title and hook for manual analysis." },
+        { status: 400 }
+      );
+    }
+
+    const analysisTitle = title || hook;
+    const video: VideoInfo = {
+      id: "",
+      title: analysisTitle,
+      description: [hook, thumbnailText, description].filter(Boolean).join("\n\n"),
+      channelTitle: channelName,
+      publishedAt: null,
+      duration: null,
+      thumbnailUrl: "",
+      viewCount: null,
+      likeCount: null,
+      commentCount: null,
+    };
+
+    const { scores, analysis, recommendations, mode } = await aiAnalysis(video);
+    return NextResponse.json({
+      source: "manual",
+      video,
+      scores,
+      analysis,
+      recommendations,
+      mode,
+      disclaimer: DISCLAIMER,
+    } satisfies AnalyzeResponse);
   }
 
+  // ── URL mode ──────────────────────────────────────────────────────────────
   if (!validateYouTubeUrl(rawUrl)) {
     return NextResponse.json(
-      { error: "invalid_url", message: "Enter a valid YouTube video URL (youtube.com or youtu.be)." },
+      { error: "invalid_url", message: "Enter a valid YouTube URL (youtube.com/watch?v=..., youtu.be/..., or Shorts URL)." },
       { status: 400 }
     );
   }
 
   const videoId = extractVideoId(rawUrl)!;
 
-  // Cache hit — skip Apify and AI entirely
-  const cached = getCached(videoId);
-  if (cached) {
-    const payload: VideoAnalyzeResponse = {
-      ...cached.data,
-      analysis: cached.analysis,
-      mode: "cached",
-      cached: true,
-    };
-    return NextResponse.json(payload);
+  // Cache hit
+  const cached = videoCache.get(videoId);
+  if (cached && Date.now() - cached.cachedAt < CACHE_TTL_MS) {
+    return NextResponse.json({ ...cached.payload, source: "cached" } satisfies AnalyzeResponse);
   }
 
-  // ── Fetch via provider ──────────────────────────────────────────────────────
-  let videoData: YouTubeVideoData;
+  // Fetch from provider
+  let video: VideoInfo;
   try {
     const provider = getYouTubeVideoProvider();
-    videoData = await provider.fetchVideo(rawUrl);
+    const data = await provider.fetchVideo(rawUrl);
+    video = {
+      id: data.videoId,
+      title: data.title,
+      description: data.description,
+      channelTitle: data.channelName,
+      publishedAt: data.uploadDate,
+      duration: data.duration,
+      thumbnailUrl: data.thumbnailUrl,
+      viewCount: data.viewCount,
+      likeCount: data.likes,
+      commentCount: data.commentsCount,
+    };
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
 
     if (msg.includes("provider_not_configured")) {
+      // No API key configured — return manual mode signal so frontend can switch
       return NextResponse.json(
-        {
-          error: "provider_not_configured",
-          message:
-            "YouTube video analysis is not available right now. Use the Hook Analyzer to score your opening line directly.",
-        },
+        { error: "provider_not_configured", message: "YouTube URL analysis is not configured. Use manual mode to analyze your title and hook directly." },
         { status: 503 }
       );
     }
     if (msg.includes("no_data")) {
       return NextResponse.json(
-        {
-          error: "no_data",
-          message:
-            "No data returned for this video. It may be private, deleted, age-restricted, or unavailable in the scraper region.",
-        },
+        { error: "no_data", message: "No data found for this video. It may be private, deleted, or unavailable." },
         { status: 404 }
       );
     }
-    if (msg.includes("apify_unauthorized")) {
+    if (msg.includes("youtube_api_forbidden")) {
       return NextResponse.json(
-        { error: "provider_unauthorized", message: "YouTube video analysis is temporarily unavailable. Try again later." },
+        { error: "api_error", message: "YouTube API quota exceeded or key is invalid. Try again later." },
         { status: 503 }
       );
     }
-    if (msg.includes("apify_actor_not_found")) {
+    if (msg.includes("youtube_api_network") || msg.includes("youtube_api_error")) {
       return NextResponse.json(
-        { error: "provider_actor_not_found", message: "YouTube video analysis is temporarily unavailable. Try again later." },
-        { status: 503 }
-      );
-    }
-    if (msg.includes("apify_timeout")) {
-      return NextResponse.json(
-        { error: "scraper_timeout", message: "The video scraper timed out. Try again in a moment." },
-        { status: 504 }
+        { error: "api_error", message: "Could not reach YouTube. Try again in a moment." },
+        { status: 502 }
       );
     }
     return NextResponse.json(
-      { error: "scraper_failed", message: "Video data could not be fetched. Try again." },
+      { error: "fetch_failed", message: "Could not fetch video data. Try again." },
       { status: 502 }
     );
   }
 
-  // ── AI analysis ─────────────────────────────────────────────────────────────
-  const { analysis, mode } = await analyzeVideoWithAI(videoData);
+  // AI analysis
+  const { scores, analysis, recommendations, mode } = await aiAnalysis(video);
 
-  // Store in cache
-  videoCache.set(videoId, { data: videoData, analysis, cachedAt: Date.now() });
-
-  const payload: VideoAnalyzeResponse = {
-    ...videoData,
+  const payload: AnalyzeResponse = {
+    source: "youtube_api",
+    video,
+    scores,
     analysis,
+    recommendations,
     mode,
-    cached: false,
+    disclaimer: DISCLAIMER,
   };
 
+  videoCache.set(videoId, { payload, cachedAt: Date.now() });
   return NextResponse.json(payload);
 }

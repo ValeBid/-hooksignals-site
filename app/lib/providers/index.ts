@@ -1,4 +1,5 @@
 import { ApifyYouTubeProvider } from "./apify.provider";
+import { YouTubeDataApiProvider } from "./youtube-data-api.provider";
 import type { YouTubeVideoProvider } from "./types";
 
 export type { YouTubeVideoProvider } from "./types";
@@ -6,34 +7,31 @@ export type { YouTubeVideoProvider } from "./types";
 /**
  * Returns the active YouTube video provider based on environment configuration.
  *
- * Currently supported: Apify (default).
- *
- * To add a new provider:
- *   1. Create a class implementing YouTubeVideoProvider in ./your-provider.ts
- *   2. Add a case below (switch on YOUTUBE_PROVIDER env var)
- *   3. Set YOUTUBE_PROVIDER=<name> in your environment
- *
- * The route layer (app/api/youtube/analyze/route.ts) calls
- * provider.fetchVideo() and is fully decoupled from the concrete implementation.
+ * Priority order:
+ *   1. YOUTUBE_API_KEY (or GOOGLE_YOUTUBE_API_KEY / YOUTUBE_DATA_API_KEY) → YouTube Data API v3
+ *   2. APIFY_TOKEN → Apify scraper (legacy/fallback)
+ *   3. Neither → throws "provider_not_configured"
  */
 export function getYouTubeVideoProvider(): YouTubeVideoProvider {
-  const apifyToken = process.env.APIFY_TOKEN;
-  const actorId = process.env.APIFY_YOUTUBE_ACTOR_ID ?? "streamers/youtube-scraper";
+  // YouTube Data API v3 — preferred. Check all known env var names.
+  const ytApiKey =
+    process.env.YOUTUBE_API_KEY ||
+    process.env.GOOGLE_YOUTUBE_API_KEY ||
+    process.env.YOUTUBE_DATA_API_KEY;
 
-  // Future: uncomment to support multiple providers via env var
-  // const providerName = process.env.YOUTUBE_PROVIDER ?? "apify";
-  // switch (providerName) {
-  //   case "youtube-data-api": return new YouTubeDataApiProvider(process.env.YOUTUBE_API_KEY!);
-  //   default: break;
-  // }
-
-  if (!apifyToken) {
-    throw new Error(
-      "provider_not_configured: No YouTube video provider is configured. " +
-        "Set APIFY_TOKEN to use the Apify provider. " +
-        "Future providers can be enabled via the YOUTUBE_PROVIDER environment variable."
-    );
+  if (ytApiKey) {
+    return new YouTubeDataApiProvider(ytApiKey);
   }
 
-  return new ApifyYouTubeProvider(apifyToken, actorId);
+  // Apify scraper — legacy fallback if configured.
+  const apifyToken = process.env.APIFY_TOKEN;
+  if (apifyToken) {
+    const actorId = process.env.APIFY_YOUTUBE_ACTOR_ID ?? "streamers/youtube-scraper";
+    return new ApifyYouTubeProvider(apifyToken, actorId);
+  }
+
+  throw new Error(
+    "provider_not_configured: No YouTube video provider is configured. " +
+      "Set YOUTUBE_API_KEY (YouTube Data API v3) to enable URL-based analysis."
+  );
 }
