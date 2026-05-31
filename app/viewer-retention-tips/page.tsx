@@ -258,7 +258,7 @@ export default function ViewerRetentionTipsPage() {
 
       <div className="mt-8">
         <FAQBlock items={faqs} />
-        <RelatedTools />
+        <RelatedTools primary="hook-analyzer" secondary="youtube-video-analyzer" context="Put these retention principles to work — score your own opening line now." />
       </div>
     </PremiumToolShell>
   );

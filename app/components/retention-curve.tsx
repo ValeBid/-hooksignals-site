@@ -1,60 +1,22 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import {
-  AreaChart,
-  Area,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
 
 const EASE = "easeOut" as const;
 
-const retentionData = [
-  { label: "0s",  average: 100, predicted: 100 },
-  { label: "10s", average: 76,  predicted: 92  },
-  { label: "20s", average: 58,  predicted: 82  },
-  { label: "30s", average: 47,  predicted: 74  },
-  { label: "40s", average: 39,  predicted: 67  },
-  { label: "50s", average: 34,  predicted: 62  },
-  { label: "60s", average: 30,  predicted: 58  },
-  { label: "70s", average: 27,  predicted: 55  },
-  { label: "80s", average: 25,  predicted: 52  },
-  { label: "End", average: 22,  predicted: 49  },
-];
-
 const insights = [
-  { stat: "40–60%", text: "Typical viewer loss in the first 30 seconds with a vague or slow opening line" },
-  { stat: "+27pts",  text: "Example retention improvement shown in this demo — actual results depend on content quality" },
-  { stat: "3 sec",   text: "The opening window HookSignals analyzes most closely for retention signals" },
+  { stat: "40–60%", text: "Typical viewer loss in the first 30 seconds when the opening line lacks a clear subject or tension" },
+  { stat: "9 signals", text: "Hook strength, clarity, curiosity gap, CTR potential, retention risk and 4 more — scored per analysis" },
+  { stat: "3 sec", text: "The opening window HookSignals analyzes most closely — the decision window before a viewer scrolls away" },
 ];
 
-function CustomTooltip({ active, payload, label }: {
-  active?: boolean;
-  payload?: { name: string; value: number; color: string }[];
-  label?: string;
-}) {
-  if (!active || !payload?.length) return null;
-  return (
-    <div className="rounded-2xl border border-white/10 bg-[#09111f] px-4 py-3 text-sm shadow-xl">
-      <p className="mb-2 font-bold text-white/50">{label}</p>
-      {payload.map((entry) => (
-        <p key={entry.name} className="font-black" style={{ color: entry.color }}>
-          {entry.name}: {entry.value}%
-        </p>
-      ))}
-    </div>
-  );
-}
+const outputScores = [
+  { label: "Packaging", value: 90, color: "from-cyan-300 to-sky-400", text: "text-cyan-300" },
+  { label: "Hook strength", value: 85, color: "from-cyan-300 to-violet-400", text: "text-cyan-300" },
+  { label: "CTR potential", value: 88, color: "from-sky-400 to-violet-400", text: "text-sky-300" },
+];
 
 export default function RetentionCurveSection() {
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
-
   return (
     <section className="mx-auto mt-14 max-w-[1320px] px-5 md:px-8">
       <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
@@ -71,7 +33,7 @@ export default function RetentionCurveSection() {
             See the drop-off before your audience does.
           </h2>
           <p className="mt-5 max-w-xl text-lg leading-8 text-white/58">
-            HookSignals models expected viewer retention from your hook, title and platform. Catch the weak opening before it erodes your watch time.
+            HookSignals analyzes your hook, title and platform context for retention signals. Find the weak opening before it costs you watch time.
           </p>
 
           <div className="mt-8 grid gap-4">
@@ -91,7 +53,7 @@ export default function RetentionCurveSection() {
           </a>
         </motion.div>
 
-        {/* Right: chart */}
+        {/* Right: real output preview */}
         <motion.div
           initial={{ opacity: 0, x: 24 }}
           whileInView={{ opacity: 1, x: 0 }}
@@ -99,87 +61,65 @@ export default function RetentionCurveSection() {
           transition={{ duration: 0.7, delay: 0.1, ease: EASE }}
           className="rounded-[34px] border border-white/10 bg-white/[0.04] p-6 backdrop-blur-xl md:p-8"
         >
-          <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+          <div className="mb-6">
+            <p className="text-xs font-black uppercase tracking-[0.16em] text-cyan-300">Analysis output</p>
+            <p className="mt-1 text-sm text-white/48">What the YouTube Video Analyzer returns</p>
+          </div>
+
+          {/* Score bars */}
+          <div className="space-y-4">
+            {outputScores.map(({ label, value, color, text }, i) => (
+              <div key={label}>
+                <div className="mb-2 flex items-center justify-between">
+                  <span className="text-sm font-bold text-white/70">{label}</span>
+                  <span className={`text-lg font-black ${text}`}>{value}<span className="text-sm text-white/30">/100</span></span>
+                </div>
+                <div className="h-2 overflow-hidden rounded-full bg-white/10">
+                  <motion.div
+                    className={`h-full rounded-full bg-gradient-to-r ${color}`}
+                    initial={{ width: "0%" }}
+                    whileInView={{ width: `${value}%` }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 1.1, delay: i * 0.12, ease: EASE }}
+                  />
+                </div>
+              </div>
+            ))}
+
+            {/* Retention risk */}
             <div>
-              <p className="text-xs font-black uppercase tracking-[0.16em] text-cyan-300">Predicted retention curve</p>
-              <p className="mt-1 text-sm text-white/48">Example analysis — 90-second video</p>
-            </div>
-            <div className="flex items-center gap-4 text-xs text-white/45">
-              <span className="flex items-center gap-1.5">
-                <span className="inline-block h-2 w-5 rounded-full bg-white/30" /> Average
-              </span>
-              <span className="flex items-center gap-1.5">
-                <span className="inline-block h-2 w-5 rounded-full bg-cyan-300" /> With HookSignals
-              </span>
+              <div className="mb-2 flex items-center justify-between">
+                <span className="text-sm font-bold text-white/70">Retention risk</span>
+                <span className="rounded-full border border-emerald-300/25 bg-emerald-300/[0.09] px-2.5 py-0.5 text-xs font-black text-emerald-300">Low</span>
+              </div>
+              <div className="h-2 overflow-hidden rounded-full bg-white/10">
+                <motion.div
+                  className="h-full rounded-full bg-gradient-to-r from-emerald-400 to-cyan-400"
+                  initial={{ width: "0%" }}
+                  whileInView={{ width: "15%" }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 1.1, delay: 0.36, ease: EASE }}
+                />
+              </div>
             </div>
           </div>
 
-          <div className="h-[300px] sm:h-[340px]">
-            {mounted ? (
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={retentionData} margin={{ top: 4, right: 4, left: -24, bottom: 0 }}>
-                  <defs>
-                    <linearGradient id="predictedFill" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%"  stopColor="#22d3ee" stopOpacity={0.28} />
-                      <stop offset="95%" stopColor="#22d3ee" stopOpacity={0} />
-                    </linearGradient>
-                    <linearGradient id="averageFill" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%"  stopColor="#94a3b8" stopOpacity={0.18} />
-                      <stop offset="95%" stopColor="#94a3b8" stopOpacity={0} />
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" vertical={false} />
-                  <XAxis
-                    dataKey="label"
-                    tick={{ fill: "rgba(255,255,255,0.32)", fontSize: 11 }}
-                    axisLine={false}
-                    tickLine={false}
-                  />
-                  <YAxis
-                    domain={[0, 100]}
-                    tickFormatter={(v: number) => `${v}%`}
-                    tick={{ fill: "rgba(255,255,255,0.32)", fontSize: 11 }}
-                    axisLine={false}
-                    tickLine={false}
-                    ticks={[0, 25, 50, 75, 100]}
-                  />
-                  <Tooltip content={<CustomTooltip />} />
-                  <Area
-                    type="monotone"
-                    dataKey="average"
-                    name="Average video"
-                    stroke="rgba(148,163,184,0.5)"
-                    strokeWidth={1.5}
-                    fill="url(#averageFill)"
-                    strokeDasharray="4 3"
-                    dot={false}
-                    isAnimationActive
-                    animationDuration={1200}
-                  />
-                  <Area
-                    type="monotone"
-                    dataKey="predicted"
-                    name="With HookSignals"
-                    stroke="#22d3ee"
-                    strokeWidth={2.5}
-                    fill="url(#predictedFill)"
-                    dot={false}
-                    isAnimationActive
-                    animationDuration={1400}
-                    animationEasing="ease-out"
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
-            ) : (
-              <div className="h-full animate-pulse rounded-2xl bg-white/5" />
-            )}
-          </div>
-
-          <div className="mt-4 rounded-2xl border border-cyan-300/14 bg-cyan-300/[0.055] p-4">
-            <p className="text-xs font-black uppercase tracking-[0.14em] text-cyan-300">What this shows</p>
-            <p className="mt-2 text-sm leading-6 text-white/58">
-              The cyan curve models predicted retention when hook strength, platform pacing and title alignment are optimized. The gap is your opportunity cost before publishing.
+          {/* Diagnosis sample */}
+          <div className="mt-6 rounded-2xl border border-cyan-300/14 bg-cyan-300/[0.055] p-4">
+            <p className="text-xs font-black uppercase tracking-[0.14em] text-cyan-300">Title diagnosis</p>
+            <p className="mt-2 text-sm leading-6 text-white/65">
+              The title leverages a specific result and clear subject. The viewer knows the payoff before the second sentence. Hook and title alignment is strong.
             </p>
+          </div>
+
+          {/* Output fields list */}
+          <div className="mt-4 grid grid-cols-2 gap-2">
+            {["Better titles", "Hook rewrites", "Thumbnail text", "Description angle"].map((field) => (
+              <div key={field} className="flex items-center gap-2 rounded-xl border border-white/8 bg-white/[0.025] px-3 py-2">
+                <span className="text-[10px] text-cyan-300">✓</span>
+                <span className="text-xs text-white/50">{field}</span>
+              </div>
+            ))}
           </div>
         </motion.div>
       </div>

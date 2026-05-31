@@ -158,7 +158,7 @@ export default function ViralHookExamplesPage() {
     <PremiumToolShell
       badge="Creator hook library"
       title="Viral Hook Examples"
-      description="Study scored hook examples across 6 pattern types. Every score is labeled Example Score — not real user data. Use these as frameworks, not formulas."
+      description="Study hook examples across 6 pattern types — curiosity gap, proof, warning, contrast, problem-first and reframe. Each hook is scored and broken down so you can apply the pattern to your own content."
       primaryHref="/hook-analyzer"
       primaryLabel="Analyze Your Hook"
       secondaryHref="/tools"
@@ -190,7 +190,7 @@ export default function ViralHookExamplesPage() {
       <div className="mt-6">
         <div className="mb-4 flex items-center justify-between">
           <p className="text-xs font-black uppercase tracking-[0.14em] text-white/38">
-            Scored examples — Example Score, not real user data
+            Hook patterns — scored for framework reference
           </p>
           <span className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-xs text-white/35">
             {hookExamples.length} examples
@@ -206,7 +206,7 @@ export default function ViralHookExamplesPage() {
                     {ex.pattern}
                   </span>
                   <div className="flex items-center gap-1.5 text-xs text-white/35">
-                    Example Score: <ScorePill score={ex.score} />
+                    Pattern score: <ScorePill score={ex.score} />
                   </div>
                 </div>
                 <p className="leading-7 text-white/80">&ldquo;{ex.hook}&rdquo;</p>
@@ -263,7 +263,7 @@ export default function ViralHookExamplesPage() {
       </FadeIn>
 
       <div className="mt-8">
-        <RelatedTools />
+        <RelatedTools primary="hook-analyzer" secondary="hook-improver" context="Apply one of these patterns to your own hook and see how it scores." />
       </div>
     </PremiumToolShell>
   );

@@ -195,7 +195,7 @@ export default function RetentionHookExamplesPage() {
       </FadeIn>
 
       <div className="mt-8">
-        <RelatedTools />
+        <RelatedTools primary="hook-analyzer" secondary="hook-improver" context="Use these as a baseline. Score your own hook and find the gap." />
       </div>
     </PremiumToolShell>
   );

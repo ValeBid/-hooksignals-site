@@ -171,7 +171,7 @@ export default function HookPsychologyPage() {
       </FadeIn>
 
       <div className="mt-8">
-        <RelatedTools />
+        <RelatedTools primary="hook-analyzer" secondary="viral-hook-examples" context="Apply hook psychology to your own opening line and see which signals are missing." />
       </div>
     </PremiumToolShell>
   );

@@ -164,7 +164,7 @@ export default function YouTubeTitleGeneratorPage() {
         </a>
       </section>
 
-      <RelatedTools />
+      <RelatedTools primary="youtube-title-analyzer" secondary="hook-analyzer" context="Score the title you just generated for CTR potential and clarity before publishing." />
     </PremiumToolShell>
   );
 }

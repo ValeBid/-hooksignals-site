@@ -67,7 +67,7 @@ function PackagingComparison() {
     <div className="rounded-[28px] border border-white/10 bg-white/[0.025] p-5 md:p-7">
       <div className="mb-5 flex items-center gap-2">
         <span className="inline-block h-1.5 w-1.5 rounded-full bg-cyan-300" />
-        <p className="text-xs font-black uppercase tracking-[0.14em] text-white/45">Example Analysis — not real data</p>
+        <p className="text-xs font-black uppercase tracking-[0.14em] text-white/45">Packaging comparison</p>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
@@ -127,52 +127,41 @@ function PlatformSignals() {
     {
       name: "YouTube Shorts",
       hook: "3-second window",
-      note: "Swipe rate drops 62% when the first line names the subject and tension.",
-      score: 91,
+      note: "HookSignals scores the first line for swipe risk. A vague or slow subject costs the view before the second sentence.",
+      signal: "Swipe risk score",
       accent: "cyan" as const,
     },
     {
       name: "TikTok",
       hook: "First word matters",
-      note: "Algorithm indexes the first spoken keyword. Late topic placement reduces distribution.",
-      score: 87,
+      note: "Topic and subject placement in the first spoken line affects distribution. HookSignals flags late-topic hooks.",
+      signal: "Topic placement check",
       accent: "violet" as const,
     },
     {
       name: "YouTube Long-form",
       hook: "30-second retention gate",
-      note: "Videos that pass the 30s gate see 2.4× completion rate versus those with slow openings.",
-      score: 78,
+      note: "The opening promise must carry attention past the 30-second gate. HookSignals scores title-to-hook alignment.",
+      signal: "Promise alignment score",
       accent: "sky" as const,
     },
   ];
 
   return (
     <div className="grid gap-4 md:grid-cols-3">
-      {platforms.map(({ name, hook, note, score, accent }) => {
+      {platforms.map(({ name, hook, note, signal, accent }) => {
         const accentText = { cyan: "text-cyan-300", violet: "text-violet-300", sky: "text-sky-300" }[accent];
         const accentBorder = { cyan: "border-cyan-300/18 bg-cyan-300/[0.05]", violet: "border-violet-300/18 bg-violet-300/[0.05]", sky: "border-sky-300/18 bg-sky-300/[0.05]" }[accent];
+        const accentSignal = { cyan: "border-cyan-300/20 bg-cyan-300/[0.08] text-cyan-200", violet: "border-violet-300/20 bg-violet-300/[0.08] text-violet-200", sky: "border-sky-300/20 bg-sky-300/[0.08] text-sky-200" }[accent];
         return (
           <div key={name} className={`rounded-[24px] border p-5 ${accentBorder}`}>
             <p className={`text-xs font-black uppercase tracking-[0.14em] ${accentText}`}>{name}</p>
             <p className="mt-3 text-lg font-black text-white">{hook}</p>
             <p className="mt-2 text-sm leading-6 text-white/52">{note}</p>
-            <div className="mt-4 flex items-end gap-2">
-              <span className={`text-4xl font-black ${accentText}`}>{score}</span>
-              <span className="mb-1 text-white/30">/100 avg strong hook</span>
-            </div>
-            <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-white/10">
-              <motion.div
-                className={`h-full rounded-full ${
-                  accent === "cyan" ? "bg-gradient-to-r from-cyan-300 to-sky-400" :
-                  accent === "violet" ? "bg-gradient-to-r from-violet-400 to-purple-400" :
-                  "bg-gradient-to-r from-sky-300 to-cyan-300"
-                }`}
-                initial={{ width: "0%" }}
-                whileInView={{ width: `${score}%` }}
-                viewport={{ once: true }}
-                transition={{ duration: 1.1, ease: EASE }}
-              />
+            <div className="mt-4">
+              <span className={`inline-flex rounded-full border px-3 py-1 text-xs font-black ${accentSignal}`}>
+                {signal}
+              </span>
             </div>
           </div>
         );
@@ -205,9 +194,9 @@ export default function CreatorAuthoritySection() {
           desc="Score your opening line for clarity, curiosity gap and retention strength across platforms."
           accent="cyan"
           metrics={[
-            { key: "Clarity", value: "88", sub: "Example" },
-            { key: "Curiosity", value: "83", sub: "Example" },
-            { key: "Risk", value: "Low", sub: "Example" },
+            { key: "Clarity", value: "88" },
+            { key: "Curiosity", value: "83" },
+            { key: "Risk", value: "Low" },
           ]}
         />
         <WorkflowStage
@@ -217,9 +206,9 @@ export default function CreatorAuthoritySection() {
           desc="Turn vague openings into specific, tension-driven hooks with four named rewrite angles."
           accent="violet"
           metrics={[
-            { key: "Variants", value: "4×", sub: "Example" },
-            { key: "Score lift", value: "+51", sub: "Example" },
-            { key: "Angles", value: "Named", sub: "Example" },
+            { key: "Variants", value: "4×" },
+            { key: "Score lift", value: "+51" },
+            { key: "Angles", value: "Named" },
           ]}
         />
         <WorkflowStage
@@ -229,9 +218,9 @@ export default function CreatorAuthoritySection() {
           desc="Align the hook promise with a CTR-optimized title and thumbnail text before the idea goes live."
           accent="sky"
           metrics={[
-            { key: "CTR", value: "88", sub: "Example" },
-            { key: "Length", value: "Optimal", sub: "Example" },
-            { key: "Keywords", value: "Early", sub: "Example" },
+            { key: "CTR", value: "88" },
+            { key: "Length", value: "Optimal" },
+            { key: "Keywords", value: "Early" },
           ]}
         />
       </motion.div>

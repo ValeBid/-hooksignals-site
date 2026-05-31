@@ -290,7 +290,7 @@ export default function HookImproverPage() {
         ))}
       </section>
 
-      <RelatedTools />
+      <RelatedTools primary="hook-analyzer" secondary="youtube-title-analyzer" context="Check the score of your improved hook, or align it with your title." />
     </PremiumToolShell>
   );
 }

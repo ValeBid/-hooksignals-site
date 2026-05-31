@@ -407,7 +407,7 @@ export default function YouTubeTitleAnalyzerPage() {
       </div>
 
       <div className="mt-8">
-        <RelatedTools />
+        <RelatedTools primary="hook-analyzer" secondary="hook-improver" context="A strong title needs a matching hook. Score your opening line before publishing." />
       </div>
     </PremiumToolShell>
   );
