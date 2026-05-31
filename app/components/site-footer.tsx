@@ -67,11 +67,11 @@ export default function SiteFooter() {
           </div>
 
           <div className="rounded-[24px] border border-cyan-300/15 bg-cyan-300/[0.06] p-5">
-            <p className="text-lg font-black tracking-tight">Ready to test a hook?</p>
-            <p className="mt-2 text-sm leading-6 text-white/52">Start with the analyzer, then upgrade when the workflow becomes useful.</p>
+            <p className="text-lg font-black tracking-tight leading-7">Find out why your last video lost viewers in the first 30 seconds.</p>
+            <p className="mt-2 text-sm leading-6 text-white/52">Paste a YouTube URL or your opening line. Get a score, a diagnosis and a rewrite — before the next video goes live.</p>
             <div className="mt-4 flex flex-wrap gap-3">
-              <a href="/hook-analyzer" className="rounded-2xl bg-cyan-300 px-4 py-2.5 text-sm font-bold text-black transition hover:bg-cyan-200">Analyze hook</a>
-              <a href="/pricing" className="rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm font-bold text-white/80 transition hover:bg-white/10">Pricing</a>
+              <a href="/youtube-video-analyzer" className="rounded-2xl bg-cyan-300 px-4 py-2.5 text-sm font-bold text-black transition hover:bg-cyan-200">Analyze video</a>
+              <a href="/hook-analyzer" className="rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm font-bold text-white/80 transition hover:bg-white/10">Score a hook</a>
             </div>
           </div>
         </div>

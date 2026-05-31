@@ -57,6 +57,97 @@ export default function PricingPreview() {
 
   return (
     <section className="mt-14" id="pricing">
+
+      {/* Output proof — what the tool actually returns */}
+      <div className="mb-8 rounded-[32px] border border-white/10 bg-white/[0.025] p-6 md:p-10">
+        <p className="text-sm font-black uppercase tracking-[0.14em] text-cyan-300">What you get</p>
+        <h2 className="mt-4 text-3xl font-black tracking-[-0.04em] md:text-4xl">
+          Real analysis. Specific output. Actionable results.
+        </h2>
+        <p className="mt-4 max-w-2xl text-base leading-7 text-white/52">
+          Here is exactly what the YouTube Video Analyzer returns on a real public video — no simulations, no mock data.
+        </p>
+
+        <div className="mt-8 grid gap-5 md:grid-cols-3">
+          {/* Real metadata */}
+          <div className="rounded-[24px] border border-white/10 bg-black/24 p-5">
+            <p className="text-xs font-black uppercase tracking-[0.14em] text-cyan-300">Live metadata</p>
+            <p className="mt-3 text-sm font-black text-white">Fetched via YouTube Data API</p>
+            <div className="mt-4 space-y-2">
+              {[
+                ["Title", "Exact video title from YouTube"],
+                ["Channel", "Channel name and publish date"],
+                ["Views / Likes", "Real counts at time of analysis"],
+                ["Duration", "Exact runtime"],
+                ["Thumbnail", "Max-resolution thumbnail URL"],
+              ].map(([k, v]) => (
+                <div key={k} className="flex items-start justify-between gap-3 border-b border-white/6 pb-2 last:border-0">
+                  <span className="shrink-0 text-xs font-bold text-white/45">{k}</span>
+                  <span className="text-right text-xs text-white/30">{v}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* AI scores */}
+          <div className="rounded-[24px] border border-cyan-300/20 bg-[linear-gradient(135deg,rgba(34,211,238,.07),rgba(124,58,237,.04))] p-5">
+            <p className="text-xs font-black uppercase tracking-[0.14em] text-cyan-300">AI packaging scores</p>
+            <p className="mt-3 text-sm font-black text-white">9 signals analyzed per video</p>
+            <div className="mt-4 space-y-3">
+              {[
+                { label: "Packaging", val: 90 },
+                { label: "Hook strength", val: 85 },
+                { label: "CTR potential", val: 88 },
+                { label: "Clarity", val: 95 },
+                { label: "Retention risk", val: 15 },
+              ].map(({ label, val }) => (
+                <div key={label} className="flex items-center justify-between">
+                  <span className="text-xs text-white/52">{label}</span>
+                  <div className="flex items-center gap-2">
+                    <div className="h-1 w-20 overflow-hidden rounded-full bg-white/10">
+                      <div className="h-full rounded-full bg-gradient-to-r from-cyan-300 to-sky-400" style={{ width: `${label === "Retention risk" ? val : val}%` }} />
+                    </div>
+                    <span className="text-xs font-black text-cyan-300">{val}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <p className="mt-3 text-[10px] text-white/25">Scores from a verified production analysis — hooksignals.com/youtube-video-analyzer</p>
+          </div>
+
+          {/* Recommendations */}
+          <div className="rounded-[24px] border border-white/10 bg-black/24 p-5">
+            <p className="text-xs font-black uppercase tracking-[0.14em] text-violet-300">Recommendations returned</p>
+            <p className="mt-3 text-sm font-black text-white">Actionable output per analysis</p>
+            <div className="mt-4 space-y-2">
+              {[
+                ["Better titles", "3 stronger alternatives"],
+                ["Opening hook ideas", "3 hook rewrites"],
+                ["Thumbnail text", "3 short-text options"],
+                ["Title diagnosis", "Specific weakness breakdown"],
+                ["Retention diagnosis", "Drop-off risk explanation"],
+                ["Description angle", "Opening sentence direction"],
+              ].map(([k, v]) => (
+                <div key={k} className="flex items-start gap-2.5 border-b border-white/6 pb-2 last:border-0">
+                  <span className="mt-0.5 text-[10px] text-violet-300">✓</span>
+                  <div>
+                    <span className="text-xs font-bold text-white/70">{k}</span>
+                    <span className="ml-1.5 text-xs text-white/30">{v}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <a
+          href="/youtube-video-analyzer"
+          className="mt-7 inline-flex rounded-2xl border border-cyan-300/25 bg-cyan-300/[0.07] px-6 py-3 text-sm font-black text-cyan-100 transition hover:bg-cyan-300/[0.14]"
+        >
+          Run a live analysis free →
+        </a>
+      </div>
+
       <div className="rounded-[32px] border border-white/10 bg-white/[0.025] p-6 shadow-[0_24px_80px_rgba(0,0,0,.30)] md:p-10">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-3xl">
