@@ -8,9 +8,9 @@ const plans = [
     name: "Starter",
     price: "$10",
     cadence: "/pack",
-    desc: "A one-time pack for testing HookSignals with real hooks before moving into a weekly workflow.",
-    fit: "Best for validating upcoming videos without a subscription.",
-    features: ["250 credits included", "Premium hook analysis", "Basic hook rewrites", "Title and thumbnail preview", "Saved workspace history"],
+    desc: "Analyze your next 5 videos before they go live. Find the weak signal before your audience decides for you.",
+    fit: "Right when you have a specific video to strengthen before publishing.",
+    features: ["250 credits included", "Full hook analysis", "Hook rewrites", "Title and thumbnail scoring", "Saved workspace history"],
     cta: "Buy Starter Pack",
     checkoutPath: "/checkout/starter",
     premium: false,
@@ -20,20 +20,20 @@ const plans = [
     name: "Creator Pro",
     price: "$20",
     cadence: "/month",
-    desc: "The main plan for creators who want deeper pre-publish decisions before every upload.",
-    fit: "Best for solo creators publishing every week.",
-    features: ["2,000 monthly credits", "Premium hook analysis", "More hook variants", "Title pairings + thumbnail angles", "Saved creator history", "Cancel anytime"],
+    desc: "Pre-publish analysis on every upload. Stop guessing why some videos tank and others take off.",
+    fit: "Right for creators publishing weekly who want a repeatable pre-publish system.",
+    features: ["2,000 monthly credits", "Full hook analysis", "Multiple hook variants", "Title pairings + thumbnail angles", "Saved creator history", "Cancel anytime"],
     cta: "Start Creator Pro",
     checkoutPath: "/checkout/pro",
     premium: true,
-    note: "Best first upgrade",
+    note: "Most popular",
   },
   {
     name: "Elite",
     price: "$50",
     cadence: "/month",
-    desc: "A heavier workflow tier for teams, agencies and high-output creators managing multiple content ideas.",
-    fit: "Best for teams, editors and high-output creators.",
+    desc: "Full team workflow. Batch analyze content ideas before production starts across a content calendar.",
+    fit: "Right for editors, agencies and high-output creators managing multiple channels.",
     features: ["10,000 monthly credits", "Team-ready workflows", "Batch content analysis", "Creator dashboards", "Priority support", "Cancel anytime"],
     cta: "Start Elite",
     checkoutPath: "/checkout/elite",
@@ -61,11 +61,11 @@ export default function PricingPreview() {
         <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-3xl">
             <p className="text-sm font-bold uppercase tracking-[0.14em] text-cyan-300">Creator pricing</p>
-            <h2 className="mt-4 text-4xl font-black tracking-[-0.045em] md:text-5xl">Start small. Upgrade when the workflow saves real publishing time.</h2>
-            <p className="mt-5 text-lg leading-8 text-white/55">Create an account first, then checkout through a branded HookSignals payment screen. Credits attach to your dashboard after payment.</p>
+            <h2 className="mt-4 text-4xl font-black tracking-[-0.045em] md:text-5xl">Start with the free tools. Upgrade when you want analysis on every upload.</h2>
+            <p className="mt-5 text-lg leading-8 text-white/55">Free tools run without an account. Paid plans add saved history, more hook variants and deeper packaging analysis — available as soon as you pay.</p>
           </div>
           <div className="max-w-sm rounded-2xl border border-cyan-300/15 bg-cyan-300/[0.055] px-5 py-4 text-sm leading-6 text-white/62">
-            Branded checkout, secure payment by Paddle, and clear credit usage before you pay.
+            Secure checkout via Paddle. Credits appear in your dashboard instantly after payment.
           </div>
         </div>
 
@@ -111,9 +111,64 @@ export default function PricingPreview() {
         </div>
 
         <div className="mt-7 grid gap-3 text-sm text-white/45 md:grid-cols-3">
-          <p>✓ Account required before checkout</p>
-          <p>✓ 250 / 2,000 / 10,000 credit tiers</p>
-          <p>✓ Branded checkout before Paddle payment</p>
+          <p>✓ Cancel anytime on monthly plans</p>
+          <p>✓ Starter pack credits never expire</p>
+          <p>✓ Instant access after payment</p>
+        </div>
+      </div>
+
+      {/* FAQ */}
+      <div className="mt-12 rounded-[32px] border border-white/10 bg-white/[0.02] p-6 md:p-10">
+        <p className="text-sm font-black uppercase tracking-[0.14em] text-cyan-300">Common questions</p>
+        <h2 className="mt-4 text-3xl font-black tracking-[-0.04em]">Everything you need to know before upgrading.</h2>
+
+        <div className="mt-8 grid gap-4 md:grid-cols-2">
+          {[
+            {
+              q: "What is a credit?",
+              a: "One credit equals one AI analysis request. A hook analysis costs 5 credits. A YouTube video analysis (which fetches real metadata and runs packaging AI) also costs 5 credits. You can see your credit balance at any time in your dashboard.",
+            },
+            {
+              q: "What is free and what requires credits?",
+              a: "The Hook Analyzer, Title Analyzer, Thumbnail Checker and Viral Hook Examples all have a free tier that runs without credits. Saving results, running more than 3 analyses, accessing full AI output and unlocking hook rewrite variants require credits.",
+            },
+            {
+              q: "What happens when I run out of credits?",
+              a: "You can still use the free tier of each tool. You will not lose any saved history. To run new paid analyses, purchase a Starter pack or subscribe to a monthly plan — both add credits to your account instantly.",
+            },
+            {
+              q: "Can I cancel my subscription?",
+              a: "Yes. Creator Pro and Elite are monthly subscriptions and can be cancelled at any time from your dashboard. You keep access to your remaining credits and saved history until the end of the billing period.",
+            },
+            {
+              q: "Do Starter pack credits expire?",
+              a: "No. The $10 Starter pack credits are added to your account and never expire. They are a one-time purchase — not a subscription. You can use them at your own pace.",
+            },
+            {
+              q: "Do monthly credits roll over?",
+              a: "Monthly credits (Creator Pro and Elite) reset each billing cycle and do not roll over. If you regularly use fewer credits than your plan includes, the Starter pack may be a better fit.",
+            },
+            {
+              q: "Is there a free trial?",
+              a: "There is no time-limited trial, but every account gets 15 free credits on sign-up — enough for 3 full analyses. You can use these to run real analyses on your own hooks and videos before deciding whether to upgrade.",
+            },
+            {
+              q: "What if I want a refund?",
+              a: "If you purchased a Starter pack and have not used any credits, contact support@hooksignals.com within 7 days of purchase for a full refund. Monthly subscriptions are billed in advance and are not refunded for partial months, but you can cancel immediately to prevent the next charge.",
+            },
+          ].map(({ q, a }) => (
+            <div key={q} className="rounded-[24px] border border-white/10 bg-black/24 p-5">
+              <p className="font-black text-white">{q}</p>
+              <p className="mt-3 text-sm leading-7 text-white/52">{a}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-8 rounded-[24px] border border-cyan-300/18 bg-cyan-300/[0.05] p-5">
+          <p className="font-black text-white">Still have a question?</p>
+          <p className="mt-2 text-sm leading-6 text-white/55">
+            Email <a href="mailto:support@hooksignals.com" className="text-cyan-300 underline underline-offset-2 hover:text-cyan-200">support@hooksignals.com</a> and we will reply within one business day.
+          </p>
         </div>
       </div>
     </section>

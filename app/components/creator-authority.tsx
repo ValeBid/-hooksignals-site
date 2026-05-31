@@ -239,21 +239,6 @@ export default function CreatorAuthoritySection() {
         <PlatformSignals />
       </motion.div>
 
-      {/* CTA */}
-      <motion.div {...fade(0.22)} className="mt-8 flex flex-wrap items-center gap-4">
-        <a
-          href="/youtube-video-analyzer"
-          className="rounded-2xl bg-gradient-to-r from-cyan-300 via-sky-400 to-violet-400 px-7 py-3.5 text-sm font-black text-black shadow-[0_20px_48px_rgba(34,211,238,.18)] transition hover:scale-[1.01]"
-        >
-          Analyze a YouTube video →
-        </a>
-        <a
-          href="/hook-analyzer"
-          className="rounded-2xl border border-white/10 bg-white/[0.04] px-7 py-3.5 text-sm font-black text-white/70 transition hover:bg-white/[0.07]"
-        >
-          Score your hook text
-        </a>
-      </motion.div>
     </section>
   );
 }
