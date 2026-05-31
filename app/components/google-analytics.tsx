@@ -3,9 +3,9 @@ import { Suspense } from "react";
 import GoogleAnalyticsTracker from "./google-analytics-tracker";
 
 export default function GoogleAnalytics() {
-  const measurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
+  const measurementId = process.env.NEXT_PUBLIC_GA_ID;
 
-  if (!measurementId) return null;
+  if (!measurementId || process.env.NODE_ENV !== "production") return null;
 
   return (
     <>
