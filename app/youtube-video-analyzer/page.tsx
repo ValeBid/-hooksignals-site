@@ -372,9 +372,21 @@ export default function YoutubeVideoAnalyzerPage() {
         )}
 
         {/* Trust note */}
-        <p className="mt-5 text-xs leading-5 text-white/32">
-          This analysis uses public YouTube metadata and AI packaging signals. It does not access private YouTube Studio data such as retention curves, actual CTR, or watch time.
-        </p>
+        <div className="mt-5 rounded-[18px] border border-white/8 bg-white/[0.02] px-4 py-3">
+          <div className="flex flex-wrap gap-x-5 gap-y-1.5">
+            {[
+              "Uses public YouTube metadata via YouTube Data API",
+              "No YouTube login required",
+              "Does not access YouTube Studio or private analytics",
+              "Scores are directional guidance — not actual CTR or retention",
+            ].map((item) => (
+              <span key={item} className="flex items-center gap-1.5 text-xs text-white/38">
+                <span className="text-[9px] text-emerald-400">✓</span>
+                {item}
+              </span>
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* Results */}

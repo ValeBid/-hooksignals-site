@@ -160,7 +160,23 @@ export default function PricingPreview() {
           </div>
         </div>
 
-        <div className="mt-10 grid gap-5 lg:grid-cols-3">
+        {/* Trust strip */}
+        <div className="mt-8 grid gap-2 rounded-[22px] border border-white/8 bg-white/[0.02] p-4 sm:grid-cols-2 lg:grid-cols-5">
+          {[
+            "No YouTube login required",
+            "Uses public YouTube data only",
+            "Cancel anytime on monthly plans",
+            "Secure checkout via Paddle",
+            "Scores are directional guidance — not guaranteed views",
+          ].map((item) => (
+            <div key={item} className="flex items-start gap-2 px-1 py-1">
+              <span className="mt-0.5 shrink-0 text-[10px] text-emerald-300">✓</span>
+              <span className="text-xs leading-5 text-white/52">{item}</span>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-6 grid gap-5 lg:grid-cols-3">
           {plans.map((plan) => (
             <div key={plan.name} className={`relative overflow-hidden rounded-[30px] border p-7 ${plan.premium ? "border-cyan-300/45 bg-cyan-300/[0.075] shadow-[0_28px_100px_rgba(34,211,238,.16)]" : "border-white/10 bg-black/24"}`}>
               {plan.note && (

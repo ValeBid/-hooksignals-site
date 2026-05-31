@@ -17,6 +17,7 @@ const legalLinks = [
   ["Terms", "/terms"],
   ["Privacy", "/privacy"],
   ["Refund Policy", "/refund-policy"],
+  ["How Scores Work", "/how-scores-work"],
 ];
 
 export default function SiteFooter() {
