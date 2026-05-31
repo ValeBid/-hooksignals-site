@@ -3,6 +3,7 @@
 import { useState, useRef } from "react";
 import PremiumToolShell from "../components/premium-tool-shell";
 import RelatedTools from "../components/related-tools";
+import ScoreMethodology from "../components/score-methodology";
 import { trackEvent } from "../lib/analytics";
 import type { AnalyzeResponse, VideoInfo, Scores, Analysis, Recommendations } from "../api/youtube/analyze/route";
 
@@ -410,6 +411,8 @@ export default function YoutubeVideoAnalyzerPage() {
           </p>
         </section>
       )}
+
+      <ScoreMethodology />
 
       <div className="mt-6">
         <RelatedTools primary="hook-analyzer" secondary="hook-improver" context="Score the hook you want to use for this video, then sharpen it." />

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import PremiumToolShell from "../components/premium-tool-shell";
 import RelatedTools from "../components/related-tools";
+import ScoreMethodology from "../components/score-methodology";
 import CopyButton from "../components/copy-button";
 import { StaggerContainer, StaggerItem } from "../components/motion";
 
@@ -406,7 +407,9 @@ export default function YouTubeTitleAnalyzerPage() {
         </div>
       </div>
 
-      <div className="mt-8">
+      <ScoreMethodology />
+
+      <div className="mt-6">
         <RelatedTools primary="hook-analyzer" secondary="hook-improver" context="A strong title needs a matching hook. Score your opening line before publishing." />
       </div>
     </PremiumToolShell>
