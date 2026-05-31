@@ -241,6 +241,11 @@ const seoContent = {
           "A YouTube hook is the opening line or first few seconds that gives viewers a reason to keep watching.",
       },
       {
+        question: "Why do hooks matter for Shorts?",
+        answer:
+          "Shorts viewers decide very quickly whether to keep watching. A weak opening can reduce retention before the video has a chance to deliver value.",
+      },
+      {
         question: "Can I use generated hooks for Shorts?",
         answer:
           "Yes. Shorts often need even faster hooks because viewers decide quickly whether to swipe away.",
@@ -254,6 +259,11 @@ const seoContent = {
         question: "How many hook versions should I create?",
         answer:
           "Create several and compare them. Most strong hooks come from testing multiple angles, not accepting the first version.",
+      },
+      {
+        question: "Does a generated hook guarantee views?",
+        answer:
+          "No. A hook can improve the opening signal, but topic demand, packaging, audience fit and delivery still matter.",
       },
     ],
   },

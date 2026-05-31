@@ -2,7 +2,6 @@
 
 import { useMemo, useState } from "react";
 import PremiumToolShell from "../components/premium-tool-shell";
-import FAQSchema from "../components/faq-schema";
 import FAQBlock from "../components/faq-block";
 import CopyButton from "../components/copy-button";
 
@@ -36,7 +35,6 @@ export default function YoutubeHookGeneratorClient() {
 
   return (
     <>
-      <FAQSchema items={faqItems} />
       <PremiumToolShell badge="YouTube creator workflow" title="YouTube Hook Generator" description="Turn a rough video idea into sharper opening lines, then send the best one into the Hook Analyzer before publishing." primaryHref="/hook-analyzer" primaryLabel="Analyze Best Hook" secondaryHref="/tools" secondaryLabel="All Tools">
         <section className="grid gap-5 lg:grid-cols-[0.9fr_1.1fr]">
           <div className="rounded-[28px] border border-white/10 bg-black/30 p-5 shadow-[0_24px_80px_rgba(0,0,0,.35)] md:p-7">
